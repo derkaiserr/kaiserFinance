@@ -157,12 +157,13 @@ const PageOne = () => {
           <p className="amount">+550</p>
         </div>
       </main>
+                  <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-30 text-white w-fit">
 
         <svg
-          className="fixed bg-[#1F615C]  rounded-full p-4 bottom-9 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-30 text-white "
+          className=""
           xmlns="http://www.w3.org/2000/svg"
-          width="65"
-          height="65"
+          width="45"
+          height="45"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -174,6 +175,7 @@ const PageOne = () => {
           <path d="M5 12h14" />
           <path d="M12 5v14" />
         </svg>
+          </div>
       <footer className="fixed bottom-0 w-full  grid px-5 grid-cols-3 items-center py-3 pt-5 border border-t-2">
 
         <div className="flex justify-between">
