@@ -18,3 +18,10 @@
     color: gray;
     /* font-size: 45px; */
   }
+
+
+  .transActs{
+    display: flex;
+    justify-content: space-between;
+    
+  }
