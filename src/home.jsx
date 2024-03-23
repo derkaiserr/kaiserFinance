@@ -81,7 +81,7 @@ const PageOne = () => {
               </div>
               <p
                 data-state={eye}
-                className=" data-[state=true]:before:backdrop-blur-sm justify-center  flex font-semibold before:bg-[#2f7e793f before:w-[95%] before:py-3 before:backdrop-blur-0  before:absolute"
+                className=" data-[state=true]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-[95%] before:py-3 before:backdrop-blur-0  before:absolute"
               >
                 &#36;1800.00
               </p>
