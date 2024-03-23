@@ -1,5 +1,5 @@
 import React from "react";
-import standMan from "./assets/standman.png";
+import standMan from "./assets/standMan.png";
 import bgGetStarted from "./assets/bg-getStarted.png";
 
 export default function GetStarted() {
