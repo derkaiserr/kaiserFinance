@@ -2,12 +2,25 @@ import { useState } from "react";
 import bg from "./assets/bg-home.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
+import Stats from "./stats";
+
 
 const PageOne = () => {
   const [eye, setEye] = useState(false);
+
+
+
+  const data = [
+    { name: 'Jan', value: 400 },
+    { name: 'Feb', value: 300 },
+    { name: 'Mar', value: 600 },
+    { name: 'Apr', value: 700 },
+    { name: 'May', value: 500 }
+  ];
+
   return (
     <div className="mb-24">
-      <img src={bg} className="relative cover w-full" alt="" />
+      {/* <img src={bg} className="relative cover w-full" alt="" />
 
       <section className="absolute py-7 px-5  flex flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
@@ -116,7 +129,7 @@ const PageOne = () => {
         </div>
       </section>
       <header className="mt-28 flex justify-between px-6 ">
-        <p className="font-semibold">Transactions History</p>
+        <p className="font-semibold text-lg">Transactions History</p>
         <p className="text-sm text-gray-500 font-semibold">see all</p>
       </header>
 
@@ -126,28 +139,28 @@ const PageOne = () => {
             <p>Upwork</p>
             <p>Today</p>
           </div>
-          <p className="amount">+850</p>
+          <p className="amount text-green-700">+&#36;850</p>
         </div>
         <div className="transActs">
           <div>
             <p>Transfer</p>
             <p>Yesterday</p>
           </div>
-          <p className="amount">-85</p>
+          <p className="amount text-red-700">-&#36;85</p>
         </div>
         <div className="transActs">
           <div>
             <p>Paypal</p>
             <p>30th Jan, 2024</p>
           </div>
-          <p className="amount">+80</p>
+          <p className="amount text-green-700">+&#36;80</p>
         </div>
         <div className="transActs">
           <div>
             <p>Upwork</p>
             <p>14th Jan, 2024</p>
           </div>
-          <p className="amount">+550</p>
+          <p className="amount text-green-700">+&#36;550</p>
         </div>
       </main>
       <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-30 text-white w-fit">
@@ -171,7 +184,7 @@ const PageOne = () => {
       <footer className="fixed bottom-0 w-full bg-white grid px-5 grid-cols-3 items-center py-3 pt-5 border border-t-2">
         <div className="flex justify-between">
           <svg
-            className="group-[.footIcons]:bg-blue-400"
+            className=""
             xmlns="http://www.w3.org/2000/svg"
             width="34"
             height="34"
@@ -239,7 +252,11 @@ const PageOne = () => {
             <path d="M20 21a8 8 0 0 0-16 0" />
           </svg>
         </div>
-      </footer>
+      </footer> */}
+      <div className="line-chart-container">
+
+      <Stats data={data} />
+      </div>
     </div>
   );
 };

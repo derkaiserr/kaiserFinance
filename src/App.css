@@ -1,27 +1,60 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 .inter {
-    font-family: "Inter", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: weight;
-    font-style: normal;
-    font-variation-settings:
-      "slnt" 0;
-  }
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: weight;
+  font-style: normal;
+  font-variation-settings: "slnt" 0;
+}
 
+footer > svg {
+  /* background-color: green; */
+  padding: 0.8rem;
+  color: gray;
+  /* font-size: 45px; */
+}
 
-  footer > svg{
-    /* background-color: green; */
-    padding: 0.8rem;
-    color: gray;
-    /* font-size: 45px; */
-  }
+.transActs {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.transActs > div :nth-child(1) {
+  font-weight: 600;
+}
+.transActs > div :nth-child(2) {
+  color: gray;
+  font-size: smaller;
+}
 
+.transActs :last-child {
+  font-weight: 500;
+}
 
-  .transActs{
-    display: flex;
-    justify-content: space-between;
-    
-  }
+.line-chart-container {
+  /* Add styles for the container if needed */
+  
+}
+
+.recharts-wrapper {
+  /* Add styles for the chart wrapper */
+  border: 0;
+}
+
+.recharts-cartesian-grid-horizontal line {
+  stroke: #f0f0f0; /* Customize grid lines color */
+}
+
+.recharts-tooltip {
+  background-color: #ffffff; /* Tooltip background color */
+  border: 1px solid #cccccc; /* Tooltip border */
+}
+
+.recharts-tooltip-label {
+  color: #333333; /* Tooltip label color */
+}
+
+.recharts-tooltip-item {
+  color: #888888; /* Tooltip value color */
+}
