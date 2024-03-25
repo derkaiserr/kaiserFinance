@@ -34,7 +34,7 @@ footer > svg {
 
 .line-chart-container {
   /* Add styles for the container if needed */
-  
+  border: 0;
 }
 
 .recharts-wrapper {
@@ -43,16 +43,16 @@ footer > svg {
 }
 
 .recharts-cartesian-grid-horizontal line {
-  stroke: #f0f0f0; /* Customize grid lines color */
+  stroke: transparent; /* Customize grid lines color */
 }
 
 .recharts-tooltip {
-  background-color: #ffffff; /* Tooltip background color */
-  border: 1px solid #cccccc; /* Tooltip border */
+  background-color: blue; /* Tooltip background color */
+  border: 0; /* Tooltip border */
 }
 
 .recharts-tooltip-label {
-  color: #333333; /* Tooltip label color */
+  color: transparent; /* Tooltip label color */
 }
 
 .recharts-tooltip-item {

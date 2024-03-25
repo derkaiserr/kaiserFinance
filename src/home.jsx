@@ -4,19 +4,19 @@ import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import Stats from "./stats";
 
-
 const PageOne = () => {
   const [eye, setEye] = useState(false);
 
-
+  const [dataInput, setDataInput] = useState(false);
 
   const data = [
-    { name: 'Jan', value: 400 },
-    { name: 'Feb', value: 300 },
-    { name: 'Mar', value: 600 },
-    { name: 'Apr', value: 700 },
-    { name: 'May', value: 500 }
+    { name: "Jan", value: 400 },
+    { name: "Feb", value: 300 },
+    { name: "Mar", value: 600 },
+    { name: "Apr", value: 700 },
+    { name: "May", value: 500 },
   ];
+  // setDataInput(data);
 
   return (
     <div className="mb-24">
@@ -254,8 +254,7 @@ const PageOne = () => {
         </div>
       </footer> */}
       <div className="line-chart-container">
-
-      <Stats data={data} />
+        <Stats data={data} />
       </div>
     </div>
   );
