@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import G from "./assets/G.png";
 import { EyeOff } from 'lucide-react';
 import { Eye } from 'lucide-react';
+import {Link} from "react-router-dom"
 
 export default function SignUp() {
 
@@ -71,9 +72,9 @@ export default function SignUp() {
             </span>
           </label>
         </div>
-        <button className="bg-[#438883] rounded-lg w-full h-10 text-white my-3">
+        <Link to="/mainpage" className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3">
           Sign Up
-        </button>
+        </Link>
         <p className="text-center text-slate-500 text-sm font-semibold mb-2">
           Or
         </p>
@@ -85,7 +86,7 @@ export default function SignUp() {
         </button>
         <p className="pt-3 text-center">
           Already have an account? 
-          <span className="bg-transparent  text-[#438883] "> Log in.</span>
+          <Link to="/login" className="bg-transparent  text-[#438883] "> Log in.</Link>
         </p>
       </form>
     </div>

@@ -20,7 +20,7 @@ const PageOne = () => {
 
   return (
     <div className="mb-24">
-      {/* <img src={bg} className="relative cover w-full" alt="" />
+      <img src={bg} className="relative cover w-full" alt="" />
 
       <section className="absolute py-7 px-5  flex flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
@@ -67,7 +67,7 @@ const PageOne = () => {
             data-state={eye}
             className=" data-[state=true]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-[95%] before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
           >
-            &#36;2,500,000.00
+            &#36;2,504,394.52
           </p>
 
           <div className="flex justify-between pt-9">
@@ -96,7 +96,7 @@ const PageOne = () => {
                 data-state={eye}
                 className=" data-[state=true]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-[95%] before:py-3 before:backdrop-blur-0  before:absolute"
               >
-                &#36;1800.00
+                &#36;3,250,000.00
               </p>
             </div>
 
@@ -122,7 +122,7 @@ const PageOne = () => {
                 Expenses
               </div>
               <p data-state={eye} className=" flex justify-end">
-                &#36;2,500.00
+                &#36;745,605.48
               </p>
             </div>
           </div>
@@ -139,28 +139,28 @@ const PageOne = () => {
             <p>Upwork</p>
             <p>Today</p>
           </div>
-          <p className="amount text-green-700">+&#36;850</p>
+          <p className="amount text-green-700">+&#36;8,000.00</p>
         </div>
         <div className="transActs">
           <div>
             <p>Transfer</p>
             <p>Yesterday</p>
           </div>
-          <p className="amount text-red-700">-&#36;85</p>
+          <p className="amount text-red-700">-&#36;845.00</p>
         </div>
         <div className="transActs">
           <div>
             <p>Paypal</p>
             <p>30th Jan, 2024</p>
           </div>
-          <p className="amount text-green-700">+&#36;80</p>
+          <p className="amount text-green-700">+&#36;14,000.00</p>
         </div>
         <div className="transActs">
           <div>
             <p>Upwork</p>
             <p>14th Jan, 2024</p>
           </div>
-          <p className="amount text-green-700">+&#36;550</p>
+          <p className="amount text-green-700">+&#36;550.00</p>
         </div>
       </main>
       <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-30 text-white w-fit">
@@ -181,81 +181,8 @@ const PageOne = () => {
           <path d="M12 5v14" />
         </svg>
       </div>
-      <footer className="fixed bottom-0 w-full bg-white grid px-5 grid-cols-3 items-center py-3 pt-5 border border-t-2">
-        <div className="flex justify-between">
-          <svg
-            className=""
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="34"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-home"
-          >
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="34"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-bar-chart"
-          >
-            <line x1="12" x2="12" y1="20" y2="10" />
-            <line x1="18" x2="18" y1="20" y2="4" />
-            <line x1="6" x2="6" y1="20" y2="16" />
-          </svg>
-        </div>
-        <div></div>
-        <div className="flex justify-between">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="34"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-wallet"
-          >
-            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
-            <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
-            <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-          </svg>
-          <svg
-            className="group-[.footIcons]:bg-blue-400"
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="34"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-user-round"
-          >
-            <circle cx="12" cy="8" r="5" />
-            <path d="M20 21a8 8 0 0 0-16 0" />
-          </svg>
-        </div>
-      </footer> */}
-      <div className="line-chart-container">
-        <Stats data={data} />
-      </div>
+     
+     
     </div>
   );
 };
