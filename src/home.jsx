@@ -65,7 +65,7 @@ const PageOne = () => {
         <div>
           <p
             data-state={eye}
-            className=" data-[state=true]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-[95%] before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
+            className=" data-[state=true]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-full before:-mx-5 before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
           >
             &#36;2,504,394.52
           </p>
@@ -94,7 +94,7 @@ const PageOne = () => {
               </div>
               <p
                 data-state={eye}
-                className=" data-[state=true]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-[95%] before:py-3 before:backdrop-blur-0  before:absolute"
+                className=" data-[state=true]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-full before:-mx-5 before:py-3 before:backdrop-blur-0  before:absolute"
               >
                 &#36;3,250,000.00
               </p>
@@ -181,8 +181,6 @@ const PageOne = () => {
           <path d="M12 5v14" />
         </svg>
       </div>
-     
-     
     </div>
   );
 };
