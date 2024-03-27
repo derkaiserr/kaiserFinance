@@ -19,7 +19,7 @@ import "./App.css";
 
 function App() {
   let saveLocation = window.location.pathname;
-  const [nav, setNav] = useState(saveLocation);
+  const [nav, setNav] = useState(false);
 
   const savedNav = (link) => {
     setNav(link.to);
@@ -63,7 +63,7 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route exact path="/home" element={<PageOne />} />
-        <Route path="/mainpage/*" element={<Mainpage data={data} />} />
+        <Route path="/mainpage/*" element={<Mainpage data={data} nav={nav} setNav={setNav} />} />
         <Route path="/stats" element={<Stats data={data} />} />
         <Route path="/user" element={<User />} />
       </Routes>
@@ -72,15 +72,15 @@ function App() {
       {/* <Login /> */}
       {/* <Mainpage /> */}
 
-      { nav === "/mainpage" ? (
-        <footer className="fixed bg-white flex  py-3 pt-4 bottom-0 w-[100vw] justify-around border border-t-2">
+      {nav && (
+        <footer className="fixed bg-white flex  py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
           {navLinks.map((nav) => (
             <Link to={nav.to} key={nav.id}>
               <img src={nav.img} alt="" />
             </Link>
           ))}
-        </footer>) : null
-      }
+        </footer>
+      ) }
     </div>
   );
 }
