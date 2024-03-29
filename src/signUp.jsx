@@ -1,13 +1,11 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import G from "./assets/G.png";
-import { EyeOff } from 'lucide-react';
-import { Eye } from 'lucide-react';
-import {Link} from "react-router-dom"
+import { EyeOff } from "lucide-react";
+import { Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function SignUp() {
-
-
-    const [eye, setEye] = useState(false)
+  const [eye, setEye] = useState(false);
   return (
     <div className=" ">
       <header className="grid px-4 grid-cols-3 text-center pt-6 font-bold">
@@ -45,34 +43,49 @@ export default function SignUp() {
           id=""
         />
         <div className="relative flex items-center justify-center">
-
-        <input
-          className="w-full rounded-lg relative border-slate-200 outline-none border mb-7 px-3 pr-10 h-10"
-          type={eye ? "text" : "password"}
-          placeholder="Password"
-          name=""
-          id=""
+          <input
+            className="w-full rounded-lg relative border-slate-200 outline-none border mb-7 px-3 pr-10 h-10"
+            type={eye ? "text" : "password"}
+            placeholder="Password"
+            name=""
+            id=""
           />
           <div className="">
-        {eye ? <EyeOff className="absolute text-gray-500 right-3 top-2 " onClick={() => {setEye(false)}}/> : <Eye className="absolute text-gray-500 right-3 top-2" onClick={() => {setEye(true)}} />}
-
+            {eye ? (
+              <EyeOff
+                className="absolute text-gray-500 right-3 top-2 "
+                onClick={() => {
+                  setEye(false);
+                }}
+              />
+            ) : (
+              <Eye
+                className="absolute text-gray-500 right-3 top-2"
+                onClick={() => {
+                  setEye(true);
+                }}
+              />
+            )}
           </div>
-          </div>
+        </div>
         <div className=" gap-2 ">
           <input
             type="checkbox"
             className="mr-1 rounded-lg border- accent-[#438883] "
-            name=""
-            id=""
+            name="agreement"
+            id="agreement"
           />
           <label htmlFor="agreement">
-            By signing up, you agree to the{" "}
+            By signing up, you agree to the
             <span className="text-[#438883]">
               Terms of Service and Privacy Policy
             </span>
           </label>
         </div>
-        <Link to="/mainpage" className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3">
+        <Link
+          to="/mainpage"
+          className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3"
+        >
           Sign Up
         </Link>
         <p className="text-center text-slate-500 text-sm font-semibold mb-2">
@@ -85,8 +98,11 @@ export default function SignUp() {
           Sign Up with Google
         </button>
         <p className="pt-3 text-center">
-          Already have an account? 
-          <Link to="/login" className="bg-transparent  text-[#438883] "> Log in.</Link>
+          Already have an account?
+          <Link to="/login" className="bg-transparent  text-[#438883] ">
+            {" "}
+            Log in.
+          </Link>
         </p>
       </form>
     </div>

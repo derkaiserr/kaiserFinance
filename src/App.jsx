@@ -21,25 +21,11 @@ function App() {
   let saveLocation = window.location.pathname;
   const [nav, setNav] = useState(false);
 
-  const savedNav = (link) => {
-    setNav(link.to);
-  };
+  // const savedNav = (link) => {
+  //   setNav(link.to);
+  // };
 
   console.log(nav);
-  useEffect(() => {
-    const handleLocationChange = () => {
-      // Update saveLocation whenever the pathname changes
-      saveLocation = window.location.pathname;
-    };
-
-    // Attach an event listener for location change
-    window.addEventListener("popstate", handleLocationChange);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("popstate", handleLocationChange);
-    };
-  }, []); // Empty dependency array ensures this effect runs only once
 
   const data = [
     { name: "Jan", value: 400 },
@@ -56,31 +42,42 @@ function App() {
     { img: wallet, altImg: greenWallet, id: 4, to: "/home" },
     { img: user, altImg: greenUser, id: 5, to: "/user" },
   ];
+
+  const [activeLink, setActiveLink] = useState(1);
+
+  const handleNavLinkClick = (id) => {
+    setActiveLink(id);
+  };
+
   return (
     <div className=" inter ">
       <Routes>
         <Route path="/" element={<GetStarted />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route exact path="/home" element={<PageOne />} />
-        <Route path="/mainpage/*" element={<Mainpage data={data} nav={nav} setNav={setNav} />} />
+        <Route
+          path="/mainpage/*"
+          element={<Mainpage data={data} nav={nav} setNav={setNav} />}
+        />
+        <Route path="/home" element={<PageOne />} />
         <Route path="/stats" element={<Stats data={data} />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/user" element={<User setNav={setNav} />} />
       </Routes>
-      {/* <GetStarted /> */}
-      {/* <SignUp /> */}
-      {/* <Login /> */}
-      {/* <Mainpage /> */}
 
       {nav && (
-        <footer className="fixed bg-white flex  py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
+        <footer className="fixed bg-white flex py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
           {navLinks.map((nav) => (
-            <Link to={nav.to} key={nav.id}>
-              <img src={nav.img} alt="" />
+            <Link
+              to={nav.to}
+              key={nav.id}
+              onClick={() => handleNavLinkClick(nav.id)}
+              className={activeLink === nav.id ? "active" : ""}
+            >
+              <img src={activeLink === nav.id ? nav.altImg : nav.img} alt="" />
             </Link>
           ))}
         </footer>
-      ) }
+      )}
     </div>
   );
 }

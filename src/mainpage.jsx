@@ -13,30 +13,15 @@ import greenUser from "./assets/greenUser.svg";
 import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 
-const Mainpage = ({ data, setNav }) => {
-  let saveLocation = window.location.pathname;
-  setNav(true);
-  // const [nav, setNav] = useState(saveLocation);
+const Mainpage = ({ data, setNav, nav }) => {
+  useEffect(() => {
+    setNav(true);
 
-  // const savedNav = (link) => {
-  //   setNav(link.to);
-  // };
-
-  // console.log(nav)
-  // useEffect(() => {
-  //   const handleLocationChange = () => {
-  //     // Update saveLocation whenever the pathname changes
-  //     saveLocation = window.location.pathname;
-  //   };
-
-  //   // Attach an event listener for location change
-  //   window.addEventListener("popstate", handleLocationChange);
-
-  //   // Cleanup the event listener on component unmount
-  //   return () => {
-  //     window.removeEventListener("popstate", handleLocationChange);
-  //   };
-  // }, []); // Empty dependency array ensures this effect runs only once
+    // return () => {
+      
+    // };
+  }, [nav]);
+ 
 
   const navLinks = [
     { img: home, altImg: greenHome, id: 1, to: "/home" },
@@ -55,9 +40,12 @@ const Mainpage = ({ data, setNav }) => {
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} /> */}
         <Route exact path="/" element={<PageOne />} />
-        <Route path="/mainpage" element={<Mainpage />} />
+        {/* <Route path="/mainpage" element={<Mainpage />} />
         <Route path="/stats" element={<Stats data={data} />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/user" element={<User />} /> */}
+         <Route exact path="/home" element={<PageOne />} />
+        <Route path="/stats" element={<Stats data={data} />} />
+        <Route path="/user" element={<User setNav={setNav} />} />
       </Routes>
     </div>
   );

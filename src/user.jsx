@@ -1,11 +1,17 @@
 import { useState } from "react";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
+import ellipses from "./assets/ellipses.png";
 
-const User = () => {
+const User = ({ setNav }) => {
   return (
     <div className="pb-28">
       <div>
+        <img
+          src={ellipses}
+          className="absolute top-0 z-50 w-[50%] cover"
+          alt=""
+        />
         <img src={bg} className="relative cover w-full" alt="" />
         <picture className=" ">
           <img
@@ -39,7 +45,8 @@ const User = () => {
 
           <div className="flex items-center justify-between">
             <p>About</p>
-            <svg className="text-gray-500"
+            <svg
+              className="text-gray-500"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -54,10 +61,13 @@ const User = () => {
               <path d="m9 18 6-6-6-6" />
             </svg>
           </div>
-   
-          <button className="bg-red-600 py-3 text-lg font-semibold shadow-xl text-white rounded-md w-full">Sign Out</button>
-       
- 
+
+          <button
+            onClick={() => setNav(false)}
+            className="bg-red-600 py-3 text-lg font-semibold shadow-xl text-white rounded-md w-full"
+          >
+            Sign Out
+          </button>
         </div>
       </section>
     </div>
