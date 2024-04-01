@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 import bg from "./assets/bg-home.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
+import ellipses from "./assets/ellipses.png";
+import AddExpense from "./add";
 import Stats from "./stats";
 
 const PageOne = () => {
@@ -20,9 +23,14 @@ const PageOne = () => {
 
   return (
     <div className="mb-24">
+      <img
+        src={ellipses}
+        className="absolute top-0 z-20 w-[50%] cover"
+        alt=""
+      />
       <img src={bg} className="relative cover w-full" alt="" />
 
-      <section className="absolute py-7 px-5  flex flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
+      <section className="absolute py-7 px-5 z-50 flex shadow-2xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
             Total Balance
@@ -163,7 +171,8 @@ const PageOne = () => {
           <p className="amount text-green-700">+&#36;550.00</p>
         </div>
       </main>
-      <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-30 text-white w-fit">
+      <Link to="/add">
+      <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-[110] text-white w-fit">
         <svg
           className=""
           xmlns="http://www.w3.org/2000/svg"
@@ -176,11 +185,12 @@ const PageOne = () => {
           stroke-linecap="round"
           stroke-linejoin="round"
           class="lucide lucide-plus"
-        >
+          >
           <path d="M5 12h14" />
           <path d="M12 5v14" />
         </svg>
       </div>
+          </Link>
     </div>
   );
 };

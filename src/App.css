@@ -58,3 +58,17 @@ footer > svg {
 .recharts-tooltip-item {
   color: #888888; /* Tooltip value color */
 }
+
+.addForm > div > input {
+  border: #ddd 1px solid;
+  outline: 0;
+  border-radius: 10px;
+
+  font-size: 14px;
+  width: 100%;
+  color: #666666;
+}
+
+.addForm > div > input:focus {
+  border: #438883 1px solid;
+}

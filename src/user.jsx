@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
 
-const User = ({ setNav }) => {
+const User = ({ setNav, nav }) => {
+
+  useEffect(() => {
+    setNav(true);
+
+    // return () => {
+      
+    // };
+  }, [nav]);
   return (
     <div className="pb-28">
       <div>

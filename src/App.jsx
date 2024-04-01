@@ -16,7 +16,7 @@ import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-
+import AddExpense from "./add"
 function App() {
   let saveLocation = window.location.pathname;
   const [nav, setNav] = useState(false);
@@ -43,6 +43,16 @@ function App() {
     { img: user, altImg: greenUser, id: 5, to: "/user" },
   ];
 
+
+  const transactions = [
+    //type 1 is income, type 2 is expense
+    { id:1, name: "Upwork", date: "Today", amount: "8,000.00", type: 1},
+    { id:2, name: "Transfer", date: "Yesterday", amount: "845.00", type: 2},
+    { id:3, name: "Paypal", date: "30th Jan, 2024", amount: "14,000.00", type: 1},
+    { id:4, name: "Netflix", date: "14th Jan, 2024", amount: "14.99", type: 1},
+
+  ]
+
   const [activeLink, setActiveLink] = useState(1);
 
   const handleNavLinkClick = (id) => {
@@ -59,13 +69,14 @@ function App() {
           path="/mainpage/*"
           element={<Mainpage data={data} nav={nav} setNav={setNav} />}
         />
-        <Route path="/home" element={<PageOne />} />
-        <Route path="/stats" element={<Stats data={data} />} />
-        <Route path="/user" element={<User setNav={setNav} />} />
+        <Route path="/add" element={<AddExpense />}/>
+        <Route path="/home" element={<PageOne transactions={transactions} />} />
+        <Route path="/stats" element={<Stats data={data} setNav={setNav} transactions={transactions} nav={nav} />} />
+        <Route path="/user" element={<User setNav={setNav} nav={nav} />} />
       </Routes>
 
       {nav && (
-        <footer className="fixed bg-white flex py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
+        <footer className="fixed bg-white flex z-[100] py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
           {navLinks.map((nav) => (
             <Link
               to={nav.to}
@@ -79,6 +90,9 @@ function App() {
         </footer>
       )}
     </div>
+//     <div>
+// {/* <AddExpense/> */}
+//     </div>
   );
 }
 

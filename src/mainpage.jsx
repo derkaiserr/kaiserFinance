@@ -43,7 +43,6 @@ const Mainpage = ({ data, setNav, nav }) => {
         {/* <Route path="/mainpage" element={<Mainpage />} />
         <Route path="/stats" element={<Stats data={data} />} />
         <Route path="/user" element={<User />} /> */}
-         <Route exact path="/home" element={<PageOne />} />
         <Route path="/stats" element={<Stats data={data} />} />
         <Route path="/user" element={<User setNav={setNav} />} />
       </Routes>

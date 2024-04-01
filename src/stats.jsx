@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ExpenseStats from "./expenseStats";
 
-
-const Stats = ({ data }) => {
+const Stats = ({ data, nav, setNav }) => {
   const chartWidth = window.innerWidth * 0.9;
 
+  useEffect(() => {
+    setNav(true);
+
+    // return () => {
+
+    // };
+  }, [nav]);
   {
     console.log(data);
   }
+
   return (
     <div className="mb-28">
       <header className="flex justify-between   p-6">
@@ -50,14 +57,14 @@ const Stats = ({ data }) => {
       </header>
 
       <main>
-      <section className="head flex justify-around py-4 pb-12">
+        <section className="head flex justify-around py-4 pb-12">
           <button>Day</button>
           <button>Week</button>
           <button>Month</button>
           <button>Year</button>
         </section>
-      <div className="absolute text-[#1B5C58] z-40 right-8 ">
-          <select name="" className="outline-none"  id="">
+        <div className="absolute text-[#1B5C58] z-40 right-8 ">
+          <select name="" className="outline-none" id="">
             <option value="Expenses">Expenses</option>
             <option value="Income">Income</option>
           </select>
