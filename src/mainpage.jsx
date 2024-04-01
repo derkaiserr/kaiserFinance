@@ -13,7 +13,7 @@ import greenUser from "./assets/greenUser.svg";
 import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 
-const Mainpage = ({ data, setNav, nav }) => {
+const Mainpage = ({ data, setNav, nav, transactions }) => {
   useEffect(() => {
     setNav(true);
 
@@ -39,7 +39,7 @@ const Mainpage = ({ data, setNav, nav }) => {
         {/* <Route exact path="/" element={<GetStarted />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} /> */}
-        <Route exact path="/" element={<PageOne />} />
+        <Route exact path="/" element={<PageOne  transactions={transactions} />} />
         {/* <Route path="/mainpage" element={<Mainpage />} />
         <Route path="/stats" element={<Stats data={data} />} />
         <Route path="/user" element={<User />} /> */}

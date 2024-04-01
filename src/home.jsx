@@ -7,7 +7,7 @@ import ellipses from "./assets/ellipses.png";
 import AddExpense from "./add";
 import Stats from "./stats";
 
-const PageOne = () => {
+const PageOne = ({transactions}) => {
   const [eye, setEye] = useState(false);
 
   const [dataInput, setDataInput] = useState(false);
@@ -20,6 +20,21 @@ const PageOne = () => {
     { name: "May", value: 500 },
   ];
   // setDataInput(data);
+
+  const calculateAmount = (transactions, type) => {
+    let total = 0;
+    transactions.forEach(transaction => {
+      const amount = parseFloat(transaction.amount.replace(/,/g, ''));
+      if (type === 'total') {
+        transaction.type === 1 ? (total += amount) : (total -= amount);
+      } else if (type === 'expenses' && transaction.type === 2) {
+        total += amount;
+      } else if (type === 'income' && transaction.type === 1) {
+        total += amount;
+      }
+    });
+    return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
 
   return (
     <div className="mb-24">
@@ -36,14 +51,14 @@ const PageOne = () => {
             Total Balance
             <span className="">
               {eye ? (
-                <EyeOff
+                <Eye
                   className=" w-5"
                   onClick={() => {
                     setEye(false);
                   }}
                 />
               ) : (
-                <Eye
+                <EyeOff
                   className=" w-5"
                   onClick={() => {
                     setEye(true);
@@ -73,9 +88,9 @@ const PageOne = () => {
         <div>
           <p
             data-state={eye}
-            className=" data-[state=true]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-full before:-mx-5 before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
+            className=" data-[state=false]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-full before:-mx-5 before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
           >
-            &#36;2,504,394.52
+            &#36;{calculateAmount(transactions, "total")}
           </p>
 
           <div className="flex justify-between pt-9">
@@ -102,9 +117,9 @@ const PageOne = () => {
               </div>
               <p
                 data-state={eye}
-                className=" data-[state=true]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-full before:-mx-5 before:py-3 before:backdrop-blur-0  before:absolute"
+                className=" data-[state=false]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-full before:-mx-5 before:py-3 before:backdrop-blur-0  before:absolute"
               >
-                &#36;3,250,000.00
+                &#36;{calculateAmount(transactions,"income")}
               </p>
             </div>
 
@@ -129,8 +144,8 @@ const PageOne = () => {
                 </span>
                 Expenses
               </div>
-              <p data-state={eye} className=" flex justify-end">
-                &#36;745,605.48
+              <p className=" flex justify-end">
+                &#36;{calculateAmount(transactions, "expenses")}
               </p>
             </div>
           </div>
@@ -142,35 +157,30 @@ const PageOne = () => {
       </header>
 
       <main className="px-6">
-        <div className="transActs ">
-          <div>
-            <p>Upwork</p>
-            <p>Today</p>
+       
+      {transactions.map((transaction) => (
+          <div key={transaction.id} className="flex justify-between my-4">
+          <div className="">
+            <p className="font-semibold">{transaction.name}</p>
+            <p className="text-slate-500 font-medium text-sm">{transaction.date}</p>
           </div>
-          <p className="amount text-green-700">+&#36;8,000.00</p>
+          <p className={`amount font-semibold ${transaction.type === 1 ? "text-green-700": "text-red-700" } `}>{transaction.type === 1 ? "+" : "-"} &#36;{transaction.amount}</p>
         </div>
-        <div className="transActs">
-          <div>
-            <p>Transfer</p>
-            <p>Yesterday</p>
-          </div>
-          <p className="amount text-red-700">-&#36;845.00</p>
-        </div>
-        <div className="transActs">
-          <div>
-            <p>Paypal</p>
-            <p>30th Jan, 2024</p>
-          </div>
-          <p className="amount text-green-700">+&#36;14,000.00</p>
-        </div>
-        <div className="transActs">
-          <div>
-            <p>Upwork</p>
-            <p>14th Jan, 2024</p>
-          </div>
-          <p className="amount text-green-700">+&#36;550.00</p>
-        </div>
+      ))}
+      
+      
+      
       </main>
+
+
+
+
+
+
+
+
+
+
       <Link to="/add">
       <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-[110] text-white w-fit">
         <svg

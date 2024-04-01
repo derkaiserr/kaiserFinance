@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Login from "./login";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
@@ -70,12 +72,13 @@ const User = ({ setNav, nav }) => {
             </svg>
           </div>
 
-          <button
+          <Link
+          to="/login"
             onClick={() => setNav(false)}
-            className="bg-red-600 py-3 text-lg font-semibold shadow-xl text-white rounded-md w-full"
+            className="bg-red-600 py-3 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >
             Sign Out
-          </button>
+          </Link>
         </div>
       </section>
     </div>

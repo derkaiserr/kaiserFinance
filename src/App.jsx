@@ -67,7 +67,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route
           path="/mainpage/*"
-          element={<Mainpage data={data} nav={nav} setNav={setNav} />}
+          element={<Mainpage data={data} nav={nav} transactions={transactions}  setNav={setNav} />}
         />
         <Route path="/add" element={<AddExpense />}/>
         <Route path="/home" element={<PageOne transactions={transactions} />} />

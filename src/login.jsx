@@ -63,9 +63,9 @@ export default function Login() {
           </div>
         </div>
 
-        <button className="bg-[#438883] rounded-lg w-full h-10 text-white my-3">
+        <Link to="/mainpage" className="bg-[#438883] flex items-center justify-center rounded-lg w-full h-10 text-white my-3">
           Login
-        </button>
+        </Link>
         <p className="text-center text-[#438883]  font-semibold mb-2">
           Forgot Password?
         </p>
