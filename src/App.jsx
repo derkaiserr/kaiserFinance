@@ -35,15 +35,15 @@ function App() {
     // };
     
     const [activeLink, setActiveLink] = useState(
-      ()=> {
-      const storedActiveLink = localStorage.getItem("activeLink");
-    return storedActiveLink ? JSON.parse(storedActiveLink) : 1
-    } 
-  );
+    //   ()=> {
+    //   const storedActiveLink = localStorage.getItem("activeLink");
+    // return storedActiveLink ? JSON.parse(storedActiveLink) : 1
+    // } 
+ 1 );
 
-  useEffect(() => {
-    localStorage.setItem("activeLink", JSON.stringify(activeLink));
-  }, [activeLink])
+  // useEffect(() => {
+  //   localStorage.setItem("activeLink", JSON.stringify(activeLink));
+  // }, [activeLink])
 
   
     
