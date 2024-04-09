@@ -37,7 +37,7 @@ const PageOne = ({transactions}) => {
   };
 
   return (
-    <div className="mb-24">
+    <div className=" pb-20">
       <img
         src={ellipses}
         className="absolute top-0 z-20 w-[50%] cover"
@@ -45,20 +45,20 @@ const PageOne = ({transactions}) => {
       />
       <img src={bg} className="relative cover w-full" alt="" />
 
-      <section className="absolute py-7 px-5 z-50 flex shadow-2xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
+      <section className="card absolute py-7 px-5 z-50 flex shadow-2xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
             Total Balance
             <span className="">
               {eye ? (
-                <Eye
+                <EyeOff
                   className=" w-5"
                   onClick={() => {
                     setEye(false);
                   }}
                 />
               ) : (
-                <EyeOff
+                <Eye
                   className=" w-5"
                   onClick={() => {
                     setEye(true);

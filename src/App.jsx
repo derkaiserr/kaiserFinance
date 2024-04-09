@@ -19,21 +19,36 @@ import "./App.css";
 import AddExpense from "./add"
 function App() {
   let saveLocation = window.location.pathname;
-  const [nav, setNav] = useState(false);
+  const [nav, setNav] = useState(() => {
+    const storedNav = localStorage.getItem('nav');
+    return storedNav ? JSON.parse(storedNav) : false; // Parse JSON string to boolean
+  });
+
+  // Update local storage whenever the nav state changes
+  useEffect(() => {
+    localStorage.setItem('nav', JSON.stringify(nav));
+  }, [nav]); // Run this effect whenever nav changes
+
 
   // const savedNav = (link) => {
-  //   setNav(link.to);
-  // };
+    //   setNav(link.to);
+    // };
+    
+    const [activeLink, setActiveLink] = useState(
+      ()=> {
+      const storedActiveLink = localStorage.getItem("activeLink");
+    return storedActiveLink ? JSON.parse(storedActiveLink) : 1
+    } 
+  );
 
-  console.log(nav);
+  useEffect(() => {
+    localStorage.setItem("activeLink", JSON.stringify(activeLink));
+  }, [activeLink])
 
-  const data = [
-    { name: "Jan", value: 400 },
-    { name: "Feb", value: 300 },
-    { name: "Mar", value: 600 },
-    { name: "Apr", value: 700 },
-    { name: "May", value: 500 },
-  ];
+  // console.log(typeof(JSON.stringify(activeLink)))
+    
+  const data = 1
+
 
   const navLinks = [
     { img: home, altImg: greenHome, id: 1, to: "/home" },
@@ -46,21 +61,34 @@ function App() {
 
   const transactions = [
     //type 1 is income, type 2 is expense
-    { id:1, name: "Upwork", date: "Today", amount: "8,000.00", type: 1},
-    { id:2, name: "Transfer", date: "Yesterday", amount: "845.00", type: 2},
-    { id:3, name: "Paypal", date: "30th Jan, 2024", amount: "14,000.00", type: 1},
-    { id:4, name: "Netflix", date: "14th Jan, 2024", amount: "14.99", type: 1},
+    { id:1, name: "Upwork", date: "Today", amount: "8,000.00", income: 8000, type: 1},
+    { id:2, name: "Transfer", date: "Yesterday", amount: "845.00", expense: 845, type: 2},
+    { id:3, name: "Paypal", date: "30th Jan, 2024", amount: "14,000.00", income: 14000, type: 1},
+    { id:4, name: "Netflix", date: "14th Jan, 2024", amount: "14.99", income: 14.99, type: 1},
 
   ]
 
-  const [activeLink, setActiveLink] = useState(1);
 
   const handleNavLinkClick = (id) => {
     setActiveLink(id);
   };
 
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+    useEffect(() => {
+      localStorage.setItem('theme', theme);
+      // if(theme === 'black') {
+      // document.body.className = theme;}
+      // if (theme === 'light') {
+      //   document.body.className = "green"
+      // }
+      document.body.className = theme
+    }, [theme]);
+    const toggleDarkMode = () => {
+        setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    };
+
   return (
-    <div className=" inter ">
+    <div className={`${theme} inter  `}>
       <Routes>
         <Route path="/" element={<GetStarted />} />
         <Route path="/signUp" element={<SignUp />} />
@@ -71,8 +99,8 @@ function App() {
         />
         <Route path="/add" element={<AddExpense />}/>
         <Route path="/home" element={<PageOne transactions={transactions} />} />
-        <Route path="/stats" element={<Stats data={data} setNav={setNav} transactions={transactions} nav={nav} />} />
-        <Route path="/user" element={<User setNav={setNav} nav={nav} />} />
+        <Route path="/stats" element={<Stats data={data}  setNav={setNav} transactions={transactions} nav={nav} />} />
+        <Route path="/user" element={<User setNav={setNav} theme={theme} setTheme={setTheme} toggleDarkMode={toggleDarkMode} nav={nav} />} />
       </Routes>
 
       {nav && (
@@ -90,9 +118,7 @@ function App() {
         </footer>
       )}
     </div>
-//     <div>
-// {/* <AddExpense/> */}
-//     </div>
+//    
   );
 }
 

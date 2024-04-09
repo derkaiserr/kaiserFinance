@@ -43,7 +43,7 @@ const Mainpage = ({ data, setNav, nav, transactions }) => {
         {/* <Route path="/mainpage" element={<Mainpage />} />
         <Route path="/stats" element={<Stats data={data} />} />
         <Route path="/user" element={<User />} /> */}
-        <Route path="/stats" element={<Stats data={data} />} />
+        <Route path="/stats" element={<Stats data={data} transactions={transactions} />} />
         <Route path="/user" element={<User setNav={setNav} />} />
       </Routes>
     </div>

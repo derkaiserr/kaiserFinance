@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Routes, Route, Link } from "react-router-dom";
+import DarkMode from "./DarkMode";
 import Login from "./login";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
 
-const User = ({ setNav, nav }) => {
+
+
+export const ThemeContext = createContext(null)
+const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
 
   useEffect(() => {
     setNav(true);
@@ -14,9 +18,13 @@ const User = ({ setNav, nav }) => {
       
     // };
   }, [nav]);
+
+
+  
   return (
     <div className="pb-28">
       <div>
+        
         <img
           src={ellipses}
           className="absolute top-0 z-50 w-[50%] cover"
@@ -26,7 +34,7 @@ const User = ({ setNav, nav }) => {
         <picture className=" ">
           <img
             src={user}
-            className="absolute bg-white  p-8 w-32 -mt-16 rounded-full left-0 right-0 mx-auto"
+            className="absolute bg-white user  p-8 w-32 -mt-16 rounded-full left-0 right-0 mx-auto"
             alt=""
           />
         </picture>
@@ -47,11 +55,12 @@ const User = ({ setNav, nav }) => {
           </div>
           <div className="flex justify-between">
             <label for="theme">Theme</label>
-            <select className=" outline-none" name="theme" id="">
+            <select className=" outline-none" name="theme" value={theme} onChange={(e) => setTheme(e.target.value)} id="">
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
           </div>
+          {/* <DarkMode /> */}
 
           <div className="flex items-center justify-between">
             <p>About</p>

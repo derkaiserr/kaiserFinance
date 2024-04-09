@@ -15,6 +15,8 @@ footer > svg {
   /* font-size: 45px; */
 }
 
+
+
 .transActs {
   display: flex;
   justify-content: space-between;
@@ -72,3 +74,71 @@ footer > svg {
 .addForm > div > input:focus {
   border: #438883 1px solid;
 }
+
+.light{
+  background-color: white;
+}
+
+ .dark {
+  background-color: #1d1d1d;
+  color: #FFFFFF;
+}
+
+.dark .card {
+  background-color: #122d2c;
+}
+
+.dark .card h1,
+.dark .card p {
+  color: #B3B3B3;
+}
+
+
+
+.dark  footer{
+  background-color: #0e201e;
+  border: none;
+}
+.dark select{
+  background-color: transparent;
+  color: white;
+  
+  
+}
+.dark .user{
+  background-color: #666666;
+}
+
+.dark option{
+  background-color: black;
+
+}
+.dark option{
+  background-color: rgb(188, 188, 188);
+}
+
+.green{
+  background-color: #1B5C58;
+}
+
+
+.dark form{
+  background-color: #363737;
+  color: white;
+}
+
+.dark form label{
+  color: white;
+}
+
+.dark form input{
+  background-color: black;
+  border: 0;
+  color: white;
+}
+
+/* .dark .addForm > div > input:focus {
+  border: #438883 1px solid;
+} */
+
+
