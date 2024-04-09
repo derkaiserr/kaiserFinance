@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import GetStarted from "./getStarted";
 import SignUp from "./signUp";
 import Login from "./login";
-import Mainpage from "./mainpage";
+// import Mainpage from "./mainpage";
 import PageOne from "./home";
 import Stats from "./stats";
 import User from "./user";
@@ -93,12 +93,12 @@ function App() {
         <Route path="/" element={<GetStarted setNav={setNav} />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route
+        {/* <Route
           path="/mainpage/*"
           element={<Mainpage data={data} nav={nav} transactions={transactions}  setNav={setNav} />}
-        />
+        /> */}
         <Route path="/add" element={<AddExpense />}/>
-        <Route path="/home" element={<PageOne transactions={transactions} />} />
+        <Route path="/home" element={<PageOne transactions={transactions} setNav={setNav} nav={nav} />} />
         <Route path="/stats" element={<Stats data={data}  setNav={setNav} transactions={transactions} nav={nav} />} />
         <Route path="/user" element={<User setNav={setNav} theme={theme} setTheme={setTheme} toggleDarkMode={toggleDarkMode} nav={nav} />} />
       </Routes>

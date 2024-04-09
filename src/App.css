@@ -137,6 +137,11 @@ footer > svg {
   color: white;
 }
 
+.dark .login form, .dark .signUp form{
+  background-color: transparent;
+}
+
+
 /* .dark .addForm > div > input:focus {
   border: #438883 1px solid;
 } */

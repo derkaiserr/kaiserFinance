@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import bg from "./assets/bg-home.png";
 import { EyeOff } from "lucide-react";
@@ -7,7 +7,7 @@ import ellipses from "./assets/ellipses.png";
 import AddExpense from "./add";
 import Stats from "./stats";
 
-const PageOne = ({transactions}) => {
+const PageOne = ({transactions, setNav, nav}) => {
   const [eye, setEye] = useState(false);
 
   const [dataInput, setDataInput] = useState(false);
@@ -19,6 +19,11 @@ const PageOne = ({transactions}) => {
     { name: "Apr", value: 700 },
     { name: "May", value: 500 },
   ];
+    useEffect(() => {
+    setNav(true);
+
+   
+  }, [nav]);
   // setDataInput(data);
 
   const calculateAmount = (transactions, type) => {

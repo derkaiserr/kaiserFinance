@@ -7,7 +7,7 @@ export default function Login() {
   const [eye, setEye] = useState(false);
 
   return (
-    <div>
+    <div className="login">
       <header className="grid px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export default function Login() {
           </div>
         </div>
 
-        <Link to="/mainpage" className="bg-[#438883] flex items-center justify-center rounded-lg w-full h-10 text-white my-3">
+        <Link to="/home" className="bg-[#438883] flex items-center justify-center rounded-lg w-full h-10 text-white my-3">
           Login
         </Link>
         <p className="text-center text-[#438883]  font-semibold mb-2">

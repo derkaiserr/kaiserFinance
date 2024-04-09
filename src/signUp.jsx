@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 export default function SignUp() {
   const [eye, setEye] = useState(false);
   return (
-    <div className=" ">
-      <header className="grid px-4 grid-cols-3 text-center pt-6 font-bold">
+    <div className="signUp ">
+      <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -27,7 +27,7 @@ export default function SignUp() {
         <p>Sign Up</p>
       </header>
 
-      <form className="absolute px-4  bottom-24" action="">
+      <form className="flex flex-col justify-center h-[100vh] px-4 " action="">
         <input
           className="w-full rounded-lg border-slate-200 outline-none border mb-7 px-3 h-10"
           type="text"
@@ -83,7 +83,7 @@ export default function SignUp() {
           </label>
         </div>
         <Link
-          to="/mainpage"
+          to="/home"
           className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3"
         >
           Sign Up
