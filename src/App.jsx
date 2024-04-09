@@ -45,7 +45,7 @@ function App() {
     localStorage.setItem("activeLink", JSON.stringify(activeLink));
   }, [activeLink])
 
-  // console.log(typeof(JSON.stringify(activeLink)))
+  
     
   const data = 1
 
@@ -90,7 +90,7 @@ function App() {
   return (
     <div className={`${theme} inter  `}>
       <Routes>
-        <Route path="/" element={<GetStarted />} />
+        <Route path="/" element={<GetStarted setNav={setNav} />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route

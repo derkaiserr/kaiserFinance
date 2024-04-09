@@ -3,7 +3,9 @@ import standMan from "./assets/standMan.png";
 import bgGetStarted from "./assets/bg-getStarted.png";
 import {Link} from "react-router-dom"
 
-export default function GetStarted() {
+export default function GetStarted({setNav}) {
+
+  setNav(false)
   return (
     <div>
       <figure className="pt- bg-cover w-full  bg-no-repeat  b-[url('./assets/bg-getStarted.png')]">
