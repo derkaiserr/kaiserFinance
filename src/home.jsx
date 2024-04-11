@@ -7,7 +7,7 @@ import ellipses from "./assets/ellipses.png";
 import AddExpense from "./add";
 import Stats from "./stats";
 
-const PageOne = ({transactions, setNav, nav}) => {
+const PageOne = ({transactions, setNav, theme, nav}) => {
   const [eye, setEye] = useState(false);
 
   const [dataInput, setDataInput] = useState(false);
@@ -187,7 +187,7 @@ const PageOne = ({transactions, setNav, nav}) => {
 
 
       <Link to="/add">
-      <div className="fixed bg-[#1F615C]  rounded-full p-3 bottom-8 left-0 right-0 mx-auto shadow-lg shadow-slate-300 z-[110] text-white w-fit">
+      <div className={`fixed bg-[#1F615C] ${theme === "dark" ? "shadow-black" : "shadow-slate-300 "} shadow-lg rounded-full p-3 bottom-8 left-0 right-0 mx-auto  z-[110] text-white w-fit`}>
         <svg
           className=""
           xmlns="http://www.w3.org/2000/svg"

@@ -3,17 +3,17 @@ import standMan from "./assets/standMan.png";
 import bgGetStarted from "./assets/bg-getStarted.png";
 import {Link} from "react-router-dom"
 
-export default function GetStarted({setNav}) {
+export default function GetStarted({setNav, theme}) {
 
   setNav(false)
   return (
     <div>
       <figure className="pt- bg-cover w-full  bg-no-repeat  b-[url('./assets/bg-getStarted.png')]">
-        <img
+       { theme === "light" && <img
           src={bgGetStarted}
           className="absolute top-0 h-[500px]  w-full z-10"
           alt=""
-        />
+        />}
         <img
           className="bg-inherit absolute mx-auto left-0 right-0 z-20 top-10"
           src={standMan}

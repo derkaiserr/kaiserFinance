@@ -59,14 +59,14 @@ function App() {
   ];
 
 
-  const transactions = [
+  const [transactions, setTransactions] = useState( [
     //type 1 is income, type 2 is expense
     { id:1, name: "Upwork", date: "Today", amount: "8,000.00", income: 8000, type: 1},
     { id:2, name: "Transfer", date: "Yesterday", amount: "845.00", expense: 845, type: 2},
     { id:3, name: "Paypal", date: "30th Jan, 2024", amount: "14,000.00", income: 14000, type: 1},
     { id:4, name: "Netflix", date: "14th Jan, 2024", amount: "14.99", income: 14.99, type: 1},
 
-  ]
+  ])
 
 
   const handleNavLinkClick = (id) => {
@@ -90,15 +90,15 @@ function App() {
   return (
     <div className={`${theme} inter  `}>
       <Routes>
-        <Route path="/" element={<GetStarted setNav={setNav} />} />
+        <Route path="/" element={<GetStarted theme={theme} setNav={setNav} />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         {/* <Route
           path="/mainpage/*"
           element={<Mainpage data={data} nav={nav} transactions={transactions}  setNav={setNav} />}
         /> */}
-        <Route path="/add" element={<AddExpense />}/>
-        <Route path="/home" element={<PageOne transactions={transactions} setNav={setNav} nav={nav} />} />
+        <Route path="/add" element={<AddExpense transactions={transactions} setTransactions={setTransactions} />}/>
+        <Route path="/home" element={<PageOne theme={theme} transactions={transactions} setNav={setNav} nav={nav} />} />
         <Route path="/stats" element={<Stats data={data}  setNav={setNav} transactions={transactions} nav={nav} />} />
         <Route path="/user" element={<User setNav={setNav} theme={theme} setTheme={setTheme} toggleDarkMode={toggleDarkMode} nav={nav} />} />
       </Routes>

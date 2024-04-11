@@ -85,7 +85,7 @@ footer > svg {
 }
 
 .dark .card {
-  background-color: #122d2c;
+  background-color: rgb(18, 45, 44);
 }
 
 .dark .card h1,
@@ -99,20 +99,24 @@ footer > svg {
   background-color: #0e201e;
   border: none;
 }
-.dark select{
+/* .dark select{
   background-color: transparent;
   color: white;
   
   
+} */
+
+.dark select{
+  background-color: #1d1d1d;
 }
 .dark .user{
   background-color: #666666;
 }
 
-.dark option{
+/* .dark option{
   background-color: black;
 
-}
+} */
 .dark option{
   background-color: rgb(188, 188, 188);
 }
@@ -141,9 +145,11 @@ footer > svg {
   background-color: transparent;
 }
 
+.dark .float{
+  background-color: #1d1d1d;
+  
+}
+ 
 
-/* .dark .addForm > div > input:focus {
-  border: #438883 1px solid;
-} */
 
 
