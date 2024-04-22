@@ -97,36 +97,19 @@ const ExpenseStats = ({
     },
     // responsive: true, // Set responsive to false to define fixed width and height
     // maintainAspectRatio: true, // Set maintainAspectRatio to false to allow defining custom width and height
-    // plugins: {
-    //   legend: {
-    //     display: true,
-    //     position: 'top'
-    //   }
-    // },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom'
+      }
+    },
     // width: chartWidth, // Set width
     // height: "20rem" // Set height
   };
 
   return (
-    <div>
-      <div className=" flex justify-center">
-        {/* <LineChart
-          width={chartWidth}
-          height={400}
-          data={transactData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <XAxis dataKey="date" />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey={transactData === income ? "income" : "expenses"} stroke={transactData === income ? "#1B5C58" : "#FF0000"} />
-          <Line type="monotone" dataKey="expense" stroke="#FF0000" />
-        </LineChart> */}
-        <Line data={chartDataa} options={chartOptions} />
-      </div>
-
-      <main className="px-6 relative">
-        <div className=" absolute  text-[#1B5C58] z-40 right-6  top-20">
+    <div className="relative">
+        <div className=" absolute  text-[#1B5C58] z-40 right-6  -top-8">
           <select
             name="data"
             className="outline-none h-8 "
@@ -158,9 +141,25 @@ const ExpenseStats = ({
             <option value="expenses">Expenses</option>
           </select>
         </div>
-        <div style={{ width: "1000" }}>
-          <canvas id="acquisitions"></canvas>
-        </div>
+      <div className=" flex py-5 justify-center">
+        {/* <LineChart
+          width={chartWidth}
+          height={400}
+          data={transactData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <XAxis dataKey="date" />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey={transactData === income ? "income" : "expenses"} stroke={transactData === income ? "#1B5C58" : "#FF0000"} />
+          <Line type="monotone" dataKey="expense" stroke="#FF0000" />
+        </LineChart> */}
+        <Line data={chartDataa} options={chartOptions} />
+      </div>
+
+      <main className="px-6 relative">
+      
+        
 
         {chartData.map((transaction) => (
           <div key={transaction.id} className="flex justify-between my-4">

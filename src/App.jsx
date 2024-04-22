@@ -18,6 +18,7 @@ import greenWallet from "./assets/greenWallet.svg";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import AddExpense from "./add"
+// 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
   const [nav, setNav] = useState(() => {
@@ -29,84 +30,99 @@ function App() {
   useEffect(() => {
     localStorage.setItem('nav', JSON.stringify(nav));
   }, [nav]); // Run this effect whenever nav changes
-
-
+  
+  
   // const savedNav = (link) => {
     //   setNav(link.to);
     // };
     
     const [activeLink, setActiveLink] = useState(
-    //   ()=> {
-    //   const storedActiveLink = localStorage.getItem("activeLink");
-    // return storedActiveLink ? JSON.parse(storedActiveLink) : 1
-    // } 
- 1 );
-
-  // useEffect(() => {
-  //   localStorage.setItem("activeLink", JSON.stringify(activeLink));
-  // }, [activeLink])
-
-
-    
-  const data = 1
-
-  const now = new Date(2014, 1,11);
-  const newDate = date.format(now, 'ddd, MMM DD YYYY');
-  // console.log(newDate)
-
-  const navLinks = [
-    { img: home, altImg: greenHome, id: 1, to: "/home" },
+      //   ()=> {
+        //   const storedActiveLink = localStorage.getItem("activeLink");
+        // return storedActiveLink ? JSON.parse(storedActiveLink) : 1
+        // } 
+        1 );
+        
+        // useEffect(() => {
+          //   localStorage.setItem("activeLink", JSON.stringify(activeLink));
+          // }, [activeLink])
+          
+          
+          
+          const data = 1
+          
+          const now = new Date(2014, 1,11);
+          const newDate = date.format(now, 'ddd, MMM DD YYYY');
+          // console.log(newDate)
+          
+          const navLinks = [
+            { img: home, altImg: greenHome, id: 1, to: "/home" },
     { img: bars, altImg: greenBars, id: 2, to: "/stats" },
     { img: "", altImg: "", id: 3 },
     { img: wallet, altImg: wallet, id: 4, to: "/home" },
     { img: user, altImg: greenUser, id: 5, to: "/user" },
   ];
-
+  
   const dateFUnction = (year, month, day) => {
     return date.format(new Date(year, month, day), 'MMM DD, YYYY')
   }
-
+  
   const [transactions, setTransactions] = useState( [
     //type 1 is income, type 2 is expense
     { id:1, name: "Upwork", date: dateFUnction(2021, 0, 24) ,   amount: "8,000.00", income: 8000, type: 1},
     { id:2, name: "Transfer", date:dateFUnction(2024, 1, 17), amount: "845.00", expense: 845, type: 2},
     { id:3, name: "Paypal", date: dateFUnction(2024, 1, 20), amount: "14,000.00", income: 14000, type: 1},
-    { id:4, name: "Netflix", date: dateFUnction(2024, 0, 14), amount: "14.99", income: 14.99, type: 1},
-
+    { id:4, name: "Netflix", date: dateFUnction(2024, 0, 14), amount: "14.99", expense: 14.99, type: 2},
+    
   ])
-
-
+  
+  
   const sortedTransactions = transactions.slice().sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateA - dateB;
-});
-
-// transactions.map((transaction) => console.log( new Date (transaction.date)))
-
-
-console.log(sortedTransactions)
-
+  });
   
-
-
+  // transactions.map((transaction) => console.log( new Date (transaction.date)))
+  
+  
+  console.log(sortedTransactions)
+  
+  
+  
+  
   const handleNavLinkClick = (id) => {
     setActiveLink(id);
   };
-
+  
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
-    useEffect(() => {
+  useEffect(() => {
       localStorage.setItem('theme', theme);
       // if(theme === 'black') {
-      // document.body.className = theme;}
-      // if (theme === 'light') {
-      //   document.body.className = "green"
-      // }
-      document.body.className = theme
-    }, [theme]);
+        // document.body.className = theme;}
+        // if (theme === 'light') {
+          //   document.body.className = "green"
+          // }
+          document.body.className = theme
+        }, [theme]);
     const toggleDarkMode = () => {
-        setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+      setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
     };
+    
+    const APIK_KEY = import.meta.env.VITE_SOME_KEY;
+    const [currencyState, setCurrencyState] = useState(0)
+    
+    const addRate = (rate) => {
+      setCurrencyState(rate)
+}
+
+    fetch(`https://v6.exchangerate-api.com/v6/${APIK_KEY}/latest/USD`)
+    .then((response) => {
+      return response.json()
+    })
+    .then(data => addRate(data.conversion_rates.NGN))
+
+    console.log(currencyState)
 
   return (
     <div className={`${theme} inter  `}>
