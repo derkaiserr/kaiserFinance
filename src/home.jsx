@@ -41,6 +41,15 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
     return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
+
+  const reverselySortedTx = transactions.sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+    return dateB - dateA;
+
+  })
+  console.log(reverselySortedTx)
+
   return (
     <div className=" pb-20">
       <img
@@ -79,10 +88,10 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-ellipsis"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-ellipsis"
           >
             <circle cx="12" cy="12" r="1" />
             <circle cx="19" cy="12" r="1" />
@@ -109,10 +118,10 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-move-down"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-move-down"
                   >
                     <path d="M8 18L12 22L16 18" />
                     <path d="M12 2V22" />
@@ -138,10 +147,10 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-move-up"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-move-up"
                   >
                     <path d="M8 6L12 2L16 6" />
                     <path d="M12 2V22" />
@@ -163,7 +172,7 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
 
       <main className="px-6">
        
-      {transactions.map((transaction) => (
+      {reverselySortedTx.map((transaction) => (
           <div key={transaction.id} className="flex justify-between my-4">
           <div className="">
             <p className="font-semibold">{transaction.name}</p>
@@ -189,17 +198,17 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
       <Link to="/add">
       <div className={`fixed bg-[#1F615C] ${theme === "dark" ? "shadow-black" : "shadow-slate-300 "} shadow-lg rounded-full p-3 bottom-8 left-0 right-0 mx-auto  z-[110] text-white w-fit`}>
         <svg
-          className=""
+          
           xmlns="http://www.w3.org/2000/svg"
           width="45"
           height="45"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-plus"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-plus"
           >
           <path d="M5 12h14" />
           <path d="M12 5v14" />

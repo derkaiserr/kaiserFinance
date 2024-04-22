@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useClickOutside from "../hooks/useClickOutside";
 import bg from "./assets/bg-home.png";
 import ellipses from "./assets/ellipses.png";
+import { Routes, Route, Link } from "react-router-dom";
 
 const AddExpense = ({ transactions, setTransactions }) => {
   const [transactType, setTransactType] = useState(1);
@@ -12,7 +13,8 @@ const AddExpense = ({ transactions, setTransactions }) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-
+const [income, setIncome]  = useState(0);
+const [expenses, setExpenses] = useState(0)
   const [typeTrack, setTypeTrack] = useState(1);
   const generateNewId = () => {
     const maxId = transactions.reduce(
@@ -28,33 +30,55 @@ const AddExpense = ({ transactions, setTransactions }) => {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-GB', options);
   
-    // Extract day, month, and year from formatted date
-    const [, day, month, year] = formattedDate.match(/^(\d+)\s(\w+)\s(\d+)$/);
+    // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
   
-    // Convert day to ordinal format (e.g., 1st, 2nd, 3rd, etc.)
-    let ordinalDay;
-    if (day == 11 || day == 12 || day == 13) {
-      ordinalDay = day + "th";
-    } else {
-      switch (day % 10) {
-        case 1:
-          ordinalDay = day + "st";
-          break;
-        case 2:
-          ordinalDay = day + "nd";
-          break;
-        case 3:
-          ordinalDay = day + "rd";
-          break;
-        default:
-          ordinalDay = day + "th";
-          break;
-      }
+    // Get yesterday's date
+    const yesterday = new Date(today);
+    const twoDaysAgo = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    twoDaysAgo.setDate(today.getDate() - 2);
+  
+    // Check if the date is today
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
     }
   
-    return `${ordinalDay} ${month}, ${year}`;
-  };
+    // Check if the date is yesterday
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
 
+    if(date.toDateString() === twoDaysAgo.toDateString()){
+      return "Two days ago"
+    }
+  
+    // If not today or yesterday, return formatted date with ordinal day
+    const [, day, month, year] = formattedDate.match(/^(\d+)\s(\w+)\s(\d+)$/);
+    // let ordinalDay;
+    // if (day == 11 || day == 12 || day == 13) {
+    //   ordinalDay = day + "th";
+    // } else {
+    //   switch (day % 10) {
+    //     case 1:
+    //       ordinalDay = day + "st";
+    //       break;
+    //     case 2:
+    //       ordinalDay = day + "nd";
+    //       break;
+    //     case 3:
+    //       ordinalDay = day + "rd";
+    //       break;
+    //     default:
+    //       ordinalDay = day + "th";
+    //       break;
+    //   }
+    // }
+  
+    return `${month} ${day}, ${year}`;
+  };
+  
 
 
   const closeOption = () => {
@@ -64,25 +88,65 @@ const AddExpense = ({ transactions, setTransactions }) => {
   const dropdownRef = useClickOutside(closeOption);
 
  
-  
+  const formattedNumber = (number) => {
+    // Convert the string to a number
+    const numericValue = parseFloat(number);
+
+    // Check if the input is a valid number
+    if (isNaN(numericValue)) {
+      return ""; // Return an empty string if it's not a valid number
+    }
+
+    // Format the number with two decimal places and comma separators
+    return numericValue.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+  const formattedAmount = formattedNumber(amount);
 
   const addTransaction = (e) => {
     e.preventDefault();
-    if(date !== "" && !isNaN(amount) && name !== "" ){
+    if (date !== "" && !isNaN(amount) && name !== "") {
       const formattedNewDate = formatDate(date); // Format the date before adding to transactions
+  
 
-      setTransactions((prev) => [
-        ...prev,
-      {
+      if (typeTrack === 1) {
+        console.log("Previous income:", income);
+        setIncome(prevIncome => parseFloat(prevIncome) + 30);
+
+        console.log("Updated income:", isNaN(income));
+      } else if (typeTrack === 2) {
+        console.log("Previous expenses:", expenses);
+        setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
+        console.log("Updated expenses:", expenses);
+      }
+
+      // console.log(isNaN(fo))
+  
+      const newTransaction = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
         amount: formattedAmount,
         date: formattedNewDate,
         id: generateNewId(),
         type: typeTrack,
-      },
-    ]);
-  }
+        // income: parseFloat(income),
+        // expense: parseFloat(expenses)
+      };
+  
+      if (typeTrack === 1) { // Assuming typeTrack is 1 for income, 2 for expense
+        newTransaction.income = parseFloat(income); // Add income property only if type is 1
+    }else{
+      newTransaction.expense = parseFloat(expenses); // Add expense property only if type is
+    }
+      // Update transactions state
+      setTransactions(prevTransactions => [...prevTransactions, newTransaction]);
+  
+      // Update income or expense detail
+      
+    }
   };
+  
   useEffect(() => {
     console.log(transactions);
   }, [transactions]);
@@ -109,22 +173,7 @@ const AddExpense = ({ transactions, setTransactions }) => {
     },
   ];
 
-  const formattedNumber = (number) => {
-    // Convert the string to a number
-    const numericValue = parseFloat(number);
-
-    // Check if the input is a valid number
-    if (isNaN(numericValue)) {
-      return ""; // Return an empty string if it's not a valid number
-    }
-
-    // Format the number with two decimal places and comma separators
-    return numericValue.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
-  const formattedAmount = formattedNumber(amount);
+ 
 
 
 
@@ -191,7 +240,7 @@ const AddExpense = ({ transactions, setTransactions }) => {
           ))}
       </div>
       <form
-       onSubmit={addTransaction}
+     
         className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 "
         
       >
@@ -220,7 +269,10 @@ const AddExpense = ({ transactions, setTransactions }) => {
             name="amount"
             id="amount"
             // value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => {setAmount(e.target.value)
+            setIncome(e.target.value)
+          setExpenses(e.target.value)
+            }}
           />
           <button
         
@@ -247,13 +299,13 @@ const AddExpense = ({ transactions, setTransactions }) => {
             id="date"
           />
         </div>
-        <button
-          type="submit"
-         
+        <Link
+           onClick={addTransaction}
+         to="/home"
           className={`hover:bg-[#438883] ${typeTrack ===1 ? "text-green-600" : "text-red-600"} py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
         >
           Add {typeTrack === 1 ? "Income" : "Expense"}
-        </button>
+        </Link>
       </form>
     </div>
   );

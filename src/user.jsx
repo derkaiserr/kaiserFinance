@@ -47,15 +47,15 @@ const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
 
         <div className="flex flex-col gap-10 justify-center">
           <div className="flex  justify-between">
-            <label for="currency">Currency</label>
-            <select className=" outline-none" name="currency" id="">
+            <label htmlFor="currency">Currency</label>
+            <select className=" outline-none" name="currency" id="currency">
               <option value="USD">USD</option>
               <option value="NGN">NGN</option>
             </select>
           </div>
           <div className="flex justify-between">
-            <label for="theme">Theme</label>
-            <select className=" outline-none" name="theme" value={theme} onChange={(e) => setTheme(e.target.value)} id="">
+            <label htmlFor="theme">Theme</label>
+            <select className=" outline-none" name="theme" id="theme" value={theme} onChange={(e) => setTheme(e.target.value)} >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
@@ -65,17 +65,17 @@ const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
           <div className="flex items-center justify-between">
             <p>About</p>
             <svg
-              className="text-gray-500"
+              
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-chevron-right"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className=" text-gray-500lucide lucide-chevron-right"
             >
               <path d="m9 18 6-6-6-6" />
             </svg>

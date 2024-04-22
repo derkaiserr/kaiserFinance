@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
 import ExpenseStats from "./expenseStats";
 
-const Stats = ({ data, nav, setNav, transactions }) => {
+const Stats = ({
+  data,
+  nav,
+  setNav,
+  transactions,
+  setTransactions,
+  sortedTransactions,
+}) => {
   const chartWidth = window.innerWidth * 0.9;
 
-  const income = transactions.filter((transactions) => transactions.type === 1);
-  const expenses = transactions.filter(
+  const income = sortedTransactions.filter(
+    (transactions) => transactions.type === 1
+  );
+  const expenses = sortedTransactions.filter(
     (transactions) => transactions.type === 2
   );
-  const [transactData, setTransactData] = useState(expenses);
+  const [transactData, setTransactData] = useState(income);
 
   useEffect(() => console.log(transactData), [transactData]);
   return (
@@ -54,37 +63,22 @@ const Stats = ({ data, nav, setNav, transactions }) => {
 
       <main>
         <section className="head flex justify-around py-4 pb-12">
-          <button
-            onClick={() => {
-              setTransactData(expenses);
-            }}
-          >
-            Day
-          </button>
+          <button>Day</button>
           <button>Week</button>
           <button>Month</button>
           <button>Year</button>
         </section>
-        <div className="absolute text-[#1B5C58] z-40 right-8 ">
-          <select
-            name="data"
-            className="outline-none"
-            id="tracker"
-            onChange={(e) => {
-              const selectedValue = e.target.value;
-              if (selectedValue === "Expenses") {
-                setTransactData(expenses);
-              } else if (selectedValue === "Income") {
-                setTransactData(income);
-              }
-            }}
-          >
-            <option value="Expenses">Expenses</option>
-            <option value="Income">Income</option>
-          </select>
-        </div>
 
-        <ExpenseStats chartData={transactData} transactions={transactions} />
+        <ExpenseStats
+          chartData={transactData}
+          transactData={transactData}
+          setTransactData={setTransactData}
+          setTransactions={setTransactions}
+          transactions={transactions}
+          sortedTransactions={sortedTransactions}
+          income={income}
+          expenses={expenses}
+        />
       </main>
     </div>
   );

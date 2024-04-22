@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import date from 'date-and-time';
 import GetStarted from "./getStarted";
 import SignUp from "./signUp";
 import Login from "./login";
@@ -45,28 +46,48 @@ function App() {
   //   localStorage.setItem("activeLink", JSON.stringify(activeLink));
   // }, [activeLink])
 
-  
+
     
   const data = 1
 
+  const now = new Date(2014, 1,11);
+  const newDate = date.format(now, 'ddd, MMM DD YYYY');
+  // console.log(newDate)
 
   const navLinks = [
     { img: home, altImg: greenHome, id: 1, to: "/home" },
     { img: bars, altImg: greenBars, id: 2, to: "/stats" },
     { img: "", altImg: "", id: 3 },
-    { img: wallet, altImg: greenWallet, id: 4, to: "/home" },
+    { img: wallet, altImg: wallet, id: 4, to: "/home" },
     { img: user, altImg: greenUser, id: 5, to: "/user" },
   ];
 
+  const dateFUnction = (year, month, day) => {
+    return date.format(new Date(year, month, day), 'MMM DD, YYYY')
+  }
 
   const [transactions, setTransactions] = useState( [
     //type 1 is income, type 2 is expense
-    { id:1, name: "Upwork", date: "Today", amount: "8,000.00", income: 8000, type: 1},
-    { id:2, name: "Transfer", date: "Yesterday", amount: "845.00", expense: 845, type: 2},
-    { id:3, name: "Paypal", date: "30th Jan, 2024", amount: "14,000.00", income: 14000, type: 1},
-    { id:4, name: "Netflix", date: "14th Jan, 2024", amount: "14.99", income: 14.99, type: 1},
+    { id:1, name: "Upwork", date: dateFUnction(2021, 0, 24) ,   amount: "8,000.00", income: 8000, type: 1},
+    { id:2, name: "Transfer", date:dateFUnction(2024, 1, 17), amount: "845.00", expense: 845, type: 2},
+    { id:3, name: "Paypal", date: dateFUnction(2024, 1, 20), amount: "14,000.00", income: 14000, type: 1},
+    { id:4, name: "Netflix", date: dateFUnction(2024, 0, 14), amount: "14.99", income: 14.99, type: 1},
 
   ])
+
+
+  const sortedTransactions = transactions.slice().sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateA - dateB;
+});
+
+// transactions.map((transaction) => console.log( new Date (transaction.date)))
+
+
+console.log(sortedTransactions)
+
+  
 
 
   const handleNavLinkClick = (id) => {
@@ -99,7 +120,7 @@ function App() {
         /> */}
         <Route path="/add" element={<AddExpense transactions={transactions} setTransactions={setTransactions} />}/>
         <Route path="/home" element={<PageOne theme={theme} transactions={transactions} setNav={setNav} nav={nav} />} />
-        <Route path="/stats" element={<Stats data={data}  setNav={setNav} transactions={transactions} nav={nav} />} />
+        <Route path="/stats" element={<Stats data={data} sortedTransactions={ sortedTransactions}  setNav={setNav} transactions={transactions} setTransactions={setTransactions}  nav={nav} />} />
         <Route path="/user" element={<User setNav={setNav} theme={theme} setTheme={setTheme} toggleDarkMode={toggleDarkMode} nav={nav} />} />
       </Routes>
 
@@ -112,7 +133,7 @@ function App() {
               onClick={() => handleNavLinkClick(nav.id)}
               className={activeLink === nav.id ? "active" : ""}
             >
-              <img src={activeLink === nav.id ? nav.altImg : nav.img} alt="" />
+              <img src={saveLocation === nav.to ? nav.altImg : nav.img} alt="" />
             </Link>
           ))}
         </footer>
