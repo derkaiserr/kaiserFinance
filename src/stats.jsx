@@ -8,6 +8,7 @@ const Stats = ({
   transactions,
   setTransactions,
   sortedTransactions,
+  currencySymbol
 }) => {
   const chartWidth = window.innerWidth * 0.9;
 
@@ -78,6 +79,7 @@ const Stats = ({
           sortedTransactions={sortedTransactions}
           income={income}
           expenses={expenses}
+          currencySymbol={currencySymbol}
         />
       </main>
     </div>

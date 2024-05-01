@@ -4,7 +4,7 @@ import bg from "./assets/bg-home.png";
 import ellipses from "./assets/ellipses.png";
 import { Routes, Route, Link } from "react-router-dom";
 
-const AddExpense = ({ transactions, setTransactions }) => {
+const AddExpense = ({ transactions, setTransactions, updatedTransactions, localCurrency, currencySymbol }) => {
   const [transactType, setTransactType] = useState(1);
 
   const [inputValue, setInputValue] = useState("");
@@ -103,36 +103,54 @@ const [expenses, setExpenses] = useState(0)
       maximumFractionDigits: 2,
     });
   };
-  const formattedAmount = formattedNumber(amount);
-
+  let newAmount = (amount / localCurrency);
+  if (localCurrency === 1) {
+    newAmount = amount
+  }
   const addTransaction = (e) => {
     e.preventDefault();
     if (date !== "" && !isNaN(amount) && name !== "") {
       const formattedNewDate = formatDate(date); // Format the date before adding to transactions
-  
+      
+      // useEffect(()=> {
+      //   if (currencySymbol === "₦") {
+      //     setAmount(prev => prev / localCurrency)
+      //   } else {
+      //     setAmount(prev => prev * 1)
+      //   }
 
-      if (typeTrack === 1) {
-        console.log("Previous income:", income);
-        setIncome(prevIncome => parseFloat(prevIncome) + 30);
+      // }, [currencySymbol])
 
-        console.log("Updated income:", isNaN(income));
-      } else if (typeTrack === 2) {
-        console.log("Previous expenses:", expenses);
-        setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
-        console.log("Updated expenses:", expenses);
-      }
+      // if (typeTrack === 1) {
+      //   console.log("Previous income:", income);
+      //   setIncome(prevIncome => parseFloat(prevIncome) + 30);
+
+      //   console.log("Updated income:", isNaN(income));
+      // } else if (typeTrack === 2) {
+      //   console.log("Previous expenses:", expenses);
+      //   setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
+      //   console.log("Updated expenses:", expenses);
+      // }
 
       // console.log(isNaN(fo))
-  
+      
+      
       const newTransaction = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
-        amount: formattedAmount,
+        amount: newAmount,
         date: formattedNewDate,
         id: generateNewId(),
         type: typeTrack,
         // income: parseFloat(income),
         // expense: parseFloat(expenses)
       };
+      
+      // const newUpdatedTx = transactions.map(tx => tx.amount * local)
+
+      // if (currencySymbol === "₦"){
+      //   newTransaction.amount = formattedNumber(amount  )
+      // }
+
   
       if (typeTrack === 1) { // Assuming typeTrack is 1 for income, 2 for expense
         newTransaction.income = parseFloat(income); // Add income property only if type is 1
@@ -140,7 +158,10 @@ const [expenses, setExpenses] = useState(0)
       newTransaction.expense = parseFloat(expenses); // Add expense property only if type is
     }
       // Update transactions state
-      setTransactions(prevTransactions => [...prevTransactions, newTransaction]);
+      setTransactions( prev => [...prev, newTransaction]);
+      // updatedTransactions.push(newTransaction);
+      // console.log(updatedTransactions)
+      console.log(transactions)
   
       // Update income or expense detail
       
@@ -262,7 +283,7 @@ const [expenses, setExpenses] = useState(0)
             Amount
           </label>
           <br />
-          <p className="absolute left-3 top-[2.55rem] text-sm  ">&#36;</p>
+          <p className="absolute left-3 top-[2.55rem] text-sm  ">{currencySymbol}</p>
           <input
             type="text"
             className="px-6 pr-12 py-2"

@@ -41,6 +41,7 @@ const ExpenseStats = ({
   transactData,
   setTransactions,
   sortedTransactions,
+  currencySymbol
 }) => {
   // let sortedTransactions = transactions.sort((a, b) => {
   //   return new Date(a.date) - new Date(b.date);})
@@ -174,7 +175,7 @@ const ExpenseStats = ({
                 transaction.type === 1 ? "text-green-700" : "text-red-700"
               } `}
             >
-              {transaction.type === 1 ? "+" : "-"} &#36;{transaction.amount}
+              {transaction.type === 1 ? "+" : "-"} {currencySymbol}{transaction.amount}
             </p>
           </div>
         ))}

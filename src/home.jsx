@@ -7,7 +7,14 @@ import ellipses from "./assets/ellipses.png";
 import AddExpense from "./add";
 import Stats from "./stats";
 
-const PageOne = ({transactions, setNav, theme, nav}) => {
+const PageOne = ({
+  transactions,
+  setNav,
+  theme,
+  nav,
+  localCurrency,
+  currencySymbol,
+}) => {
   const [eye, setEye] = useState(false);
 
   const [dataInput, setDataInput] = useState(false);
@@ -19,36 +26,54 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
     { name: "Apr", value: 700 },
     { name: "May", value: 500 },
   ];
-    useEffect(() => {
+  useEffect(() => {
     setNav(true);
-
-   
   }, [nav]);
   // setDataInput(data);
 
   const calculateAmount = (transactions, type) => {
     let total = 0;
-    transactions.forEach(transaction => {
-      const amount = parseFloat(transaction.amount.replace(/,/g, ''));
-      if (type === 'total') {
+    transactions.forEach((transaction) => {
+      // const amount = parseFloat(transaction.amount.replace(/,/g, ""));
+      const amount = parseFloat(transaction.amount)
+      if (type === "total") {
         transaction.type === 1 ? (total += amount) : (total -= amount);
-      } else if (type === 'expenses' && transaction.type === 2) {
+      } else if (type === "expenses" && transaction.type === 2) {
         total += amount;
-      } else if (type === 'income' && transaction.type === 1) {
+      } else if (type === "income" && transaction.type === 1) {
         total += amount;
       }
     });
-    return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return total.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
 
-  const reverselySortedTx = transactions.sort((a, b) => {
-    const dateA = new Date(a.date)
-    const dateB = new Date(b.date)
-    return dateB - dateA;
+  const formattedNumber = (number) => {
+    // Convert the string to a number
+    const numericValue = parseFloat(number);
 
-  })
-  console.log(reverselySortedTx)
+    // Check if the input is a valid number
+    if (isNaN(numericValue)) {
+      return ""; // Return an empty string if it's not a valid number
+    }
+
+    // Format the number with two decimal places and comma separators
+    return numericValue.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+
+  // const reverselySortedTx = transactions.sort((a, b) => {
+  //   const dateA = new Date(a.date);
+  //   const dateB = new Date(b.date);
+  //   return dateB - dateA;
+  // });
+  // console.log(reverselySortedTx);
 
   return (
     <div className=" pb-20">
@@ -104,7 +129,8 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
             data-state={eye}
             className=" data-[state=false]:before:backdrop-blur-md before:bg-[#2f7e79f1  before:w-full before:-mx-5 before:py-4 before:backdrop-blur-0 text-2xl  before:absolute font-semibold"
           >
-            &#36;{calculateAmount(transactions, "total")}
+            {currencySymbol}
+            {calculateAmount(transactions, "total")}
           </p>
 
           <div className="flex justify-between pt-9">
@@ -133,7 +159,8 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
                 data-state={eye}
                 className=" data-[state=false]:before:backdrop-blur-sm font-semibold before:bg-[#2f7e793f before:w-full before:-mx-5 before:py-3 before:backdrop-blur-0  before:absolute"
               >
-                &#36;{calculateAmount(transactions,"income")}
+                {currencySymbol}
+                {calculateAmount(transactions, "income")}
               </p>
             </div>
 
@@ -159,7 +186,8 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
                 Expenses
               </div>
               <p className=" flex justify-end">
-                &#36;{calculateAmount(transactions, "expenses")}
+                {currencySymbol}
+                {calculateAmount(transactions, "expenses")}
               </p>
             </div>
           </div>
@@ -171,50 +199,50 @@ const PageOne = ({transactions, setNav, theme, nav}) => {
       </header>
 
       <main className="px-6">
-       
-      {reverselySortedTx.map((transaction) => (
+        {transactions.map((transaction) => (
           <div key={transaction.id} className="flex justify-between my-4">
-          <div className="">
-            <p className="font-semibold">{transaction.name}</p>
-            <p className="text-slate-500 font-medium text-sm">{transaction.date}</p>
+            <div className="">
+              <p className="font-semibold">{transaction.name}</p>
+              <p className="text-slate-500 font-medium text-sm">
+                {transaction.date}
+              </p>
+            </div>
+            <p
+              className={`amount font-semibold flex items-center justiy-between ${
+                transaction.type === 1 ? "text-green-700" : "text-red-700"
+              } `}
+            >
+              {transaction.type === 1 ? "+" : "-"}
+              {""}
+              {currencySymbol} {formattedNumber(transaction.amount * localCurrency)}
+            </p>
           </div>
-          <p className={`amount font-semibold ${transaction.type === 1 ? "text-green-700": "text-red-700" } `}>{transaction.type === 1 ? "+" : "-"} &#36;{transaction.amount}</p>
-        </div>
-      ))}
-      
-      
-      
+        ))}
       </main>
 
-
-
-
-
-
-
-
-
-
       <Link to="/add">
-      <div className={`fixed bg-[#1F615C] ${theme === "dark" ? "shadow-black" : "shadow-slate-300 "} shadow-lg rounded-full p-3 bottom-8 left-0 right-0 mx-auto  z-[110] text-white w-fit`}>
-        <svg
-          
-          xmlns="http://www.w3.org/2000/svg"
-          width="45"
-          height="45"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-plus"
+        <div
+          className={`fixed bg-[#1F615C] ${
+            theme === "dark" ? "shadow-black" : "shadow-slate-300 "
+          } shadow-lg rounded-full p-3 bottom-8 left-0 right-0 mx-auto  z-[110] text-white w-fit`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="45"
+            height="45"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-plus"
           >
-          <path d="M5 12h14" />
-          <path d="M12 5v14" />
-        </svg>
-      </div>
-          </Link>
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
+        </div>
+      </Link>
     </div>
   );
 };

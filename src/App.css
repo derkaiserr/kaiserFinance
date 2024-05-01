@@ -137,7 +137,7 @@ footer > svg {
 
 .dark form input{
   background-color: black;
-  border: 0;
+  border: #444   1px solid;
   color: white;
 }
 

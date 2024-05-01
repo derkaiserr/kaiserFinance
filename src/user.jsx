@@ -6,25 +6,49 @@ import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
 
-
-
-export const ThemeContext = createContext(null)
-const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
-
+export const ThemeContext = createContext(null);
+const User = ({
+  setNav,
+  nav,
+  theme,
+  setTheme,
+  setCurrencyState,
+  localCurrency,
+  setLocalCurrency,
+  currencyState,
+  toggleDarkMode,
+  setCurrencySymbol
+}) => {
   useEffect(() => {
     setNav(true);
 
     // return () => {
-      
+
     // };
   }, [nav]);
 
+  // console.log(localCurrency);
+  const [currency, setCurrency] = useState(
+    localStorage.getItem("currency") || "USD"
+  );
+  const changeCurrency = (e) => {
+    const value = e.target.value;
+    // localStorage.getItem("currency");
+    localStorage.setItem("currency", value);
+    setCurrency(value);
+    if (value === "USD") {
+      setLocalCurrency(1);
+      setCurrencySymbol("$")
+    } else if (value === "NGN") {
+      setLocalCurrency(currencyState);
+      setCurrencySymbol("₦")
+    }
+  };
 
-  
+
   return (
     <div className="pb-28">
       <div>
-        
         <img
           src={ellipses}
           className="absolute top-0 z-50 w-[50%] cover"
@@ -48,14 +72,26 @@ const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
         <div className="flex flex-col gap-10 justify-center">
           <div className="flex  justify-between">
             <label htmlFor="currency">Currency</label>
-            <select className=" outline-none" name="currency" id="currency">
+            <select
+              onChange={changeCurrency}
+              className=" outline-none"
+              name="currency"
+              id="currency"
+              value={currency}
+            >
               <option value="USD">USD</option>
               <option value="NGN">NGN</option>
             </select>
           </div>
           <div className="flex justify-between">
             <label htmlFor="theme">Theme</label>
-            <select className=" outline-none" name="theme" id="theme" value={theme} onChange={(e) => setTheme(e.target.value)} >
+            <select
+              className=" outline-none"
+              name="theme"
+              id="theme"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+            >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
@@ -65,7 +101,6 @@ const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
           <div className="flex items-center justify-between">
             <p>About</p>
             <svg
-              
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -82,7 +117,7 @@ const User = ({ setNav, nav, theme, setTheme, toggleDarkMode }) => {
           </div>
 
           <Link
-          to="/login"
+            to="/login"
             onClick={() => setNav(false)}
             className="bg-red-600 py-3 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >
