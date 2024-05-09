@@ -1,11 +1,47 @@
-import React, { useState } from "react";
-import G from "./assets/G.png";
+import React, { useEffect, useState } from "react";
+import G from "../assets/G.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Register, doSignInWithGoogle } from "../firebase/auth";
+import { app, auth } from "../firebase/firebase";
 
 export default function SignUp() {
   const [eye, setEye] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signedUp, setSignedUp] = useState(false);
+
+  const navigate = useNavigate();
+  const user = auth.currentUser;
+  useEffect(() => {
+    if (user != null) {
+      // User is signed in
+      setSignedUp(true);
+      console.log(user);
+    } else {
+      // No user is signed in
+      setSignedUp(false);
+    }
+  }, [user]);
+
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log(auth.currentUser);
+    await Register(email, password);
+    if (auth.currentUser === null) {
+      // setIsSigningIn(true)
+      // throw new Error("You Suck!");
+      const error = new Error("error")
+      console.log(error);
+      throw error
+    }
+    navigate("/home");
+  };
+
   return (
     <div className="signUp ">
       <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
@@ -16,10 +52,10 @@ export default function SignUp() {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-arrow-left"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-arrow-left"
         >
           <path d="m12 19-7-7 7-7" />
           <path d="M19 12H5" />
@@ -33,14 +69,16 @@ export default function SignUp() {
           type="text"
           placeholder="Name"
           name=""
-          id=""
+          id="name"
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           className="w-full rounded-lg border-slate-200 outline-none border mb-7 px-3 h-10"
           type="text"
           placeholder="Email"
           name=""
-          id=""
+          id="email"
+          onChange={(e) => setEmail(e.target.value)}
         />
         <div className="relative flex items-center justify-center">
           <input
@@ -48,7 +86,8 @@ export default function SignUp() {
             type={eye ? "text" : "password"}
             placeholder="Password"
             name=""
-            id=""
+            id="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <div className="">
             {eye ? (
@@ -82,16 +121,23 @@ export default function SignUp() {
             </span>
           </label>
         </div>
-        <Link
-          to="/home"
+        <button
           className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3"
+          type="submit"
+          onClick={async (e) => {
+            await onSubmit(e);
+          }}
         >
-          Sign Up
-        </Link>
+         
+            Sign Up
+        </button>
         <p className="text-center text-slate-500 text-sm font-semibold mb-2">
           Or
         </p>
-        <button className="flex gap-3 rounded-lg border border-slate-300 h-10 items-center justify-center text-sm font-semibold w-full">
+        <button
+          onClick={doSignInWithGoogle}
+          className="flex gap-3 rounded-lg border border-slate-300 h-10 items-center justify-center text-sm font-semibold w-full"
+        >
           <span>
             <img className="w-6" src={G} alt="googleIcon" />
           </span>

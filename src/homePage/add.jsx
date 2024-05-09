@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
-import useClickOutside from "../hooks/useClickOutside";
-import bg from "./assets/bg-home.png";
-import ellipses from "./assets/ellipses.png";
+import React, { useState, useEffect, useContext } from "react";
+import useClickOutside from "../../hooks/useClickOutside.jsx";
+// import bg from "./assets/bg-home.png";
+import bg from "../assets/bg-home.png"
+import ellipses from "../assets/ellipses.png";
 import { Routes, Route, Link } from "react-router-dom";
+import UserContext from "../../hooks/context/context.js";
 
-const AddExpense = ({ transactions, setTransactions, updatedTransactions, localCurrency, currencySymbol }) => {
+const AddExpense = () => {
+  const { localCurrency, currencySymbol, transactions, setTransactions } =
+    useContext(UserContext);
   const [transactType, setTransactType] = useState(1);
 
   const [inputValue, setInputValue] = useState("");
@@ -13,8 +17,8 @@ const AddExpense = ({ transactions, setTransactions, updatedTransactions, localC
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-const [income, setIncome]  = useState(0);
-const [expenses, setExpenses] = useState(0)
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
   const [typeTrack, setTypeTrack] = useState(1);
   const generateNewId = () => {
     const maxId = transactions.reduce(
@@ -24,36 +28,35 @@ const [expenses, setExpenses] = useState(0)
     return maxId + 1;
   };
 
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'short', year: 'numeric' };
-    const formattedDate = date.toLocaleDateString('en-GB', options);
-  
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-GB", options);
+
     // Get today's date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
+
     // Get yesterday's date
     const yesterday = new Date(today);
     const twoDaysAgo = new Date(today);
     yesterday.setDate(today.getDate() - 1);
     twoDaysAgo.setDate(today.getDate() - 2);
-  
+
     // Check if the date is today
     if (date.toDateString() === today.toDateString()) {
-      return 'Today';
-    }
-  
-    // Check if the date is yesterday
-    if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
+      return "Today";
     }
 
-    if(date.toDateString() === twoDaysAgo.toDateString()){
-      return "Two days ago"
+    // Check if the date is yesterday
+    if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
     }
-  
+
+    if (date.toDateString() === twoDaysAgo.toDateString()) {
+      return "Two days ago";
+    }
+
     // If not today or yesterday, return formatted date with ordinal day
     const [, day, month, year] = formattedDate.match(/^(\d+)\s(\w+)\s(\d+)$/);
     // let ordinalDay;
@@ -75,11 +78,9 @@ const [expenses, setExpenses] = useState(0)
     //       break;
     //   }
     // }
-  
+
     return `${month} ${day}, ${year}`;
   };
-  
-
 
   const closeOption = () => {
     setSelector(false);
@@ -87,7 +88,6 @@ const [expenses, setExpenses] = useState(0)
 
   const dropdownRef = useClickOutside(closeOption);
 
- 
   const formattedNumber = (number) => {
     // Convert the string to a number
     const numericValue = parseFloat(number);
@@ -103,15 +103,15 @@ const [expenses, setExpenses] = useState(0)
       maximumFractionDigits: 2,
     });
   };
-  let newAmount = (amount / localCurrency);
+  let newAmount = amount / localCurrency;
   if (localCurrency === 1) {
-    newAmount = amount
+    newAmount = amount;
   }
   const addTransaction = (e) => {
     e.preventDefault();
     if (date !== "" && !isNaN(amount) && name !== "") {
       const formattedNewDate = formatDate(date); // Format the date before adding to transactions
-      
+
       // useEffect(()=> {
       //   if (currencySymbol === "₦") {
       //     setAmount(prev => prev / localCurrency)
@@ -133,8 +133,7 @@ const [expenses, setExpenses] = useState(0)
       // }
 
       // console.log(isNaN(fo))
-      
-      
+
       const newTransaction = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
         amount: newAmount,
@@ -144,30 +143,29 @@ const [expenses, setExpenses] = useState(0)
         // income: parseFloat(income),
         // expense: parseFloat(expenses)
       };
-      
+
       // const newUpdatedTx = transactions.map(tx => tx.amount * local)
 
       // if (currencySymbol === "₦"){
       //   newTransaction.amount = formattedNumber(amount  )
       // }
 
-  
-      if (typeTrack === 1) { // Assuming typeTrack is 1 for income, 2 for expense
+      if (typeTrack === 1) {
+        // Assuming typeTrack is 1 for income, 2 for expense
         newTransaction.income = parseFloat(income); // Add income property only if type is 1
-    }else{
-      newTransaction.expense = parseFloat(expenses); // Add expense property only if type is
-    }
+      } else {
+        newTransaction.expense = parseFloat(expenses); // Add expense property only if type is
+      }
       // Update transactions state
-      setTransactions( prev => [...prev, newTransaction]);
+      setTransactions((prev) => [...prev, newTransaction]);
       // updatedTransactions.push(newTransaction);
       // console.log(updatedTransactions)
-      console.log(transactions)
-  
+      console.log(transactions);
+
       // Update income or expense detail
-      
     }
   };
-  
+
   useEffect(() => {
     console.log(transactions);
   }, [transactions]);
@@ -193,10 +191,6 @@ const [expenses, setExpenses] = useState(0)
       },
     },
   ];
-
- 
-
-
 
   return (
     <div>
@@ -260,11 +254,7 @@ const [expenses, setExpenses] = useState(0)
             </button>
           ))}
       </div>
-      <form
-     
-        className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 "
-        
-      >
+      <form className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
         <div>
           <label className="text-sm text-[#666666]" htmlFor="name">
             Name
@@ -283,20 +273,22 @@ const [expenses, setExpenses] = useState(0)
             Amount
           </label>
           <br />
-          <p className="absolute left-3 top-[2.55rem] text-sm  ">{currencySymbol}</p>
+          <p className="absolute left-3 top-[2.55rem] text-sm  ">
+            {currencySymbol}
+          </p>
           <input
             type="text"
             className="px-6 pr-12 py-2"
             name="amount"
             id="amount"
             // value={amount}
-            onChange={(e) => {setAmount(e.target.value)
-            setIncome(e.target.value)
-          setExpenses(e.target.value)
+            onChange={(e) => {
+              setAmount(e.target.value);
+              setIncome(e.target.value);
+              setExpenses(e.target.value);
             }}
           />
           <button
-        
             onClick={(e) => {
               e.preventDefault();
               setAmount("");
@@ -321,9 +313,11 @@ const [expenses, setExpenses] = useState(0)
           />
         </div>
         <Link
-           onClick={addTransaction}
-         to="/home"
-          className={`hover:bg-[#438883] ${typeTrack ===1 ? "text-green-600" : "text-red-600"} py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
+          onClick={addTransaction}
+          to="/home"
+          className={`hover:bg-[#438883] ${
+            typeTrack === 1 ? "text-green-600" : "text-red-600"
+          } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
         >
           Add {typeTrack === 1 ? "Income" : "Expense"}
         </Link>

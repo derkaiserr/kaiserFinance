@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Line } from "react-chartjs-2";
+import UserContext from "../../hooks/context/context.js";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +12,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,17 +32,7 @@ import {
   // Legend,
 } from "recharts";
 
-const ExpenseStats = ({
-  chartData,
-  transactions,
-  income,
-  expenses,
-  setTransactData,
-  transactData,
-  setTransactions,
-  sortedTransactions,
-  currencySymbol
-}) => {
+const ExpenseStats = ({ income, expenses, setTransactData, transactData }) => {
   // let sortedTransactions = transactions.sort((a, b) => {
   //   return new Date(a.date) - new Date(b.date);})
 
@@ -55,8 +45,13 @@ const ExpenseStats = ({
   // setTransactions(sortedTransactions);
 
   // console.log(sortedTransactions)
+
+  const { sortedTransactions, localCurrency, currencySymbol } =
+    useContext(UserContext);
   const [dataState, setDataState] = useState(
-    sortedTransactions.map((transaction) => transaction.income || 0)
+    sortedTransactions.map(
+      (transaction) => transaction.income * localCurrency || 0
+    )
   );
   const [labelState, setLabelState] = useState("Income");
   const [colorState, setColorState] = useState("green");
@@ -101,68 +96,73 @@ const ExpenseStats = ({
     plugins: {
       legend: {
         display: true,
-        position: 'bottom'
-      }
+        position: "bottom",
+      },
     },
     // width: chartWidth, // Set width
     // height: "20rem" // Set height
   };
 
+  const formattedNumber = (number) => {
+    // Convert the string to a number
+    const numericValue = parseFloat(number);
+
+    // Check if the input is a valid number
+    if (isNaN(numericValue)) {
+      return ""; // Return an empty string if it's not a valid number
+    }
+
+    // Format the number with two decimal places and comma separators
+    return numericValue.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
   return (
-    <div className="relative">
-        <div className=" absolute  text-[#1B5C58] z-40 right-6  -top-8">
-          <select
-            name="data"
-            className="outline-none h-8 "
-            id="tracker"
-            onChange={(e) => {
-              const selectedValue = e.target.value;
-              if (selectedValue === "income") {
-                setTransactData(income);
-                setDataState(
-                  sortedTransactions.map(
-                    (transaction) => transaction.income || 0
-                  )
-                );
-                setLabelState("Income");
-                setColorState("green");
-              } else if (selectedValue === "expenses") {
-                setTransactData(expenses);
-                setDataState(
-                  sortedTransactions.map(
-                    (transaction) => transaction.expense || 0
-                  )
-                );
-                setLabelState("Expense");
-                setColorState("red");
-              }
-            }}
-          >
-            <option value="income">Income</option>
-            <option value="expenses">Expenses</option>
-          </select>
-        </div>
-      <div className=" flex py-5 justify-center">
-        {/* <LineChart
-          width={chartWidth}
-          height={400}
-          data={transactData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+    <div className="relative pt-10">
+      <div
+        className={` absolute  ${
+          colorState === "green" ? "text-green-600" : "text-red-600"
+        }  z-40 right-6  top-0`}
+      >
+        <select
+          name="data"
+          className="outline-none h-8 "
+          id="tracker"
+          onChange={(e) => {
+            const selectedValue = e.target.value;
+            if (selectedValue === "income") {
+              setTransactData(income);
+              setDataState(
+                sortedTransactions.map(
+                  (transaction) => transaction.income * localCurrency || 0
+                )
+              );
+              setLabelState("Income");
+              setColorState("green");
+            } else if (selectedValue === "expenses") {
+              setTransactData(expenses);
+              setDataState(
+                sortedTransactions.map(
+                  (transaction) => transaction.expense * localCurrency || 0
+                )
+              );
+              setLabelState("Expense");
+              setColorState("red");
+            }
+          }}
         >
-          <XAxis dataKey="date" />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey={transactData === income ? "income" : "expenses"} stroke={transactData === income ? "#1B5C58" : "#FF0000"} />
-          <Line type="monotone" dataKey="expense" stroke="#FF0000" />
-        </LineChart> */}
+          <option value="income">Income</option>
+          <option value="expenses">Expenses</option>
+        </select>
+      </div>
+      <div className=" flex py-5 justify-center">
         <Line data={chartDataa} options={chartOptions} />
       </div>
 
       <main className="px-6 relative">
-      
-        
-
-        {chartData.map((transaction) => (
+        {transactData.map((transaction) => (
           <div key={transaction.id} className="flex justify-between my-4">
             <div className="">
               <p className="font-semibold">{transaction.name}</p>
@@ -175,7 +175,8 @@ const ExpenseStats = ({
                 transaction.type === 1 ? "text-green-700" : "text-red-700"
               } `}
             >
-              {transaction.type === 1 ? "+" : "-"} {currencySymbol}{transaction.amount}
+              {transaction.type === 1 ? "+" : "-"} {currencySymbol}
+              {formattedNumber(transaction.amount * localCurrency)}
             </p>
           </div>
         ))}

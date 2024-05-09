@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
-import ExpenseStats from "./expenseStats";
+import { useState, useEffect, useContext } from "react";
+import ExpenseStats from "./expenseStats.jsx";
+import UserContext from "../../hooks/context/context.js";
 
-const Stats = ({
-  data,
-  nav,
-  setNav,
-  transactions,
-  setTransactions,
-  sortedTransactions,
-  currencySymbol
-}) => {
+const Stats = () => {
+  const {
+    nav,
+    setNav,
+    localCurrency,
+    currencySymbol,
+    transactions,
+    setTransactions,
+    sortedTransactions,
+  } = useContext(UserContext);
   const chartWidth = window.innerWidth * 0.9;
 
   const income = sortedTransactions.filter(
@@ -63,23 +65,11 @@ const Stats = ({
       </header>
 
       <main>
-        <section className="head flex justify-around py-4 pb-12">
-          <button>Day</button>
-          <button>Week</button>
-          <button>Month</button>
-          <button>Year</button>
-        </section>
-
         <ExpenseStats
-          chartData={transactData}
           transactData={transactData}
           setTransactData={setTransactData}
-          setTransactions={setTransactions}
-          transactions={transactions}
-          sortedTransactions={sortedTransactions}
           income={income}
           expenses={expenses}
-          currencySymbol={currencySymbol}
         />
       </main>
     </div>

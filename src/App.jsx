@@ -1,12 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
+
 import date from "date-and-time";
 import GetStarted from "./getStarted";
-import SignUp from "./signUp";
-import Login from "./login";
+import SignUp from "./signUp/signUp.jsx";
+import Login from "./logIn/login.jsx";
 // import Mainpage from "./mainpage";
-import PageOne from "./home";
-import Stats from "./stats";
-import User from "./user";
+import PageOne from "./homePage/home.jsx";
+import Stats from "./statisticsPage/stats.jsx";
+import User from "./user.jsx";
 import bars from "./assets/bars.svg";
 import user from "./assets/user.svg";
 import home from "./assets/home.svg";
@@ -17,7 +18,8 @@ import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import AddExpense from "./add";
+import AddExpense from "./homePage/add.jsx";
+import Context from "../hooks/context/context.js";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
@@ -89,8 +91,6 @@ function App() {
   const [currencyState, setCurrencyState] = useState(1250);
   const [currencySymbol, setCurrencySymbol] = useState("$");
 
-  
-
   // console.log(currencyState * "3")
   // const addRate = useCallback((rate) => {
   //   setCurrencyState(rate);
@@ -130,8 +130,7 @@ function App() {
   // Use currencyState in your component
   // const updatedTransactions =
 
-
-  const [transactions, setTransactions] = useState( [
+  const [transactions, setTransactions] = useState([
     {
       id: 1,
       name: "Upwork",
@@ -143,7 +142,7 @@ function App() {
     {
       id: 2,
       name: "Transfer",
-      date: dateFunction(2024, 1, 17),
+      date: dateFunction(2024, 4, 7),
       amount: 845, // Update the amount based on localCurrency
       expense: 845,
       type: 2,
@@ -212,11 +211,7 @@ function App() {
   );
   useEffect(() => {
     localStorage.setItem("theme", theme);
-    // if(theme === 'black') {
-    // document.body.className = theme;}
-    // if (theme === 'light') {
-    //   document.body.className = "green"
-    // }
+
     document.body.className = theme;
   }, [theme]);
   const toggleDarkMode = () => {
@@ -226,93 +221,58 @@ function App() {
   // console.log(currencyState);
 
   return (
-    <div className={`${theme} inter  `}>
-      <Routes>
-        <Route
-          path="/"
-          element={<GetStarted theme={theme} setNav={setNav} />}
-        />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        {/* <Route
-          path="/mainpage/*"
-          element={<Mainpage data={data} nav={nav} transactions={transactions}  setNav={setNav} />}
-        /> */}
-        <Route
-          path="/add"
-          element={
-            <AddExpense
-              currencySymbol={currencySymbol}
-              transactions={transactions}
-              setTransactions={setTransactions}
-              localCurrency={localCurrency}
-              // updatedTransactions={updatedTransactions}
-            />
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <PageOne
-              theme={theme}
-              currencySymbol={currencySymbol}
-              transactions={transactions}
-              localCurrency={localCurrency}
-              setNav={setNav}
-              nav={nav}
-            />
-          }
-        />
-        <Route
-          path="/stats"
-          element={
-            <Stats
-              sortedTransactions={sortedTransactions}
-              setNav={setNav}
-              transactions={transactions}
-              setTransactions={setTransactions}
-              nav={nav}
-              currencySymbol={currencySymbol}
-            />
-          }
-        />
-        <Route
-          path="/user"
-          element={
-            <User
-              setNav={setNav}
-              theme={theme}
-              setTheme={setTheme}
-              toggleDarkMode={toggleDarkMode}
-              nav={nav}
-              setCurrencySymbol={setCurrencySymbol}
-              localCurrency={localCurrency}
-              setLocalCurrency={setLocalCurrency}
-              setCurrencyState={setCurrencyState}
-              currencyState={currencyState}
-            />
-          }
-        />
-      </Routes>
+    <Context.Provider
+      value={{
+        setNav,
+        nav,
+        theme,
+        setTheme,
+        currencyState,
+        currencySymbol,
+        setCurrencyState,
+        setCurrencySymbol,
+        localCurrency,
+        setLocalCurrency,
+        transactions,
+        setTransactions,
+        toggleDarkMode,
+        sortedTransactions,
+      }}
+    >
+      <div className={`${theme} inter  `}>
+        <Routes>
+          <Route
+            path="/"
+            element={<GetStarted theme={theme} setNav={setNav} />}
+          />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
 
-      {nav && (
-        <footer className="fixed bg-white flex z-[100] py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
-          {navLinks.map((nav) => (
-            <Link
-              to={nav.to}
-              key={nav.id}
-              onClick={() => handleNavLinkClick(nav.id)}
-              className={activeLink === nav.id ? "active" : ""}
-            >
-              <img
-                src={saveLocation === nav.to ? nav.altImg : nav.img}
-                alt=""
-              />
-            </Link>
-          ))}
-        </footer>
-      )}
-    </div>
+          <Route path="/add" element={<AddExpense />} />
+          <Route path="/home" element={<PageOne />} />
+          <Route path="/stats" element={<Stats />} />
+          <Route path="/user" element={<User />} />
+        </Routes>
+
+        {nav && (
+          <footer className="fixed bg-white flex z-[100] py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
+            {navLinks.map((nav) => (
+              <Link
+                to={nav.to}
+                key={nav.id}
+                onClick={() => handleNavLinkClick(nav.id)}
+                className={activeLink === nav.id ? "active" : ""}
+              >
+                <img
+                  src={saveLocation === nav.to ? nav.altImg : nav.img}
+                  alt=""
+                />
+              </Link>
+            ))}
+          </footer>
+        )}
+      </div>
+    </Context.Provider>
     //
   );
 }

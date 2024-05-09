@@ -1,33 +1,26 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import DarkMode from "./DarkMode";
-import Login from "./login";
+import UserContext from "../hooks/context/context.js";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
-
+import { doSignOut } from "./firebase/auth.js";
+import { auth } from "./firebase/firebase.js";
 export const ThemeContext = createContext(null);
-const User = ({
-  setNav,
-  nav,
-  theme,
-  setTheme,
-  setCurrencyState,
-  localCurrency,
-  setLocalCurrency,
-  currencyState,
-  toggleDarkMode,
-  setCurrencySymbol
-}) => {
+const User = ({}) => {
+  const {
+    nav,
+    setNav,
+    theme,
+    setTheme,
+    setLocalCurrency,
+    currencyState,
+    setCurrencySymbol,
+  } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
-
-    // return () => {
-
-    // };
   }, [nav]);
 
-  // console.log(localCurrency);
   const [currency, setCurrency] = useState(
     localStorage.getItem("currency") || "USD"
   );
@@ -38,13 +31,12 @@ const User = ({
     setCurrency(value);
     if (value === "USD") {
       setLocalCurrency(1);
-      setCurrencySymbol("$")
+      setCurrencySymbol("$");
     } else if (value === "NGN") {
       setLocalCurrency(currencyState);
-      setCurrencySymbol("₦")
+      setCurrencySymbol("₦");
     }
   };
-
 
   return (
     <div className="pb-28">
@@ -66,7 +58,7 @@ const User = ({
       <section className="mt-20 px-6">
         <div className="flex-col justify-center items-center my-6 flex">
           <p>[name]</p>
-          <p>[@username]</p>
+          <p>{auth.currentUser?.email}</p>
         </div>
 
         <div className="flex flex-col gap-10 justify-center">
@@ -118,7 +110,9 @@ const User = ({
 
           <Link
             to="/login"
-            onClick={() => setNav(false)}
+            onClick={() => {setNav(false)
+            doSignOut()
+            }}
             className="bg-red-600 py-3 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >
             Sign Out

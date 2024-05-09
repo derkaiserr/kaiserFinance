@@ -1,41 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import bg from "./assets/bg-home.png";
+import bg from "../assets/bg-home.png"
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import ellipses from "./assets/ellipses.png";
-import AddExpense from "./add";
-import Stats from "./stats";
+import ellipses from "../assets/ellipses.png";
+import AddExpense from "./add.jsx";
+import Stats from "../statisticsPage/stats.jsx";
+import UserContext from "../../hooks/context/context.js";
 
-const PageOne = ({
-  transactions,
-  setNav,
-  theme,
-  nav,
-  localCurrency,
-  currencySymbol,
-}) => {
+const PageOne = () => {
+  const { nav, setNav, theme, localCurrency, currencySymbol, transactions } =
+    useContext(UserContext);
   const [eye, setEye] = useState(false);
 
-  const [dataInput, setDataInput] = useState(false);
-
-  const data = [
-    { name: "Jan", value: 400 },
-    { name: "Feb", value: 300 },
-    { name: "Mar", value: 600 },
-    { name: "Apr", value: 700 },
-    { name: "May", value: 500 },
-  ];
   useEffect(() => {
     setNav(true);
   }, [nav]);
-  // setDataInput(data);
 
   const calculateAmount = (transactions, type) => {
     let total = 0;
     transactions.forEach((transaction) => {
       // const amount = parseFloat(transaction.amount.replace(/,/g, ""));
-      const amount = parseFloat(transaction.amount)
+      const amount = parseFloat(transaction.amount * localCurrency);
       if (type === "total") {
         transaction.type === 1 ? (total += amount) : (total -= amount);
       } else if (type === "expenses" && transaction.type === 2) {
@@ -49,7 +35,6 @@ const PageOne = ({
       maximumFractionDigits: 2,
     });
   };
-
 
   const formattedNumber = (number) => {
     // Convert the string to a number
@@ -67,13 +52,12 @@ const PageOne = ({
     });
   };
 
-
-  // const reverselySortedTx = transactions.sort((a, b) => {
-  //   const dateA = new Date(a.date);
-  //   const dateB = new Date(b.date);
-  //   return dateB - dateA;
-  // });
-  // console.log(reverselySortedTx);
+  const reverselySortedTx = transactions.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  });
+  console.log(reverselySortedTx);
 
   return (
     <div className=" pb-20">
@@ -199,7 +183,7 @@ const PageOne = ({
       </header>
 
       <main className="px-6">
-        {transactions.map((transaction) => (
+        {reverselySortedTx.map((transaction) => (
           <div key={transaction.id} className="flex justify-between my-4">
             <div className="">
               <p className="font-semibold">{transaction.name}</p>
@@ -214,7 +198,8 @@ const PageOne = ({
             >
               {transaction.type === 1 ? "+" : "-"}
               {""}
-              {currencySymbol} {formattedNumber(transaction.amount * localCurrency)}
+              {currencySymbol}{" "}
+              {formattedNumber(transaction.amount * localCurrency)}
             </p>
           </div>
         ))}

@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import standMan from "./assets/standMan.png";
 import bgGetStarted from "./assets/bg-getStarted.png";
 import { Link } from "react-router-dom";
+import UserContext from "../hooks/context/context.js";
 
-export default function GetStarted({ setNav, theme }) {
+export default function GetStarted() {
+  const { setNav, theme } = useContext(UserContext);
   useEffect(() => setNav(false), []);
 
   return (
