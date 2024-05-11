@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, snapshotEqual } from 'firebase/firestore/lite';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
@@ -11,7 +11,7 @@ import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "fir
   //   return cityList;
   // }
 
-const firebaseConfig = {
+  const firebaseConfig = {
     apiKey: "AIzaSyAO16xMaMYZCorJtGMRc3Z7bRMu8MC6zo0",
     authDomain: "kaiserfinance-288b6.firebaseapp.com",
     projectId: "kaiserfinance-288b6",
@@ -25,6 +25,23 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const auth = getAuth(app);
+
+  const db = getFirestore()
+  const colRef = collection(db, "userName")
+
+  getDocs(colRef)
+  .then((snapshot) => {
+    let books = []
+  //   snapshot.docs.map((doc) =>(books.push({...doc.data, id: doc.id})))
+  //   console.log(books)
+  // })
+  snapshot.docs.forEach((doc) => {books.push({...doc.data, id: doc.id})
+    console.log(books)
+})})
+  .catch((err) => {
+    console.error(err.message)
+  })
+
   // createUserWithEmailAndPassword(auth, email, password)
   // .then((userCredential) => {
   //   // Signed up 
