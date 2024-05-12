@@ -23,9 +23,9 @@ export default function Login() {
     if (auth.currentUser === null) {
       // setIsSigningIn(true)
       // throw new Error("You Suck!");
-      const error = new Error("error")
+      const error = new Error("error");
       console.log(error);
-      throw error
+      throw error;
     }
     navigate("/home");
     console.log(isSigningIn);

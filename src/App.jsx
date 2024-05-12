@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 
 import date from "date-and-time";
 import GetStarted from "./getStarted";
-import SignUp from "./signUp/signUp.jsx";
+// import SignUp from "./signUp/signUp.jsx";
+import { SignUp } from "./signUp/signUp.jsx";
 import Login from "./logIn/login.jsx";
 // import Mainpage from "./mainpage";
 import PageOne from "./homePage/home.jsx";
@@ -16,7 +18,6 @@ import greenBars from "./assets/greenBars.svg";
 import greenUser from "./assets/greenUser.svg";
 import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
-import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import AddExpense from "./homePage/add.jsx";
 import Context from "../hooks/context/context.js";

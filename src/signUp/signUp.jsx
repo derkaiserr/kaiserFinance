@@ -4,9 +4,10 @@ import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Register, doSignInWithGoogle } from "../firebase/auth";
-import { app, auth } from "../firebase/firebase";
+import { app, auth, db, colRef } from "../firebase/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
-export default function SignUp() {
+ function SignUp() {
   const [eye, setEye] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,6 +28,9 @@ export default function SignUp() {
   }, [user]);
 
 
+   
+
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,9 +43,23 @@ export default function SignUp() {
       console.log(error);
       throw error
     }
+     try {
+    const docRef = await addDoc(collection(db, "userName"), {
+      email: email,
+      name: name,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (err) {
+    console.error("Error adding document: ", err);
+  }
     navigate("/home");
   };
 
+
+  const fetchName = () =>{
+    
+  }
+  
   return (
     <div className="signUp ">
       <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
@@ -154,3 +172,6 @@ export default function SignUp() {
     </div>
   );
 }
+
+export {SignUp}
+

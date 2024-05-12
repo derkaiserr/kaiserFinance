@@ -5,7 +5,10 @@ import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
 import { doSignOut } from "./firebase/auth.js";
-import { auth } from "./firebase/firebase.js";
+import { auth,colRef, } from "./firebase/firebase.js";
+import { getDocs } from "firebase/firestore";
+// import { name } from "./firebase/firebase.js";
+// import { YourComponent } from "./firebase/firebase.js";
 export const ThemeContext = createContext(null);
 const User = ({}) => {
   const {
@@ -38,6 +41,29 @@ const User = ({}) => {
     }
   };
 
+
+
+  const [matchingEmail, setMatchingEmail] = useState(null);
+
+  useEffect(() => {
+    const fetchDocs = async () => {
+      try {
+        const snapshot = await getDocs(colRef);
+        const filteredDocs = snapshot.docs.filter((doc) => {
+          return doc.data().email === auth.currentUser.email;
+        });
+        if (filteredDocs.length > 0) {
+          setMatchingEmail( filteredDocs[0].data().name)
+        }
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+      }
+    };
+
+    fetchDocs();
+  }, []);
+// console.log(<YourComponent/>)
+
   return (
     <div className="pb-28">
       <div>
@@ -57,7 +83,7 @@ const User = ({}) => {
       </div>
       <section className="mt-20 px-6">
         <div className="flex-col justify-center items-center my-6 flex">
-          <p>[name]</p>
+          <p>{matchingEmail}</p>
           <p>{auth.currentUser?.email}</p>
         </div>
 

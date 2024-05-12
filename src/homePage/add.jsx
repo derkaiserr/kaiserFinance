@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
 // import bg from "./assets/bg-home.png";
-import bg from "../assets/bg-home.png"
+import bg from "../assets/bg-home.png";
 import ellipses from "../assets/ellipses.png";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import UserContext from "../../hooks/context/context.js";
 
 const AddExpense = () => {
@@ -20,6 +20,8 @@ const AddExpense = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [typeTrack, setTypeTrack] = useState(1);
+
+  const navigate = useNavigate();
   const generateNewId = () => {
     const maxId = transactions.reduce(
       (max, transaction) => Math.max(max, transaction.id),
@@ -28,59 +30,17 @@ const AddExpense = () => {
     return maxId + 1;
   };
 
+  // const dateString = date;
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: "numeric", month: "short", year: "numeric" };
-    const formattedDate = date.toLocaleDateString("en-GB", options);
+    const options = { day: "2-digit", month: "short", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-US", options);
+    return formattedDate;
+};
 
-    // Get today's date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+const formattedDate = formatDate(date);
 
-    // Get yesterday's date
-    const yesterday = new Date(today);
-    const twoDaysAgo = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    twoDaysAgo.setDate(today.getDate() - 2);
-
-    // Check if the date is today
-    if (date.toDateString() === today.toDateString()) {
-      return "Today";
-    }
-
-    // Check if the date is yesterday
-    if (date.toDateString() === yesterday.toDateString()) {
-      return "Yesterday";
-    }
-
-    if (date.toDateString() === twoDaysAgo.toDateString()) {
-      return "Two days ago";
-    }
-
-    // If not today or yesterday, return formatted date with ordinal day
-    const [, day, month, year] = formattedDate.match(/^(\d+)\s(\w+)\s(\d+)$/);
-    // let ordinalDay;
-    // if (day == 11 || day == 12 || day == 13) {
-    //   ordinalDay = day + "th";
-    // } else {
-    //   switch (day % 10) {
-    //     case 1:
-    //       ordinalDay = day + "st";
-    //       break;
-    //     case 2:
-    //       ordinalDay = day + "nd";
-    //       break;
-    //     case 3:
-    //       ordinalDay = day + "rd";
-    //       break;
-    //     default:
-    //       ordinalDay = day + "th";
-    //       break;
-    //   }
-    // }
-
-    return `${month} ${day}, ${year}`;
-  };
 
   const closeOption = () => {
     setSelector(false);
@@ -109,8 +69,8 @@ const AddExpense = () => {
   }
   const addTransaction = (e) => {
     e.preventDefault();
-    if (date !== "" && !isNaN(amount) && name !== "") {
-      const formattedNewDate = formatDate(date); // Format the date before adding to transactions
+
+     // Format the date before adding to transactions
 
       // useEffect(()=> {
       //   if (currencySymbol === "₦") {
@@ -137,19 +97,13 @@ const AddExpense = () => {
       const newTransaction = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
         amount: newAmount,
-        date: formattedNewDate,
+        date: formattedDate,
         id: generateNewId(),
         type: typeTrack,
-        // income: parseFloat(income),
-        // expense: parseFloat(expenses)
+    
       };
 
-      // const newUpdatedTx = transactions.map(tx => tx.amount * local)
-
-      // if (currencySymbol === "₦"){
-      //   newTransaction.amount = formattedNumber(amount  )
-      // }
-
+     
       if (typeTrack === 1) {
         // Assuming typeTrack is 1 for income, 2 for expense
         newTransaction.income = parseFloat(income); // Add income property only if type is 1
@@ -162,9 +116,11 @@ const AddExpense = () => {
       // console.log(updatedTransactions)
       console.log(transactions);
 
+      return navigate("/home");
+
       // Update income or expense detail
     }
-  };
+  
 
   useEffect(() => {
     console.log(transactions);
@@ -288,15 +244,18 @@ const AddExpense = () => {
               setExpenses(e.target.value);
             }}
           />
+          <div>
+
           <button
             onClick={(e) => {
               e.preventDefault();
               setAmount("");
             }}
             className="absolute text-sm text-[#666666] right-1 p-2 top-[2rem]"
-          >
+            >
             Clear
           </button>
+            </div>
         </div>
         <div className="w-full ">
           <label className="text-sm text-[#666666]" htmlFor="date">
@@ -312,7 +271,7 @@ const AddExpense = () => {
             id="date"
           />
         </div>
-        <Link
+        <button
           onClick={addTransaction}
           to="/home"
           className={`hover:bg-[#438883] ${
@@ -320,7 +279,7 @@ const AddExpense = () => {
           } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
         >
           Add {typeTrack === 1 ? "Income" : "Expense"}
-        </Link>
+        </button>
       </form>
     </div>
   );

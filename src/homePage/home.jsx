@@ -36,6 +36,67 @@ const PageOne = () => {
     });
   };
 
+
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-GB", options);
+
+    // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Get yesterday's date
+    const yesterday = new Date(today);
+    const twoDaysAgo = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    twoDaysAgo.setDate(today.getDate() - 2);
+
+    // Check if the date is today
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    }
+
+    // Check if the date is yesterday
+    if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+
+    if (date.toDateString() === twoDaysAgo.toDateString()) {
+      return "Two days ago";
+    }
+
+    // If not today or yesterday, return formatted date with ordinal day
+    const [, day, month, year] = formattedDate.match(/^(\d+)\s(\w+)\s(\d+)$/);
+    let ordinalDay;
+    if (day == 11 || day == 12 || day == 13) {
+      ordinalDay = day + "th";
+    } else {
+      switch (day % 10) {
+        case 1:
+          ordinalDay = day + "st";
+          break;
+        case 2:
+          ordinalDay = day + "nd";
+          break;
+        case 3:
+          ordinalDay = day + "rd";
+          break;
+        default:
+          ordinalDay = day + "th";
+          break;
+      }
+    }
+
+    return `${month} ${ordinalDay}, ${year}`;
+  };
+
+
+
+
+ 
   const formattedNumber = (number) => {
     // Convert the string to a number
     const numericValue = parseFloat(number);
@@ -188,7 +249,7 @@ const PageOne = () => {
             <div className="">
               <p className="font-semibold">{transaction.name}</p>
               <p className="text-slate-500 font-medium text-sm">
-                {transaction.date}
+                {formatDate(transaction.date)}
               </p>
             </div>
             <p
