@@ -133,7 +133,7 @@ export default function Login() {
 
           <p className="pt-3 text-center">
             Don't have an account yet?
-            <span className="bg-transparent  text-[#438883] "> Sign Up.</span>
+            <Link to={"/SignUp"} className="bg-transparent  text-[#438883] "> Sign Up.</Link>
           </p>
         </form>
       }

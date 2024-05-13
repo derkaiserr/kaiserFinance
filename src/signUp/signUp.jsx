@@ -45,7 +45,7 @@ import { addDoc, collection } from "firebase/firestore";
     }
      try {
     const docRef = await addDoc(collection(db, "userName"), {
-      email: email,
+      email: email.toLowerCase(),
       name: name,
     });
     console.log("Document written with ID: ", docRef.id);

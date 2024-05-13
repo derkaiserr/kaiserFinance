@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import bg from "../assets/bg-home.png"
+import bg from "../assets/bg-home.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import ellipses from "../assets/ellipses.png";
@@ -35,9 +35,6 @@ const PageOne = () => {
       maximumFractionDigits: 2,
     });
   };
-
-
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -93,10 +90,10 @@ const PageOne = () => {
     return `${month} ${ordinalDay}, ${year}`;
   };
 
+  useEffect(() => {
+    if(transactions.length < 1)  setEye(true);
+  }, [transactions]);
 
-
-
- 
   const formattedNumber = (number) => {
     // Convert the string to a number
     const numericValue = parseFloat(number);
@@ -244,26 +241,30 @@ const PageOne = () => {
       </header>
 
       <main className="px-6">
-        {reverselySortedTx.map((transaction) => (
-          <div key={transaction.id} className="flex justify-between my-4">
-            <div className="">
-              <p className="font-semibold">{transaction.name}</p>
-              <p className="text-slate-500 font-medium text-sm">
-                {formatDate(transaction.date)}
+        {reverselySortedTx.length > 0 ? (
+          reverselySortedTx?.map((transaction) => (
+            <div key={transaction.id} className="flex justify-between my-4">
+              <div className="">
+                <p className="font-semibold">{transaction.name}</p>
+                <p className="text-slate-500 font-medium text-sm">
+                  {formatDate(transaction.date)}
+                </p>
+              </div>
+              <p
+                className={`amount font-semibold flex items-center justiy-between ${
+                  transaction.type === 1 ? "text-green-700" : "text-red-700"
+                } `}
+              >
+                {transaction.type === 1 ? "+" : "-"}
+                {""}
+                {currencySymbol}{" "}
+                {formattedNumber(transaction.amount * localCurrency)}
               </p>
             </div>
-            <p
-              className={`amount font-semibold flex items-center justiy-between ${
-                transaction.type === 1 ? "text-green-700" : "text-red-700"
-              } `}
-            >
-              {transaction.type === 1 ? "+" : "-"}
-              {""}
-              {currencySymbol}{" "}
-              {formattedNumber(transaction.amount * localCurrency)}
-            </p>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-gray-500">No transactions yet.</p>
+        )}
       </main>
 
       <Link to="/add">

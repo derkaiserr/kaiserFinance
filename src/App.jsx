@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate} from "react-router-dom";
 
 import date from "date-and-time";
 import GetStarted from "./getStarted";
@@ -24,6 +24,9 @@ import Context from "../hooks/context/context.js";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
+
+
+  const navigate = useNavigate()
   const [nav, setNav] = useState(() => {
     const storedNav = localStorage.getItem("nav");
     return storedNav ? JSON.parse(storedNav) : false; // Parse JSON string to boolean
@@ -126,7 +129,7 @@ function App() {
   //     });
   // }, [currencyMemo]);
 
-  console.log(localCurrency);
+  
 
   // Use currencyState in your component
   // const updatedTransactions =
@@ -175,13 +178,10 @@ function App() {
   // useEffect(()=>
   // setTransactions(updatedTx),[])
 
-  useEffect(() => {
-    console.log(transactions);
-    // console.log(formattedNumber("8000" * localCurrency));
-  }, [localCurrency]);
+ 
 
-  const value = transactions[0].amount;
-  const [values, setValues] = useState(3 * localCurrency);
+  // const value = transactions[0].amount;
+  // const [values, setValues] = useState(3 * localCurrency);
 
   // let sortedTransactions
   const sortedTransactions = transactions.slice().sort((a, b) => {
@@ -238,6 +238,7 @@ function App() {
         setTransactions,
         toggleDarkMode,
         sortedTransactions,
+        navigate
       }}
     >
       <div className={`${theme} inter  `}>

@@ -19,6 +19,7 @@ const User = ({}) => {
     setLocalCurrency,
     currencyState,
     setCurrencySymbol,
+    setTransactions
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
@@ -49,12 +50,17 @@ const User = ({}) => {
     const fetchDocs = async () => {
       try {
         const snapshot = await getDocs(colRef);
+        console.log(snapshot.docs)
         const filteredDocs = snapshot.docs.filter((doc) => {
+          console.log(auth.currentUser.email)
+          console.log(doc.data().email)
           return doc.data().email === auth.currentUser.email;
         });
         if (filteredDocs.length > 0) {
           setMatchingEmail( filteredDocs[0].data().name)
         }
+        console.log(matchingEmail)
+        console.log(filteredDocs)
       } catch (error) {
         console.error('Error fetching documents:', error);
       }
@@ -64,6 +70,15 @@ const User = ({}) => {
   }, []);
 // console.log(<YourComponent/>)
 
+
+const resetPrompt = ()=>{
+  const prompt = confirm("Are you sure you want to clear all transactions?")
+  if (prompt){
+    setTransactions([])
+  }
+}
+
+const [selectedImage, setSelectedImage] = useState(null);
   return (
     <div className="pb-28">
       <div>
@@ -74,14 +89,23 @@ const User = ({}) => {
         />
         <img src={bg} className="relative cover w-full" alt="" />
         <picture className=" ">
+          {selectedImage &&
           <img
-            src={user}
-            className="absolute bg-white user  p-8 w-32 -mt-16 rounded-full left-0 right-0 mx-auto"
+            src={URL.createObjectURL(selectedImage)}
+            className="absolute bg-white user  p-8 w-40 h-40 contain -mt-16 rounded-full left-0 right-0 mx-auto"
             alt=""
-          />
+          />}
         </picture>
       </div>
       <section className="mt-20 px-6">
+      <input
+        type="file"
+        name="myImage"
+        onChange={(event) => {
+          console.log(event.target.files[0]);
+          setSelectedImage(event.target.files[0]);
+        }}
+      />
         <div className="flex-col justify-center items-center my-6 flex">
           <p>{matchingEmail}</p>
           <p>{auth.currentUser?.email}</p>
@@ -133,13 +157,14 @@ const User = ({}) => {
               <path d="m9 18 6-6-6-6" />
             </svg>
           </div>
+          <button onClick={resetPrompt} className="bg-slate-400 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full" type="reset">Reset</button>
 
           <Link
             to="/login"
             onClick={() => {setNav(false)
             doSignOut()
             }}
-            className="bg-red-600 py-3 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
+            className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >
             Sign Out
           </Link>

@@ -11,6 +11,7 @@ const Stats = () => {
     transactions,
     setTransactions,
     sortedTransactions,
+    navigate,
   } = useContext(UserContext);
   const chartWidth = window.innerWidth * 0.9;
 
@@ -22,7 +23,6 @@ const Stats = () => {
   );
   const [transactData, setTransactData] = useState(income);
 
-  useEffect(() => console.log(transactData), [transactData]);
   return (
     <div className="mb-28">
       <header className="flex justify-between   p-6">
@@ -38,6 +38,7 @@ const Stats = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             className="lucide lucide-chevron-left"
+            onClick={ ()=> navigate(-1)}
           >
             <path d="m15 18-6-6 6-6" />
           </svg>
@@ -65,12 +66,16 @@ const Stats = () => {
       </header>
 
       <main>
-        <ExpenseStats
-          transactData={transactData}
-          setTransactData={setTransactData}
-          income={income}
-          expenses={expenses}
-        />
+        {transactions.length > 0 ? (
+          <ExpenseStats
+            transactData={transactData}
+            setTransactData={setTransactData}
+            income={income}
+            expenses={expenses}
+          />
+        ) : (
+          <p className="px-6 text-gray-500">No statistical data available.</p>
+        )}
       </main>
     </div>
   );
