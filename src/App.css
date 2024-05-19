@@ -153,3 +153,21 @@ footer > svg {
 
 
 
+
+
+.image-container img {
+ 
+  object-fit:cover; /*Resize the image to cover the entire container */
+  object-position:center; /* Position the image at the center */
+}
+
+.image-container .svg{
+  opacity:0;
+  transition: all 0.5s;
+  z-index: 1000;
+}
+
+.image-container:hover .svg{
+  background-color: #3c3c3c5b;
+  opacity: 0.8;
+}

@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp,  } from "firebase/app";
 // import {  collection, getDocs, snapshotEqual } from 'firebase/firestore/lite';
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useState, useEffect } from "react";
+
+import { getStorage } from "firebase/storage";
 
 // async function getCities(db) {
 //   const citiesCol = collection(db, 'cities');
@@ -91,7 +92,6 @@ const colRef = collection(db, "userName");
 //   .catch((error) => {
 //     console.error("Error getting documents: ", error);
 //   });
+const imageDb = getStorage(app)
 
-
-
-export { app, auth, db, colRef };
+export { app, auth, db, colRef, imageDb };
