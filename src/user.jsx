@@ -22,6 +22,10 @@ const User = ({}) => {
     currencyState,
     setCurrencySymbol,
     setTransactions,
+    imgUrl,
+    setImgUrl,
+    selectedImage,
+    setSelectedImage,
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
@@ -50,7 +54,7 @@ const User = ({}) => {
   };
 
   // const [matchingName, setMatchingName] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("");
+  
   const [matchingName, setMatchingName] = useState(() => {
     // Retrieve initial state from local storage
     const savedName = localStorage.getItem("savedNames");
@@ -62,7 +66,7 @@ const User = ({}) => {
     localStorage.setItem("savedNames", JSON.stringify(matchingName));
   }, [matchingName]);
 
-  const [imgUrl, setImgUrl] = useState([])
+  // const [imgUrl, setImgUrl] = useState([])
 
   useEffect(() => {
     const fetchDocs = async () => {
@@ -115,6 +119,63 @@ const User = ({}) => {
 
 
 
+  // useEffect(() => {
+  //   const fetchImages = async () => {
+  //     try {
+  //       const imagesRef = ref(imageDb, `${auth.currentUser.email}`);
+  //       const imgs = await listAll(imagesRef);
+
+  //       if (imgs.items.length === 0) {
+  //         console.log("No images found");
+  //         return;
+  //       }
+
+  //       console.log(imgs); // Check the structure and content of imgs
+
+  //       const urls = await Promise.all(
+  //         imgs.items.map(async (val) => {
+  //           const url = await getDownloadURL(val);
+  //           return url;
+  //         })
+  //       );
+
+  //       setImgUrl(urls);
+  //     } catch (error) {
+  //       console.error("Error fetching images: ", error);
+  //     }
+  //   };
+
+  //   fetchImages();
+  // }, [selectedImage]); // Add any necessary dependencies
+
+  // useEffect(() => {
+  //   console.log(imgUrl);
+  // }, [imgUrl]);
+
+  // const cityRef = doc(db, 'userName', 'Ya4rTI1lFMn6Uu78ABSh');
+  // setDoc(cityRef, { picture: selectedImage }, { merge: true });
+
+  // const Docs = getDocs(colRef)
+  //   .then((snapshot) => {
+  //     // Filter documents based on email
+  //     const filteredDocs = snapshot.docs.filter((doc) => {
+  //       return doc.data().email === auth.currentUser.email;
+  //     });
+
+  //     // Log the filtered documents
+  //     filteredDocs.forEach((doc) => {
+  //       const name = doc.data().name;
+  //       return name;
+  //     });
+
+  //     // Optionally, return the filtered documents if needed
+  //     // return filteredDocs;
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error getting documents: ", error);
+  //   });
+
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -142,34 +203,12 @@ const User = ({}) => {
     };
 
     fetchImages();
-  }, [selectedImage]); // Add any necessary dependencies
+  }, [selectedImage, imgUrl]); // Add any necessary dependencies
 
   useEffect(() => {
     console.log(imgUrl);
   }, [imgUrl]);
 
-  // const cityRef = doc(db, 'userName', 'Ya4rTI1lFMn6Uu78ABSh');
-  // setDoc(cityRef, { picture: selectedImage }, { merge: true });
-
-  // const Docs = getDocs(colRef)
-  //   .then((snapshot) => {
-  //     // Filter documents based on email
-  //     const filteredDocs = snapshot.docs.filter((doc) => {
-  //       return doc.data().email === auth.currentUser.email;
-  //     });
-
-  //     // Log the filtered documents
-  //     filteredDocs.forEach((doc) => {
-  //       const name = doc.data().name;
-  //       return name;
-  //     });
-
-  //     // Optionally, return the filtered documents if needed
-  //     // return filteredDocs;
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error getting documents: ", error);
-  //   });
 
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
@@ -191,9 +230,9 @@ const User = ({}) => {
           {
             <img
               onClick={handleImageClick}
-              src={imgUrl ? imgUrl[0] : user}
+              src={imgUrl[0] ? imgUrl[0] : user}
               className={`absolute bg-white user ${
-                !imgUrl && "p-8"
+                !imgUrl[0] && "p-8"
               }  w-40 h-40 -mt-20 rounded-full left-0 right-0 mx-auto`}
               alt=""
             />

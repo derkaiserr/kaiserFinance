@@ -21,12 +21,16 @@ import greenWallet from "./assets/greenWallet.svg";
 import "./App.css";
 import AddExpense from "./homePage/add.jsx";
 import Context from "../hooks/context/context.js";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
+import { imageDb, auth } from "./firebase/firebase.js";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
 
 
   const navigate = useNavigate()
+  const [imgUrl, setImgUrl] = useState([])
+  const [selectedImage, setSelectedImage] = useState("");
   const [nav, setNav] = useState(() => {
     const storedNav = localStorage.getItem("nav");
     return storedNav ? JSON.parse(storedNav) : false; // Parse JSON string to boolean
@@ -221,6 +225,10 @@ function App() {
 
   // console.log(currencyState);
 
+
+
+
+ 
   return (
     <Context.Provider
       value={{
@@ -238,7 +246,11 @@ function App() {
         setTransactions,
         toggleDarkMode,
         sortedTransactions,
-        navigate
+        navigate,
+        imgUrl,
+        setImgUrl, 
+        selectedImage,
+        setSelectedImage
       }}
     >
       <div className={`${theme} inter  `}>
