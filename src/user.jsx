@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { Routes, Route, Link } from "react-router-dom";
+import Modal from "react-modal";
 import UserContext from "../hooks/context/context.js";
 import bg from "./assets/bg-home.png";
 import user from "./assets/user.svg";
@@ -26,6 +27,8 @@ const User = ({}) => {
     setImgUrl,
     selectedImage,
     setSelectedImage,
+    matchingName,
+    setMatchingName,
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
@@ -54,17 +57,11 @@ const User = ({}) => {
   };
 
   // const [matchingName, setMatchingName] = useState(null);
-  
-  const [matchingName, setMatchingName] = useState(() => {
-    // Retrieve initial state from local storage
-    const savedName = localStorage.getItem("savedNames");
-    return savedName ? JSON.parse(savedName) : null;
-  });
 
-  useEffect(() => {
-    // Save state to local storage whenever it changes
-    localStorage.setItem("savedNames", JSON.stringify(matchingName));
-  }, [matchingName]);
+  // useEffect(() => {
+  //   // Save state to local storage whenever it changes
+  //   localStorage.setItem("savedNames", JSON.stringify(matchingName));
+  // }, [matchingName]);
 
   // const [imgUrl, setImgUrl] = useState([])
 
@@ -86,7 +83,6 @@ const User = ({}) => {
     fetchDocs();
   }, [selectedImage]);
 
-
   const handleImageInput = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -101,114 +97,45 @@ const User = ({}) => {
 
       try {
         // Upload the file directly from the event object
-        await uploadBytes(imgRef, file)
-        .then(value =>{
-          getDownloadURL(value.ref).then(url =>{
-            setImgUrl(data => [...data, url])
-          })
-        })
+        await uploadBytes(imgRef, file).then((value) => {
+          getDownloadURL(value.ref).then((url) => {
+            setImgUrl((data) => [...data, url]);
+          });
+        });
         console.log("Upload successful");
       } catch (error) {
         console.error("Error uploading file:", error);
       }
-
-      // Log the file for debugging purposes
-      // console.log(file);
     }
   };
 
+  // Modal.setAppElement('#root')
+  // const customStyles = {
+  //   content: {
+  //     backgroundColor: "#1B5C58",
+  //     top: "50%",
+  //     left: "50%",
+  //     right: "auto",
+  //     bottom: "auto",
+  //     marginRight: "-50%",
+  //     transform: "translate(-50%, -50%)",
+  //   },
+  // };
 
+  // let subtitle;
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function controlModal() {
+    setIsOpen((prev) => !prev);
+  }
 
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     try {
-  //       const imagesRef = ref(imageDb, `${auth.currentUser.email}`);
-  //       const imgs = await listAll(imagesRef);
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = "#f00";
+  }
 
-  //       if (imgs.items.length === 0) {
-  //         console.log("No images found");
-  //         return;
-  //       }
-
-  //       console.log(imgs); // Check the structure and content of imgs
-
-  //       const urls = await Promise.all(
-  //         imgs.items.map(async (val) => {
-  //           const url = await getDownloadURL(val);
-  //           return url;
-  //         })
-  //       );
-
-  //       setImgUrl(urls);
-  //     } catch (error) {
-  //       console.error("Error fetching images: ", error);
-  //     }
-  //   };
-
-  //   fetchImages();
-  // }, [selectedImage]); // Add any necessary dependencies
-
-  // useEffect(() => {
-  //   console.log(imgUrl);
-  // }, [imgUrl]);
-
-  // const cityRef = doc(db, 'userName', 'Ya4rTI1lFMn6Uu78ABSh');
-  // setDoc(cityRef, { picture: selectedImage }, { merge: true });
-
-  // const Docs = getDocs(colRef)
-  //   .then((snapshot) => {
-  //     // Filter documents based on email
-  //     const filteredDocs = snapshot.docs.filter((doc) => {
-  //       return doc.data().email === auth.currentUser.email;
-  //     });
-
-  //     // Log the filtered documents
-  //     filteredDocs.forEach((doc) => {
-  //       const name = doc.data().name;
-  //       return name;
-  //     });
-
-  //     // Optionally, return the filtered documents if needed
-  //     // return filteredDocs;
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error getting documents: ", error);
-  //   });
-
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const imagesRef = ref(imageDb, `${auth.currentUser.email}`);
-        const imgs = await listAll(imagesRef);
-
-        if (imgs.items.length === 0) {
-          console.log("No images found");
-          return;
-        }
-
-        console.log(imgs); // Check the structure and content of imgs
-
-        const urls = await Promise.all(
-          imgs.items.map(async (val) => {
-            const url = await getDownloadURL(val);
-            return url;
-          })
-        );
-
-        setImgUrl(urls);
-      } catch (error) {
-        console.error("Error fetching images: ", error);
-      }
-    };
-
-    fetchImages();
-  }, [selectedImage, imgUrl]); // Add any necessary dependencies
-
-  useEffect(() => {
-    console.log(imgUrl);
-  }, [imgUrl]);
-
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
@@ -225,15 +152,14 @@ const User = ({}) => {
           className="absolute top-0 z-50 w-[50%] cover"
           alt=""
         />
-        <img src={bg} className="relative cover w-full" alt="" />
+        <img src={bg} className="relative cover z-20 w-full" alt="" />
         <picture className="image-container relative flex justify-center ">
           {
             <img
-              onClick={handleImageClick}
               src={imgUrl[0] ? imgUrl[0] : user}
               className={`absolute bg-white user ${
                 !imgUrl[0] && "p-8"
-              }  w-40 h-40 -mt-20 rounded-full left-0 right-0 mx-auto`}
+              }  w-40 h-40 -mt-20 rounded-full z-20 left-0 right-0 mx-auto`}
               alt=""
             />
           }
@@ -264,7 +190,61 @@ const User = ({}) => {
             accept="image/jpeg, image/png, image/gif"
             onChange={handleImageInput}
           />
+          <div
+            onClick={controlModal}
+            className="editPen absolute z-20  text-[#26afa6] border-[#24a9a0] bg-[#bdbdbdb4] h-10 w-10 p-2 overflow-hidden   ml-28 mt-8 border  rounded-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              data-state={modalIsOpen}
+              className="lucide lucide-pencil data-[state=true]:-translate-y-8 transition-all duration-200"
+            >
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+              <path d="m15 5 4 4" />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-x  data-[state=true]:-translate-y-6 transition-all duration-200"
+              data-state={modalIsOpen}
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </div>
         </picture>
+
+        <section
+          data-state={modalIsOpen}
+          className="dropdown data-[state=true]:translate-y-0 -translate-y-56 duration-400  bg-gradient-to-r from-[#368882] to-[#2c7e78] absolute w-full transition-all ease-in-out h-52 top-[14rem] flex items-end justify-center z-0"
+        >
+          <div className="pictureOptions flex text-white flex-col items-center borde leading-10  p-0 w-[95%] shadow-2x shadow-blac   rounded-t-lg  text-sm">
+            <button
+              onClick={handleImageClick}
+              className="border-b border-gray-500 w-full "
+            >
+              {imgUrl[0] != undefined ? "Change" : "Add"} Image
+            </button>
+            <button className={imgUrl[0] === undefined && "text-gray-400 w-full bg-[#2224]"}>
+              Remove Image
+            </button>
+          </div>
+        </section>
       </div>
       <section className="mt-20 px-6">
         <div className="flex-col justify-center items-center my-6 flex">
@@ -331,8 +311,8 @@ const User = ({}) => {
             onClick={() => {
               setNav(false);
               doSignOut();
-              setImgUrl([])
-              setMatchingName(null)
+              setImgUrl([]);
+              setMatchingName(null);
             }}
             className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >

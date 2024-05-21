@@ -171,3 +171,8 @@ footer > svg {
   background-color: #3c3c3c5b;
   opacity: 0.8;
 }
+
+
+.pictureOptions{
+  box-shadow: rgba(38, 38, 38, 1) 1px  12px 30px 1px ;
+}

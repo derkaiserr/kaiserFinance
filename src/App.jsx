@@ -20,6 +20,7 @@ import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 import "./App.css";
 import AddExpense from "./homePage/add.jsx";
+
 import Context from "../hooks/context/context.js";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { imageDb, auth } from "./firebase/firebase.js";
@@ -31,6 +32,8 @@ function App() {
   const navigate = useNavigate()
   const [imgUrl, setImgUrl] = useState([])
   const [selectedImage, setSelectedImage] = useState("");
+
+  const [matchingName, setMatchingName] = useState(null);
   const [nav, setNav] = useState(() => {
     const storedNav = localStorage.getItem("nav");
     return storedNav ? JSON.parse(storedNav) : false; // Parse JSON string to boolean
@@ -225,6 +228,38 @@ function App() {
 
   // console.log(currencyState);
 
+  useEffect(() => {
+    if(!auth.currentUser){
+      return
+    }
+
+      const fetchImages = async () => {
+        try {
+        const imagesRef = ref(imageDb, `${auth.currentUser?.email}`);
+        const imgs = await listAll(imagesRef);
+
+        if (imgs.items.length === 0) {
+          return;
+        }
+        
+        // console.log(imgs); // Check the structure and content of imgs
+        
+        const urls = await Promise.all(
+          imgs.items.map(async (val) => {
+            const url = await getDownloadURL(val);
+            return url;
+          })
+        );
+        
+        setImgUrl(urls);
+      } catch (error) {
+        console.error("Error fetching images: ", error);
+      }
+    };
+    
+    fetchImages();
+
+  }, [imgUrl, auth.currentUser]);
 
 
 
@@ -250,7 +285,9 @@ function App() {
         imgUrl,
         setImgUrl, 
         selectedImage,
-        setSelectedImage
+        setSelectedImage,
+        matchingName,
+        setMatchingName
       }}
     >
       <div className={`${theme} inter  `}>

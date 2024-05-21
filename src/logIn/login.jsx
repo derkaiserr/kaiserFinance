@@ -1,19 +1,21 @@
 import React, { useState, useContext, useEffect } from "react";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import { SignIn, doSignInWithGoogle } from "../firebase/auth";
+import UserContext from "../../hooks/context/context.js";
 // import { useAuth } from "../../hooks/context/authContext/authContext";
 
 export default function Login() {
+  const {navigate} = useContext(UserContext)
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   // const {userLoggedIn} = useContext(useAuth)
-  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +59,7 @@ export default function Login() {
       {/* {isSigningIn && <Navigate to={homeLink}/>} */}
       <header className="grid px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
+        onClick={() => navigate(-1)}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"

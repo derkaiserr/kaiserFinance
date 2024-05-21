@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import G from "../assets/G.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Register, doSignInWithGoogle } from "../firebase/auth";
 import { app, auth, db, colRef } from "../firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import UserContext from "../../hooks/context/context.js";
 
  function SignUp() {
+
+  const {navigate} = useContext(UserContext)
   const [eye, setEye] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signedUp, setSignedUp] = useState(false);
 
-  const navigate = useNavigate();
   const user = auth.currentUser;
   useEffect(() => {
     if (user != null) {
@@ -64,6 +66,7 @@ import { addDoc, collection } from "firebase/firestore";
     <div className="signUp ">
       <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
+        onClick={()=> navigate(-1)}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
