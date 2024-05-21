@@ -12,7 +12,7 @@ import { getStorage } from "firebase/storage";
 
 const VITE_FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
 const VITE_FIREBASE_AUTH_DOMAIN = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
-const VITE_FIREBASE_PROJECT_ID = import.meta.env.VITE_FIREBASE_PROJECT_ID;
+const VITE_FIREBASE_PROJECT_ID = "kaiserfinance-288b6"
 const VITE_FIREBASE_STORAGE_BUCKET = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
 const VITE_FIREBASE_MESSAGING_SENDER_ID = import.meta.env
   .VITE_FIREBASE_MESSAGING_SENDER_ID;
