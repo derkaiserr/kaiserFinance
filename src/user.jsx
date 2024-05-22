@@ -240,7 +240,7 @@ const User = ({}) => {
             >
               {imgUrl[0] != undefined ? "Change" : "Add"} Image
             </button>
-            <button className={imgUrl[0] === undefined && "text-gray-400 w-full bg-[#2224]"}>
+            <button className={imgUrl[0] === undefined ? "text-gray-400 w-full bg-[#2224]" : undefined}>
               Remove Image
             </button>
           </div>
