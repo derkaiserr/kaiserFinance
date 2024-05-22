@@ -8,7 +8,7 @@ import ellipses from "./assets/ellipses.png";
 import { doSignOut } from "./firebase/auth.js";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, listAll, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 // import { name } from "./firebase/firebase.js";
 // import { YourComponent } from "./firebase/firebase.js";
@@ -128,15 +128,20 @@ const User = ({}) => {
     setIsOpen((prev) => !prev);
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
+ const removeImage = async () =>{
+  
+  const imgRef = ref(
+    imageDb,
+    `${auth.currentUser.email}/${auth.currentUser.email}`
+  );
+  await deleteObject(imgRef)
+  .then(() => {
+    console.log('Image deleted successfully!');
+  })
+  .catch((error) => {
+    console.error('Error deleting image:', error);
+  });
+ }
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
@@ -152,7 +157,7 @@ const User = ({}) => {
           className="absolute top-0 z-50 w-[50%] cover"
           alt=""
         />
-        <img src={bg} className="relative cover z-20 w-full" alt="" />
+        <img src={bg} className="relative cover z-20 w-full h-[7cm]" alt="" />
         <picture className="image-container relative flex justify-center ">
           {
             <img
@@ -231,7 +236,7 @@ const User = ({}) => {
 
         <section
           data-state={modalIsOpen}
-          className="dropdown data-[state=true]:translate-y-0 -translate-y-56 duration-400  bg-gradient-to-r from-[#368882] to-[#2c7e78] absolute w-full transition-all ease-in-out h-52 top-[14rem] flex items-end justify-center z-0"
+          className="dropdown data-[state=true]:translate-y-0 -translate-y-56 duration-300  bg-gradient-to-r from-[#368882] to-[#2c7e78] absolute w-full transition-all ease-in-out h-[5cm] top-[6.4cm] mt-[10cm flex items-end justify-center z-0"
         >
           <div className="pictureOptions flex text-white flex-col items-center borde leading-10  p-0 w-[95%] shadow-2x shadow-blac   rounded-t-lg  text-sm">
             <button
@@ -240,7 +245,14 @@ const User = ({}) => {
             >
               {imgUrl[0] != undefined ? "Change" : "Add"} Image
             </button>
-            <button className={imgUrl[0] === undefined ? "text-gray-400 w-full bg-[#2224]" : undefined}>
+            <button
+              onClick={removeImage}
+              className={
+                imgUrl[0] === undefined
+                  ? "text-gray-400 w-full bg-[#2224]"
+                  : undefined
+              }
+            >
               Remove Image
             </button>
           </div>
