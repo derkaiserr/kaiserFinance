@@ -30,9 +30,18 @@ function App() {
 
 
   const navigate = useNavigate()
-  const [imgUrl, setImgUrl] = useState([])
-  const [selectedImage, setSelectedImage] = useState("");
+  const [imgUrl, setImgUrl] = useState(() => {
+    // Retrieve initial state from localStorage if it exists, otherwise use an empty array
+    const savedImgUrl = localStorage.getItem('imgUrl');
+    return savedImgUrl ? JSON.parse(savedImgUrl) : [];
+  });
 
+  useEffect(() => {
+    // Save imgUrl to localStorage whenever it changes
+    localStorage.setItem('imgUrl', JSON.stringify(imgUrl));
+  }, [imgUrl]);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [reloadImage, setReloadImage] = useState(false)
   const [matchingName, setMatchingName] = useState(null);
   const [nav, setNav] = useState(() => {
     const storedNav = localStorage.getItem("nav");
@@ -48,13 +57,9 @@ function App() {
   //   setNav(link.to);
   // };
 
-  const [activeLink, setActiveLink] = useState(
-    //   ()=> {
-    //   const storedActiveLink = localStorage.getItem("activeLink");
-    // return storedActiveLink ? JSON.parse(storedActiveLink) : 1
-    // }
-    1
-  );
+  
+
+  const [activeLink, setActiveLink] = useState(1);
 
   // useEffect(() => {
   //   localStorage.setItem("activeLink", JSON.stringify(activeLink));
@@ -253,13 +258,13 @@ function App() {
         
         setImgUrl(urls);
       } catch (error) {
-        console.error("Error fetching images: ", error);
+        // console.error("Error fetching images: ", error);
       }
     };
     
     fetchImages();
 
-  }, [imgUrl, auth.currentUser]);
+  }, [imgUrl, auth.currentUser, reloadImage]);
 
 
 
@@ -287,7 +292,8 @@ function App() {
         selectedImage,
         setSelectedImage,
         matchingName,
-        setMatchingName
+        setMatchingName,
+        setReloadImage
       }}
     >
       <div className={`${theme} inter  `}>

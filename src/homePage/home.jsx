@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import bg from "../assets/bg-home.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import ellipses from "../assets/ellipses.png";
-import AddExpense from "./add.jsx";
-import Stats from "../statisticsPage/stats.jsx";
+
 import UserContext from "../../hooks/context/context.js";
 
 const PageOne = () => {
@@ -91,7 +90,7 @@ const PageOne = () => {
   };
 
   useEffect(() => {
-    if(transactions.length < 1)  setEye(true);
+    if (transactions.length < 1) setEye(true);
   }, [transactions]);
 
   const formattedNumber = (number) => {
@@ -110,11 +109,13 @@ const PageOne = () => {
     });
   };
 
-  const reverselySortedTx = transactions.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB - dateA;
-  });
+  const reverselySortedTx = useMemo(() => {
+    return [...transactions].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+  }, [transactions]);
   console.log(reverselySortedTx);
 
   return (
@@ -237,12 +238,12 @@ const PageOne = () => {
       </section>
       <header className="mt-28 flex justify-between px-6 ">
         <p className="font-semibold text-lg">Transactions History</p>
-        <p className="text-sm text-gray-500 font-semibold">see all</p>
+        {reverselySortedTx.length > 3 && <button className="text-sm text-gray-500 font-semibold">see all</button>}
       </header>
 
       <main className="px-6">
         {reverselySortedTx.length > 0 ? (
-          reverselySortedTx?.map((transaction) => (
+          reverselySortedTx?.slice(0,3).map((transaction) => (
             <div key={transaction.id} className="flex justify-between my-4">
               <div className="">
                 <p className="font-semibold">{transaction.name}</p>

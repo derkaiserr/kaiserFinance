@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.2",
     "date-and-time": "^3.1.1",
     "dotenv": "^16.4.5",

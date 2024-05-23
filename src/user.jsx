@@ -3,15 +3,15 @@ import { Routes, Route, Link } from "react-router-dom";
 import Modal from "react-modal";
 import UserContext from "../hooks/context/context.js";
 import bg from "./assets/bg-home.png";
+import Bg from "./bg.jsx";
 import user from "./assets/user.svg";
 import ellipses from "./assets/ellipses.png";
 import { doSignOut } from "./firebase/auth.js";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, listAll, ref, uploadBytes, deleteObject } from "firebase/storage";
+import imageCompression from 'browser-image-compression';
+import { getDownloadURL, ref, uploadBytes, deleteObject } from "firebase/storage";
 
-// import { name } from "./firebase/firebase.js";
-// import { YourComponent } from "./firebase/firebase.js";
 export const ThemeContext = createContext(null);
 const User = ({}) => {
   const {
@@ -29,10 +29,14 @@ const User = ({}) => {
     setSelectedImage,
     matchingName,
     setMatchingName,
+    setReloadImage
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
   }, [nav]);
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [error, manageError] = useState("")
 
   const [currency, setCurrency] = useState(
     localStorage.getItem("currency") || "USD"
@@ -56,14 +60,7 @@ const User = ({}) => {
     imageRef.current.click();
   };
 
-  // const [matchingName, setMatchingName] = useState(null);
-
-  // useEffect(() => {
-  //   // Save state to local storage whenever it changes
-  //   localStorage.setItem("savedNames", JSON.stringify(matchingName));
-  // }, [matchingName]);
-
-  // const [imgUrl, setImgUrl] = useState([])
+  
 
   useEffect(() => {
     const fetchDocs = async () => {
@@ -77,6 +74,7 @@ const User = ({}) => {
         }
       } catch (error) {
         console.error("Error fetching documents:", error);
+        
       }
     };
 
@@ -85,63 +83,111 @@ const User = ({}) => {
 
   const handleImageInput = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      // Set the selected image to the state
-      setSelectedImage(file);
 
-      // Create a reference to the image in your database
-      const imgRef = ref(
-        imageDb,
-        `${auth.currentUser.email}/${auth.currentUser.email}`
-      );
+    if (file) {
+      // Compress the image file
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
 
       try {
-        // Upload the file directly from the event object
-        await uploadBytes(imgRef, file).then((value) => {
+        const compressedFile = await imageCompression(file, options);
+        console.log('compressedFile:', compressedFile);
+
+        // Set the selected image to the state
+        setSelectedImage(compressedFile);
+
+        // Create a reference to the image in your database
+        const imgRef = ref(
+          imageDb,
+          `${auth.currentUser.email}/${auth.currentUser.email}`
+        );
+
+        // Upload the compressed file
+        await uploadBytes(imgRef, compressedFile).then((value) => {
           getDownloadURL(value.ref).then((url) => {
             setImgUrl((data) => [...data, url]);
+            setIsOpen(false);
+            // Optionally save the URL to localStorage
+            localStorage.setItem('imgUrl', JSON.stringify([...imgUrl, url]));
           });
         });
-        console.log("Upload successful");
       } catch (error) {
-        console.error("Error uploading file:", error);
+        console.error('Error compressing or uploading file:', error);
+        manageError('Image Upload Failed');
+        setIsVisible(true);
       }
     }
   };
 
-  // Modal.setAppElement('#root')
-  // const customStyles = {
-  //   content: {
-  //     backgroundColor: "#1B5C58",
-  //     top: "50%",
-  //     left: "50%",
-  //     right: "auto",
-  //     bottom: "auto",
-  //     marginRight: "-50%",
-  //     transform: "translate(-50%, -50%)",
-  //   },
-  // };
+  
+  
+  const handleImageUpload = async (event) => {
+    const imageFile = event.target.files[0];
 
-  // let subtitle;
-  const [modalIsOpen, setIsOpen] = useState(false);
+    const options = {
+      maxSizeMB: 1,          // (default: Number.POSITIVE_INFINITY)
+      // maxWidthOrHeight: 800, // (default: undefined)
+      useWebWorker: true     // (default: true)
+    };
+
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      // console.log('compressedFile:', compressedFile);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl((prevUrls) => [...prevUrls, reader.result]);
+        // Optionally save the compressed image to localStorage
+        localStorage.setItem('imgUrl', JSON.stringify([...imgUrl, reader.result]));
+      };
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      // console.error('Error compressing image:', error);
+    }
+  };
+
+ 
   function controlModal() {
     setIsOpen((prev) => !prev);
   }
 
- const removeImage = async () =>{
+
   
-  const imgRef = ref(
-    imageDb,
-    `${auth.currentUser.email}/${auth.currentUser.email}`
-  );
-  await deleteObject(imgRef)
-  .then(() => {
-    console.log('Image deleted successfully!');
-  })
-  .catch((error) => {
-    console.error('Error deleting image:', error);
-  });
+  
+ const removeImage = async () =>{
+  //  if(imgUrl[0] === undefined) return
+   const imgRef = ref(
+     imageDb,
+     `${auth.currentUser.email}/${auth.currentUser.email}`
+    );
+    await deleteObject(imgRef)
+    .then(() => {
+      setReloadImage(prev => !prev)
+      setImgUrl([undefined])
+      
+    })
+    .catch((error) => {
+      manageError("Error Deleting Image")
+      setIsVisible(true)
+    });
+    setIsOpen(false)
  }
+
+
+ const [isVisible, setIsVisible] = useState(false);
+
+ useEffect(() => {
+   // Set a timer to hide the element after 5 seconds
+   const timer = setTimeout(() => {
+     setIsVisible(false);
+   }, 5000);
+
+   // Clear the timer if the component is unmounted before 5 seconds
+   return () => clearTimeout(timer);
+ }, [isVisible === true]);
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
@@ -151,13 +197,9 @@ const User = ({}) => {
 
   return (
     <div className="pb-28">
+      {error != "" && isVisible && <p className="absolute rounded-bl z-50 bg-red-500 text-white text-sm px-1 right-0">{error}</p>}
       <div>
-        <img
-          src={ellipses}
-          className="absolute top-0 z-50 w-[50%] cover"
-          alt=""
-        />
-        <img src={bg} className="relative cover z-20 w-full h-[7cm]" alt="" />
+       <Bg />
         <picture className="image-container relative flex justify-center ">
           {
             <img
@@ -165,28 +207,11 @@ const User = ({}) => {
               className={`absolute bg-white user ${
                 !imgUrl[0] && "p-8"
               }  w-40 h-40 -mt-20 rounded-full z-20 left-0 right-0 mx-auto`}
-              alt=""
+              
             />
           }
 
-          {/* {imgUrl.map(img => <img src={img} />)} */}
-          <svg
-            onClick={handleImageClick}
-            className=" svg absolute -mt-20 w-40 h-40 p-14 text-gray-200 cursor-pointer rounded-full"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-plus"
-          >
-            <path d="M5 12h14" />
-            <path d="M12 5v14" />
-          </svg>
+  
           <input
             type="file"
             className="hidden"
@@ -197,20 +222,20 @@ const User = ({}) => {
           />
           <div
             onClick={controlModal}
-            className="editPen absolute z-20  text-[#26afa6] border-[#24a9a0] bg-[#bdbdbdb4] h-10 w-10 p-2 overflow-hidden   ml-28 mt-8 border  rounded-full"
+            className="editPen absolute z-20  text-[#26afa6] border-[#24a9a0] bg-[#e7e5e596] h-10 w-10 p-2 overflow-hidden   ml-28 mt-8 border  rounded-full"
           >
             <svg
+              className="lucide lucide-pencil data-[state=true]:-translate-y-8 transition-all duration-300"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               data-state={modalIsOpen}
-              className="lucide lucide-pencil data-[state=true]:-translate-y-8 transition-all duration-200"
             >
               <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
               <path d="m15 5 4 4" />
@@ -222,11 +247,11 @@ const User = ({}) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="lucide lucide-x  data-[state=true]:-translate-y-6 transition-all duration-200"
-              data-state={modalIsOpen}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-x  data-[state=false]:-translate-y-6 transition-all duration-300"
+              data-state={!modalIsOpen}
             >
               <path d="M18 6 6 18" />
               <path d="m6 6 12 12" />
@@ -236,7 +261,7 @@ const User = ({}) => {
 
         <section
           data-state={modalIsOpen}
-          className="dropdown data-[state=true]:translate-y-0 -translate-y-56 duration-300  bg-gradient-to-r from-[#368882] to-[#2c7e78] absolute w-full transition-all ease-in-out h-[5cm] top-[6.4cm] mt-[10cm flex items-end justify-center z-0"
+          className="dropdown data-[state=true]:translate-y-0 -translate-y-56 duration-500  bg-gradient-to-r from-[#368882] to-[#2c7e78] absolute w-full transition-all ease-in-out h-[5.4cm] top-[5cm] mt-[10cm flex items-end justify-center z-0"
         >
           <div className="pictureOptions flex text-white flex-col items-center borde leading-10  p-0 w-[95%] shadow-2x shadow-blac   rounded-t-lg  text-sm">
             <button
@@ -258,7 +283,7 @@ const User = ({}) => {
           </div>
         </section>
       </div>
-      <section className="mt-20 px-6">
+      <section className="mt-24 px-6">
         <div className="flex-col justify-center items-center my-6 flex">
           <p>{matchingName}</p>
           <p>{auth.currentUser?.email}</p>
@@ -325,6 +350,7 @@ const User = ({}) => {
               doSignOut();
               setImgUrl([]);
               setMatchingName(null);
+
             }}
             className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >

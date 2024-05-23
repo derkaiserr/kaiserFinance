@@ -166,10 +166,10 @@ const formattedDate = formatDate(date);
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-chevron-left"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-left"
           >
             <path d="m15 18-6-6 6-6" />
           </svg>
@@ -186,10 +186,10 @@ const formattedDate = formatDate(date);
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-ellipsis"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-ellipsis"
           >
             <circle cx="12" cy="12" r="1" />
             <circle cx="19" cy="12" r="1" />
@@ -237,7 +237,7 @@ const formattedDate = formatDate(date);
             className="px-6 pr-12 py-2"
             name="amount"
             id="amount"
-            // value={amount}
+            value={amount}
             onChange={(e) => {
               setAmount(e.target.value);
               setIncome(e.target.value);
@@ -250,6 +250,8 @@ const formattedDate = formatDate(date);
             onClick={(e) => {
               e.preventDefault();
               setAmount("");
+              setIncome("");
+              setExpenses("");
             }}
             className="absolute text-sm text-[#666666] right-1 p-2 top-[2rem]"
             >
