@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext, useMemo , useRef} from "react";
 
 import Bg from "../bg.jsx";
 import { EyeOff } from "lucide-react";
@@ -126,10 +126,18 @@ const handlePropagation = (e) => {
   e.stopPropagation();
 }
 
+const elementRef = useRef(null);
+
+  useEffect(() => {
+    
+      elementRef.current.scrollIntoView({ behavior: 'smooth' });
+    
+  });
+
   return (
-    <div className=" pb-28">
+    <div className=" mb-[27m] ">
      <Bg/>
-      <section className="card absolute py-7 px-5 z-50 flex shadow-2xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
+      <section className="card absolute py-7 px-5 z-50 flex shadow-xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
             Total Balance
@@ -238,9 +246,9 @@ const handlePropagation = (e) => {
           </div>
         </div>
       </section>
-      <main className={`px-6 mt-28 ${showTxList ?  " shadow-2xl  w-[90%] pt-6 rounded-2xl overflow-auto fixed  h-[90%] -translate-y-72 " : "h-52 absolute overflow-hidden"}  w-[90%] right-0 left-0 mx-auto z-[80]   bg-white transition-all duration-500 ease-in `} >
-      <header className=" flex justify-between px  ">
-        <p className="font-semibold text-lg">Transactions History</p>
+      <main  className={`px-6 mt-28 ${showTxList ?  " shadow-2xl  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] " : "h-40  overflow-hidden"} absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `} >
+      <header  className=" flex justify-between px ">
+        <p ref={elementRef} data-state={showTxList}  className={`font-semibold data-[state=true]:pt-6 transition-all duration-300  text-lg`}>Transactions History</p>
         {reverselySortedTx.length > 3 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}
       </header>
 

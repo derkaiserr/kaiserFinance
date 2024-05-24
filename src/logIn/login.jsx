@@ -28,9 +28,13 @@ export default function Login() {
       const error = new Error("error");
       console.log(error);
       throw error;
+      
     }
-    navigate("/home");
-    console.log(isSigningIn);
+    if(auth.currentUser.email ===email){
+
+      navigate("/home");
+      console.log(isSigningIn);
+    }
   };
 
   // const loggedInLink = () =>{
