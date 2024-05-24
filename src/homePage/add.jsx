@@ -2,13 +2,18 @@ import React, { useState, useEffect, useContext } from "react";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
 // import bg from "./assets/bg-home.png";
 import bg from "../assets/bg-home.png";
+import Bg from "../bg.jsx";
 import ellipses from "../assets/ellipses.png";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import UserContext from "../../hooks/context/context.js";
 
 const AddExpense = () => {
-  const { localCurrency, currencySymbol, transactions, setTransactions } =
-    useContext(UserContext);
+  const {
+    localCurrency,
+    currencySymbol,
+    transactions,
+    setTransactions,
+    navigate,
+  } = useContext(UserContext);
   const [transactType, setTransactType] = useState(1);
 
   const [inputValue, setInputValue] = useState("");
@@ -21,7 +26,6 @@ const AddExpense = () => {
   const [expenses, setExpenses] = useState(0);
   const [typeTrack, setTypeTrack] = useState(1);
 
-  const navigate = useNavigate();
   const generateNewId = () => {
     const maxId = transactions.reduce(
       (max, transaction) => Math.max(max, transaction.id),
@@ -31,16 +35,15 @@ const AddExpense = () => {
   };
 
   // const dateString = date;
-  
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: "2-digit", month: "short", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", options);
     return formattedDate;
-};
+  };
 
-const formattedDate = formatDate(date);
-
+  const formattedDate = formatDate(date);
 
   const closeOption = () => {
     setSelector(false);
@@ -70,40 +73,39 @@ const formattedDate = formatDate(date);
   const addTransaction = (e) => {
     e.preventDefault();
 
-     // Format the date before adding to transactions
+    // Format the date before adding to transactions
 
-      // useEffect(()=> {
-      //   if (currencySymbol === "₦") {
-      //     setAmount(prev => prev / localCurrency)
-      //   } else {
-      //     setAmount(prev => prev * 1)
-      //   }
+    // useEffect(()=> {
+    //   if (currencySymbol === "₦") {
+    //     setAmount(prev => prev / localCurrency)
+    //   } else {
+    //     setAmount(prev => prev * 1)
+    //   }
 
-      // }, [currencySymbol])
+    // }, [currencySymbol])
 
-      // if (typeTrack === 1) {
-      //   console.log("Previous income:", income);
-      //   setIncome(prevIncome => parseFloat(prevIncome) + 30);
+    // if (typeTrack === 1) {
+    //   console.log("Previous income:", income);
+    //   setIncome(prevIncome => parseFloat(prevIncome) + 30);
 
-      //   console.log("Updated income:", isNaN(income));
-      // } else if (typeTrack === 2) {
-      //   console.log("Previous expenses:", expenses);
-      //   setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
-      //   console.log("Updated expenses:", expenses);
-      // }
+    //   console.log("Updated income:", isNaN(income));
+    // } else if (typeTrack === 2) {
+    //   console.log("Previous expenses:", expenses);
+    //   setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
+    //   console.log("Updated expenses:", expenses);
+    // }
 
-      // console.log(isNaN(fo))
+    // console.log(isNaN(fo))
 
+    if (name != "" && amount != "" && date != "") {
       const newTransaction = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
         amount: newAmount,
         date: formattedDate,
         id: generateNewId(),
         type: typeTrack,
-    
       };
 
-     
       if (typeTrack === 1) {
         // Assuming typeTrack is 1 for income, 2 for expense
         newTransaction.income = parseFloat(income); // Add income property only if type is 1
@@ -117,17 +119,17 @@ const formattedDate = formatDate(date);
       console.log(transactions);
 
       return navigate("/home");
-
-      // Update income or expense detail
     }
-  
 
-  useEffect(() => {
-    console.log(transactions);
-  }, [transactions]);
-  useEffect(() => {
-    console.log(date);
-  }, [date]);
+    // Update income or expense detail
+  };
+
+  // useEffect(() => {
+  //   console.log(transactions);
+  // }, [transactions]);
+  // useEffect(() => {
+  //   console.log(date);
+  // }, [date]);
 
   const selection = [
     {
@@ -150,16 +152,12 @@ const formattedDate = formatDate(date);
 
   return (
     <div>
-      <img
-        src={ellipses}
-        className="absolute top-0 z-20 w-[50%] cover"
-        alt=""
-      />
-
-      <img src={bg} className="relative cover w-full" alt="" />
-      <header className="flex text-white absolute top-10 rid grid-cols-3 flex-row w-full justify-between   p-6">
-        <div>
+    <Bg />
+      <header className="flex text-white absolute top-10 rid grid-cols-3 flex-row w-full justify-between z-50   p-6">
+        <button >
+      
           <svg
+            onClick={() => navigate(-1)}
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -173,7 +171,7 @@ const formattedDate = formatDate(date);
           >
             <path d="m15 18-6-6 6-6" />
           </svg>
-        </div>
+        </button>
 
         <p className="font-semibold">
           Add {typeTrack === 1 ? "Income" : "Expense"}
@@ -198,7 +196,7 @@ const formattedDate = formatDate(date);
         </button>
       </header>
 
-      <div className="absolute float border z-50 top-[90px] right-6  flex flex-col rounded-md bg-white  ">
+      <div className="absolute float border z-[85] top-[90px] right-6  flex flex-col rounded-md bg-white  ">
         {selector &&
           selection.map((select) => (
             <button
@@ -210,7 +208,7 @@ const formattedDate = formatDate(date);
             </button>
           ))}
       </div>
-      <form className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
+      <form className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
         <div>
           <label className="text-sm text-[#666666]" htmlFor="name">
             Name
@@ -245,19 +243,18 @@ const formattedDate = formatDate(date);
             }}
           />
           <div>
-
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setAmount("");
-              setIncome("");
-              setExpenses("");
-            }}
-            className="absolute text-sm text-[#666666] right-1 p-2 top-[2rem]"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setAmount("");
+                setIncome("");
+                setExpenses("");
+              }}
+              className="absolute text-sm text-[#666666] right-1 p-2 top-[2rem]"
             >
-            Clear
-          </button>
-            </div>
+              Clear
+            </button>
+          </div>
         </div>
         <div className="w-full ">
           <label className="text-sm text-[#666666]" htmlFor="date">
@@ -275,7 +272,6 @@ const formattedDate = formatDate(date);
         </div>
         <button
           onClick={addTransaction}
-          to="/home"
           className={`hover:bg-[#438883] ${
             typeTrack === 1 ? "text-green-600" : "text-red-600"
           } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}

@@ -1,17 +1,15 @@
 import { useState, useEffect, useContext, useMemo } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import bg from "../assets/bg-home.png";
+
+import Bg from "../bg.jsx";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import ellipses from "../assets/ellipses.png";
-
 import UserContext from "../../hooks/context/context.js";
-
+import useClickOutside from "../../hooks/useClickOutside.jsx";
 const PageOne = () => {
-  const { nav, setNav, theme, localCurrency, currencySymbol, transactions } =
+  const { nav, setNav, theme, localCurrency, currencySymbol, transactions, navigate } =
     useContext(UserContext);
   const [eye, setEye] = useState(false);
-
+const [showTxList, setShowTxList] = useState(false) 
   useEffect(() => {
     setNav(true);
   }, [nav]);
@@ -116,17 +114,21 @@ const PageOne = () => {
       return dateB - dateA;
     });
   }, [transactions]);
-  console.log(reverselySortedTx);
+  // console.log(reverselySortedTx);
+
+
+  const closeTx = ()=>{
+    setShowTxList(false)
+  }
+const ref = useClickOutside(closeTx)
+const handlePropagation = (e) => {
+  // Prevent the click event from propagating
+  e.stopPropagation();
+}
 
   return (
-    <div className=" pb-20">
-      <img
-        src={ellipses}
-        className="absolute top-0 z-20 w-[50%] cover"
-        alt=""
-      />
-      <img src={bg} className="relative cover w-full" alt="" />
-
+    <div className=" pb-28">
+     <Bg/>
       <section className="card absolute py-7 px-5 z-50 flex shadow-2xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
@@ -236,14 +238,14 @@ const PageOne = () => {
           </div>
         </div>
       </section>
-      <header className="mt-28 flex justify-between px-6 ">
+      <main className={`px-6 mt-28 ${showTxList ?  " shadow-2xl  w-[90%] pt-6 rounded-2xl overflow-auto fixed  h-[90%] -translate-y-72 " : "h-52 absolute overflow-hidden"}  w-[90%] right-0 left-0 mx-auto z-[80]   bg-white transition-all duration-500 ease-in `} >
+      <header className=" flex justify-between px  ">
         <p className="font-semibold text-lg">Transactions History</p>
-        {reverselySortedTx.length > 3 && <button className="text-sm text-gray-500 font-semibold">see all</button>}
+        {reverselySortedTx.length > 3 && <button ref={ref} onClick={()=> setShowTxList(true)} className="text-sm text-gray-500 font-semibold">see all</button>}
       </header>
 
-      <main className="px-6">
         {reverselySortedTx.length > 0 ? (
-          reverselySortedTx?.slice(0,3).map((transaction) => (
+          reverselySortedTx?.map((transaction) => (
             <div key={transaction.id} className="flex justify-between my-4">
               <div className="">
                 <p className="font-semibold">{transaction.name}</p>
@@ -268,7 +270,7 @@ const PageOne = () => {
         )}
       </main>
 
-      <Link to="/add">
+      <button onClick={()=> navigate("/add")} >
         <div
           className={`fixed bg-[#1F615C] ${
             theme === "dark" ? "shadow-black" : "shadow-slate-300 "
@@ -290,7 +292,7 @@ const PageOne = () => {
             <path d="M12 5v14" />
           </svg>
         </div>
-      </Link>
+      </button>
     </div>
   );
 };

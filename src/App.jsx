@@ -179,6 +179,86 @@ function App() {
       expense: 14.99,
       type: 2,
     },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 5,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
+    {
+      id: 4,
+      name: "Netflix",
+      date: dateFunction(2024, 0, 14),
+      amount: 14.99, // Update the amount based on localCurrency
+      expense: 14.99,
+      type: 2,
+    },
   ]);
 
   // transactions.map((transaction) => transaction.amount * localCurrency)

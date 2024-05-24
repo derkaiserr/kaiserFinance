@@ -1,11 +1,8 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import Modal from "react-modal";
+import {  Link } from "react-router-dom";
 import UserContext from "../hooks/context/context.js";
-import bg from "./assets/bg-home.png";
 import Bg from "./bg.jsx";
 import user from "./assets/user.svg";
-import ellipses from "./assets/ellipses.png";
 import { doSignOut } from "./firebase/auth.js";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
@@ -158,7 +155,7 @@ const User = ({}) => {
   
   
  const removeImage = async () =>{
-  //  if(imgUrl[0] === undefined) return
+   if(imgUrl[0] === undefined) return
    const imgRef = ref(
      imageDb,
      `${auth.currentUser.email}/${auth.currentUser.email}`
