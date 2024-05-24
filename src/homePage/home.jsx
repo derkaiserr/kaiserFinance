@@ -241,7 +241,7 @@ const handlePropagation = (e) => {
       <main className={`px-6 mt-28 ${showTxList ?  " shadow-2xl  w-[90%] pt-6 rounded-2xl overflow-auto fixed  h-[90%] -translate-y-72 " : "h-52 absolute overflow-hidden"}  w-[90%] right-0 left-0 mx-auto z-[80]   bg-white transition-all duration-500 ease-in `} >
       <header className=" flex justify-between px  ">
         <p className="font-semibold text-lg">Transactions History</p>
-        {reverselySortedTx.length > 3 && <button ref={ref} onClick={()=> setShowTxList(true)} className="text-sm text-gray-500 font-semibold">see all</button>}
+        {reverselySortedTx.length > 3 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}
       </header>
 
         {reverselySortedTx.length > 0 ? (
