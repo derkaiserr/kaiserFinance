@@ -9,7 +9,7 @@ const Bg = () =>{
           className="absolute top-0 z-50 w-[50%] max-h-[5cm] cover"
           alt=""
         />
-        <img src={bg} className="relative cover z-20 w-full h-[6cm]" alt="" />
+        <img src={bg} className="relative cover z-20 w-full h-[5.7cm]" alt="" />
     
     </>)
 }

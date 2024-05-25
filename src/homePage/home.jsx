@@ -249,12 +249,12 @@ const elementRef = useRef(null);
       <main  className={`px-6 mt-28 ${showTxList ?  " shadow-2xl  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] " : "h-40  overflow-hidden"} absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `} >
       <header  className=" flex justify-between px ">
         <p ref={elementRef} data-state={showTxList}  className={`font-semibold data-[state=true]:pt-6 transition-all duration-300  text-lg`}>Transactions History</p>
-        {reverselySortedTx.length > 3 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}
+        {reverselySortedTx.length > 2 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}
       </header>
 
         {reverselySortedTx.length > 0 ? (
           reverselySortedTx?.map((transaction) => (
-            <div key={transaction.id} className="flex justify-between my-4">
+            <div key={transaction.id} className="flex justify-between my-4 mt-2">
               <div className="">
                 <p className="font-semibold">{transaction.name}</p>
                 <p className="text-slate-500 font-medium text-sm">
