@@ -1,19 +1,25 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
-import {  Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserContext from "../hooks/context/context.js";
 import Bg from "./bg.jsx";
 import user from "./assets/user.svg";
 import { doSignOut } from "./firebase/auth.js";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
-import imageCompression from 'browser-image-compression';
-import { getDownloadURL, ref, uploadBytes, deleteObject } from "firebase/storage";
+import imageCompression from "browser-image-compression";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 
 export const ThemeContext = createContext(null);
 const User = ({}) => {
   const {
     nav,
     setNav,
+    transactions,
     theme,
     setTheme,
     setLocalCurrency,
@@ -26,14 +32,14 @@ const User = ({}) => {
     setSelectedImage,
     matchingName,
     setMatchingName,
-    setReloadImage
+    setReloadImage,
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
   }, [nav]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [error, manageError] = useState("")
+  const [error, manageError] = useState("");
 
   const [currency, setCurrency] = useState(
     localStorage.getItem("currency") || "USD"
@@ -57,8 +63,6 @@ const User = ({}) => {
     imageRef.current.click();
   };
 
-  
-
   useEffect(() => {
     const fetchDocs = async () => {
       try {
@@ -71,7 +75,6 @@ const User = ({}) => {
         }
       } catch (error) {
         console.error("Error fetching documents:", error);
-        
       }
     };
 
@@ -91,7 +94,7 @@ const User = ({}) => {
 
       try {
         const compressedFile = await imageCompression(file, options);
-        console.log('compressedFile:', compressedFile);
+        console.log("compressedFile:", compressedFile);
 
         // Set the selected image to the state
         setSelectedImage(compressedFile);
@@ -108,26 +111,24 @@ const User = ({}) => {
             setImgUrl((data) => [...data, url]);
             setIsOpen(false);
             // Optionally save the URL to localStorage
-            localStorage.setItem('imgUrl', JSON.stringify([...imgUrl, url]));
+            localStorage.setItem("imgUrl", JSON.stringify([...imgUrl, url]));
           });
         });
       } catch (error) {
-        console.error('Error compressing or uploading file:', error);
-        manageError('Image Upload Failed');
+        console.error("Error compressing or uploading file:", error);
+        manageError("Image Upload Failed");
         setIsVisible(true);
       }
     }
   };
 
-  
-  
   const handleImageUpload = async (event) => {
     const imageFile = event.target.files[0];
 
     const options = {
-      maxSizeMB: 1,          // (default: Number.POSITIVE_INFINITY)
+      maxSizeMB: 1, // (default: Number.POSITIVE_INFINITY)
       // maxWidthOrHeight: 800, // (default: undefined)
-      useWebWorker: true     // (default: true)
+      useWebWorker: true, // (default: true)
     };
 
     try {
@@ -138,7 +139,10 @@ const User = ({}) => {
       reader.onloadend = () => {
         setImgUrl((prevUrls) => [...prevUrls, reader.result]);
         // Optionally save the compressed image to localStorage
-        localStorage.setItem('imgUrl', JSON.stringify([...imgUrl, reader.result]));
+        localStorage.setItem(
+          "imgUrl",
+          JSON.stringify([...imgUrl, reader.result])
+        );
       };
       reader.readAsDataURL(compressedFile);
     } catch (error) {
@@ -146,45 +150,39 @@ const User = ({}) => {
     }
   };
 
- 
   function controlModal() {
     setIsOpen((prev) => !prev);
   }
 
-
-  
-  
- const removeImage = async () =>{
-   if(imgUrl[0] === undefined) return
-   const imgRef = ref(
-     imageDb,
-     `${auth.currentUser.email}/${auth.currentUser.email}`
+  const removeImage = async () => {
+    if (imgUrl[0] === undefined) return;
+    const imgRef = ref(
+      imageDb,
+      `${auth.currentUser.email}/${auth.currentUser.email}`
     );
     await deleteObject(imgRef)
-    .then(() => {
-      setReloadImage(prev => !prev)
-      setImgUrl([undefined])
-      
-    })
-    .catch((error) => {
-      manageError("Error Deleting Image")
-      setIsVisible(true)
-    });
-    setIsOpen(false)
- }
+      .then(() => {
+        setReloadImage((prev) => !prev);
+        setImgUrl([undefined]);
+      })
+      .catch((error) => {
+        manageError("Error Deleting Image");
+        setIsVisible(true);
+      });
+    setIsOpen(false);
+  };
 
+  const [isVisible, setIsVisible] = useState(false);
 
- const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    // Set a timer to hide the element after 5 seconds
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 5000);
 
- useEffect(() => {
-   // Set a timer to hide the element after 5 seconds
-   const timer = setTimeout(() => {
-     setIsVisible(false);
-   }, 5000);
-
-   // Clear the timer if the component is unmounted before 5 seconds
-   return () => clearTimeout(timer);
- }, [isVisible === true]);
+    // Clear the timer if the component is unmounted before 5 seconds
+    return () => clearTimeout(timer);
+  }, [isVisible === true]);
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
@@ -194,21 +192,23 @@ const User = ({}) => {
 
   return (
     <div className="pb-28">
-      {error != "" && isVisible && <p className="absolute rounded-bl z-50 bg-red-500 text-white text-sm px-1 right-0">{error}</p>}
+      {error != "" && isVisible && (
+        <p className="absolute rounded-bl z-50 bg-red-500 text-white text-sm px-1 right-0">
+          {error}
+        </p>
+      )}
       <div>
-       <Bg />
+        <Bg />
         <picture className="image-container relative flex justify-center ">
           {
             <img
               src={imgUrl[0] ? imgUrl[0] : user}
               className={`absolute bg-white user ${
-                !imgUrl[0] && "p-8"
+                !imgUrl[0] && "p-"
               }  w-40 h-40 -mt-20 rounded-full z-20 left-0 right-0 mx-auto`}
-              
             />
           }
 
-  
           <input
             type="file"
             className="hidden"
@@ -300,6 +300,7 @@ const User = ({}) => {
               <option value="NGN">NGN</option>
             </select>
           </div>
+
           <div className="flex justify-between">
             <label htmlFor="theme">Theme</label>
             <select
@@ -334,7 +335,9 @@ const User = ({}) => {
           </div>
           <button
             onClick={resetPrompt}
-            className="bg-slate-400 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
+            className={`bg-slate-400 ${
+              transactions.length === 0 && "bg-slate-500 text-[#e0e0e0b7]"
+            } py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full`}
             type="reset"
           >
             Reset
@@ -347,7 +350,6 @@ const User = ({}) => {
               doSignOut();
               setImgUrl([]);
               setMatchingName(null);
-
             }}
             className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >

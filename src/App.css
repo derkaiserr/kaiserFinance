@@ -176,3 +176,11 @@ footer > svg {
 .pictureOptions{
   box-shadow: rgba(38, 38, 38, 1) 1px  12px 30px 1px ;
 }
+
+
+ .dark .activeTxList{
+  background-color: #2f2f2f;
+}
+ .dark .txList{
+  background-color: #1d1d1d;
+}
