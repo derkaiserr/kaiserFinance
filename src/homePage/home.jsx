@@ -132,10 +132,10 @@ const elementRef = useRef(null);
     
       elementRef.current.scrollIntoView({ behavior: 'smooth' });
     
-  });
+  },[!showTxList]);
 
   return (
-    <div className=" mb-[27m] ">
+    <div className=" ">
      <Bg/>
       <section className="card absolute py-7 px-5 z-50 flex shadow-xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
