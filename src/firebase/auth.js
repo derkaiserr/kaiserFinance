@@ -5,14 +5,20 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
+import { useContext } from "react";
+import { AuthContext } from "../../hooks/context/authContext/authContext.jsx";
 import { app, auth } from "./firebase.js";
+// import { AuthProvider } from "../../hooks/context/authContext/authContext.js";
+
 export const Register = async (email, password) => {
+  // const { error, manageError } = useContext(AuthContext);
   // return createUserWithEmailAndPassword(auth, email, password);
   try {
     const user = await createUserWithEmailAndPassword(auth, email, password);
     console.log(user);
   } catch (error) {
-    console.log(error.message);
+    // manageError(error.message);
+    console.error(error.message);
   }
 };
 export const SignIn = async (email, password) => {
@@ -20,9 +26,10 @@ export const SignIn = async (email, password) => {
     const user = await signInWithEmailAndPassword(auth, email, password);
     console.log(auth.currentUser.email);
     console.log(user);
-  } catch (error) {
-    console.log(error);
-    console.log(error.message);
+  } catch (err) {
+   const error =  new Error('Authentication failed');
+    // console.log(error);
+    // throw error;
   }
 };
 

@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-import { Routes, Route, Link, useNavigate} from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
 import date from "date-and-time";
 import GetStarted from "./getStarted";
-// import SignUp from "./signUp/signUp.jsx";
 import { SignUp } from "./signUp/signUp.jsx";
 import Login from "./logIn/login.jsx";
-// import Mainpage from "./mainpage";
 import PageOne from "./homePage/home.jsx";
 import Stats from "./statisticsPage/stats.jsx";
 import User from "./user.jsx";
@@ -20,7 +18,7 @@ import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 import "./App.css";
 import AddExpense from "./homePage/add.jsx";
-
+import { AuthContext } from "../hooks/context/authContext/authContext.jsx";
 import Context from "../hooks/context/context.js";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { imageDb, auth } from "./firebase/firebase.js";
@@ -28,26 +26,38 @@ import { imageDb, auth } from "./firebase/firebase.js";
 function App() {
   let saveLocation = window.location.pathname;
 
-
-  const navigate = useNavigate()
+  // const { error, manageError } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState(() => {
     // Retrieve initial state from localStorage if it exists, otherwise use an empty array
-    const savedImgUrl = localStorage.getItem('imgUrl');
+    const savedImgUrl = localStorage.getItem("imgUrl");
     return savedImgUrl ? JSON.parse(savedImgUrl) : [];
   });
 
   useEffect(() => {
     // Save imgUrl to localStorage whenever it changes
-    localStorage.setItem('imgUrl', JSON.stringify(imgUrl));
+    localStorage.setItem("imgUrl", JSON.stringify(imgUrl));
   }, [imgUrl]);
   const [selectedImage, setSelectedImage] = useState("");
-  const [reloadImage, setReloadImage] = useState(false)
+  const [reloadImage, setReloadImage] = useState(false);
   const [matchingName, setMatchingName] = useState(null);
   const [nav, setNav] = useState(() => {
     const storedNav = localStorage.getItem("nav");
     return storedNav ? JSON.parse(storedNav) : false; // Parse JSON string to boolean
   });
+  const [error, manageError] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
+  useEffect(() => {
+    // Set a timer to hide the element after 5 seconds
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+      manageError("")
+    }, 5000);
+
+    // Clear the timer if the component is unmounted before 5 seconds
+    return () => clearTimeout(timer);
+  }, [isVisible === true]);
   // Update local storage whenever the nav state changes
   useEffect(() => {
     localStorage.setItem("nav", JSON.stringify(nav));
@@ -56,8 +66,6 @@ function App() {
   // const savedNav = (link) => {
   //   setNav(link.to);
   // };
-
-  
 
   const [activeLink, setActiveLink] = useState(1);
 
@@ -140,8 +148,6 @@ function App() {
   //       // Handle fetch error if needed
   //     });
   // }, [currencyMemo]);
-
-  
 
   // Use currencyState in your component
   // const updatedTransactions =
@@ -270,8 +276,6 @@ function App() {
   // useEffect(()=>
   // setTransactions(updatedTx),[])
 
- 
-
   // const value = transactions[0].amount;
   // const [values, setValues] = useState(3 * localCurrency);
 
@@ -314,41 +318,37 @@ function App() {
   // console.log(currencyState);
 
   useEffect(() => {
-    if(!auth.currentUser){
-      return
+    if (!auth.currentUser) {
+      return;
     }
 
-      const fetchImages = async () => {
-        try {
+    const fetchImages = async () => {
+      try {
         const imagesRef = ref(imageDb, `${auth.currentUser?.email}`);
         const imgs = await listAll(imagesRef);
 
         if (imgs.items.length === 0) {
           return;
         }
-        
+
         // console.log(imgs); // Check the structure and content of imgs
-        
+
         const urls = await Promise.all(
           imgs.items.map(async (val) => {
             const url = await getDownloadURL(val);
             return url;
           })
         );
-        
+
         setImgUrl(urls);
       } catch (error) {
         // console.error("Error fetching images: ", error);
       }
     };
-    
-    fetchImages();
 
+    fetchImages();
   }, [imgUrl, auth.currentUser, reloadImage]);
 
-
-
- 
   return (
     <Context.Provider
       value={{
@@ -368,12 +368,16 @@ function App() {
         sortedTransactions,
         navigate,
         imgUrl,
-        setImgUrl, 
+        setImgUrl,
         selectedImage,
         setSelectedImage,
         matchingName,
         setMatchingName,
-        setReloadImage
+        setReloadImage,
+        error,
+        manageError,
+        isVisible,
+        setIsVisible,
       }}
     >
       <div className={`${theme} inter  `}>

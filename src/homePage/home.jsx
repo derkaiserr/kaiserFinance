@@ -3,11 +3,11 @@ import { useState, useEffect, useContext, useMemo , useRef} from "react";
 import Bg from "../bg.jsx";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import UserContext from "../../hooks/context/context.js";
+import Context from "../../hooks/context/context.js";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
 const PageOne = () => {
   const { nav, setNav, theme, localCurrency, currencySymbol, transactions, navigate } =
-    useContext(UserContext);
+    useContext(Context);
   const [eye, setEye] = useState(false);
 const [showTxList, setShowTxList] = useState(false) 
   useEffect(() => {
@@ -246,7 +246,7 @@ const elementRef = useRef(null);
           </div>
         </div>
       </section>
-      <main  className={`px-6  mt-28 ${showTxList ?  " shadow-2xl activeTxList  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] " : "h-40 txList  overflow-hidden"} absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `} >
+      <main  className={`px-1  mt-28 ${showTxList ?  "px-6 shadow-2xl activeTxList  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] " : "h-40 txList  overflow-hidden"} absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `} >
       <header  className=" flex justify-between px ">
         <p ref={elementRef} data-state={showTxList}  className={`font-semibold data-[state=true]:pt-6 transition-all duration-300  text-lg`}>Transactions History</p>
         {reverselySortedTx.length > 2 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}

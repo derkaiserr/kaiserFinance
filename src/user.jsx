@@ -33,13 +33,16 @@ const User = ({}) => {
     matchingName,
     setMatchingName,
     setReloadImage,
+    error,
+    manageError,
+    isVisible,
+    setIsVisible,
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
   }, [nav]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [error, manageError] = useState("");
 
   const [currency, setCurrency] = useState(
     localStorage.getItem("currency") || "USD"
@@ -172,17 +175,6 @@ const User = ({}) => {
     setIsOpen(false);
   };
 
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // Set a timer to hide the element after 5 seconds
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 5000);
-
-    // Clear the timer if the component is unmounted before 5 seconds
-    return () => clearTimeout(timer);
-  }, [isVisible === true]);
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
@@ -222,7 +214,7 @@ const User = ({}) => {
             className="editPen absolute z-20  text-[#26afa6] border-[#24a9a0] bg-[#e7e5e596] h-10 w-10 p-2 overflow-hidden   ml-28 mt-8 border  rounded-full"
           >
             <svg
-              className="lucide lucide-pencil data-[state=true]:-translate-y-8 transition-all duration-300"
+              className="lucide lucide-pencil data-[state=true]:-translate-y-8 transition-all duration-500"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -247,7 +239,7 @@ const User = ({}) => {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-x  data-[state=false]:-translate-y-6 transition-all duration-300"
+              className="lucide lucide-x  data-[state=false]:-translate-y-6 transition-all duration-500"
               data-state={!modalIsOpen}
             >
               <path d="M18 6 6 18" />
@@ -336,8 +328,10 @@ const User = ({}) => {
           <button
             onClick={resetPrompt}
             className={`bg-slate-400 ${
-              transactions.length === 0 && "bg-slate-500 text-[#e0e0e0b7]"
-            } py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full`}
+              transactions.length == 0
+                ? "bg-slate-500 text-[#c4c4c4e7]"
+                : "text-white"
+            } py-2 text-lg font-semibold shadow-xl flex justify-center  rounded-md w-full`}
             type="reset"
           >
             Reset

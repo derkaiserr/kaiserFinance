@@ -58,9 +58,7 @@ import UserContext from "../../hooks/context/context.js";
   };
 
 
-  const fetchName = () =>{
-    
-  }
+  
   
   return (
     <div className="signUp ">

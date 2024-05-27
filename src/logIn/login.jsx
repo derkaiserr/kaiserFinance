@@ -5,35 +5,37 @@ import { Link } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import { SignIn, doSignInWithGoogle } from "../firebase/auth";
 import UserContext from "../../hooks/context/context.js";
-// import { useAuth } from "../../hooks/context/authContext/authContext";
+// import { AuthContext } from "../../hooks/context/authContext/authContext.jsx";
 
 export default function Login() {
-  const {navigate} = useContext(UserContext)
-  
+  const { navigate, isVisible, setIsVisible, erro, anageError } =
+    useContext(UserContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [error, setError] = useState("");
   // const {userLoggedIn} = useContext(useAuth)
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(auth.currentUser);
-    await SignIn(email, password);
-    if (auth.currentUser === null) {
-      // setIsSigningIn(true)
-      // throw new Error("You Suck!");
-      const error = new Error("error");
-      console.log(error);
-      throw error;
-      
-    }
-    if(auth.currentUser.email ===email){
+    try {
+      await SignIn(email, password);
 
-      navigate("/home");
-      console.log(isSigningIn);
+      // Check if sign-in was successful
+      if (auth.currentUser && auth.currentUser.email === email) {
+        navigate("/home");
+      } else {
+        throw new Error("Sign-in failed. Please check your credentials.");
+      }
+    } catch (err) {
+      console.error("Error during sign-in:", err);
+
+      // If sign-in failed, manage the error and set visibility state
+      setError(err.message);
+      setIsVisible(true);
     }
   };
 
@@ -59,11 +61,18 @@ export default function Login() {
   const [eye, setEye] = useState(false);
 
   return (
-    <div className="login">
-      {/* {isSigningIn && <Navigate to={homeLink}/>} */}
-      <header className="grid px-4 grid-cols-3 text-center pt-6 font-bold">
+    <div className="login max-h-full">
+      { (
+        <p
+          data-state={isVisible}
+          className="absolute z-20 text-center data-[state=true]:translate-y-0 -translate-y-24 ease-in-out top-0 bg-red-500 text-white text-md transition-all duration-300 mx-auto left-0 right-0  w-full p-5 "
+        >
+          {error}
+        </p>
+      )}
+      <header className="absolute w-full grid px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
-        onClick={() => navigate(-1)}
+          onClick={() => navigate(-1)}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -140,7 +149,10 @@ export default function Login() {
 
           <p className="pt-3 text-center">
             Don't have an account yet?
-            <Link to={"/SignUp"} className="bg-transparent  text-[#438883] "> Sign Up.</Link>
+            <Link to={"/SignUp"} className="bg-transparent  text-[#438883] ">
+              {" "}
+              Sign Up.
+            </Link>
           </p>
         </form>
       }
