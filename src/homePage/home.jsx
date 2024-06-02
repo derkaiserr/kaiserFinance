@@ -6,13 +6,17 @@ import { Eye } from "lucide-react";
 import Context from "../../hooks/context/context.js";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
 const PageOne = () => {
-  const { nav, setNav, theme, localCurrency, currencySymbol, transactions, navigate } =
+  const { nav, setNav, theme, localCurrency, currencySymbol, transactions, navigate, loading } =
     useContext(Context);
   const [eye, setEye] = useState(false);
 const [showTxList, setShowTxList] = useState(false) 
   useEffect(() => {
+    if(loading === true) {
+      setNav(false);
+      return
+    }
     setNav(true);
-  }, [nav]);
+  }, [nav, loading]);
 
   const calculateAmount = (transactions, type) => {
     let total = 0;
@@ -121,10 +125,10 @@ const [showTxList, setShowTxList] = useState(false)
     setShowTxList(false)
   }
 const ref = useClickOutside(closeTx)
-const handlePropagation = (e) => {
-  // Prevent the click event from propagating
-  e.stopPropagation();
-}
+// const handlePropagation = (e) => {
+//   // Prevent the click event from propagating
+//   e.stopPropagation();
+// }
 
 const elementRef = useRef(null);
 
@@ -134,6 +138,8 @@ const elementRef = useRef(null);
     
   },[!showTxList]);
 
+
+  if(loading) return <div className=" flex h-[100vh] w-full justify-center items-center" ref={elementRef}><p className="loader"></p></div>
   return (
     <div className=" ">
      <Bg/>

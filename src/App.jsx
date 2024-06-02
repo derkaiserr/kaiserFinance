@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import date from "date-and-time";
 import GetStarted from "./getStarted";
 import { SignUp } from "./signUp/signUp.jsx";
@@ -21,7 +21,8 @@ import AddExpense from "./homePage/add.jsx";
 import { AuthContext } from "../hooks/context/authContext/authContext.jsx";
 import Context from "../hooks/context/context.js";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
-import { imageDb, auth } from "./firebase/firebase.js";
+import { imageDb, auth, db } from "./firebase/firebase.js";
+import { onAuthStateChanged } from "firebase/auth";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
@@ -152,121 +153,63 @@ function App() {
   // Use currencyState in your component
   // const updatedTransactions =
 
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      name: "Upwork",
-      date: dateFunction(2021, 0, 24),
-      amount: 8000, // Update the amount based on localCurrency
-      income: 8000,
-      type: 1,
-    },
-    {
-      id: 2,
-      name: "Transfer",
-      date: dateFunction(2024, 4, 7),
-      amount: 845, // Update the amount based on localCurrency
-      expense: 845,
-      type: 2,
-    },
-    {
-      id: 3,
-      name: "Paypal",
-      date: dateFunction(2024, 1, 20),
-      amount: 14000, // Update the amount based on localCurrency
-      income: 14000,
-      type: 1,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 5,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-    {
-      id: 4,
-      name: "Netflix",
-      date: dateFunction(2024, 0, 14),
-      amount: 14.99, // Update the amount based on localCurrency
-      expense: 14.99,
-      type: 2,
-    },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userIn, setUserIn] = useState(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        if (currentUser) {
+            setUserIn(currentUser);
+            fetchTransactions(currentUser);
+        } else {
+            setUserIn(null);
+            setLoading(false);
+            // navigate('/login'); // Redirect to login if user is not authenticated
+        }
+    });
+
+    return () => unsubscribe();
+}, [auth, navigate]);
+
+const fetchTransactions = async (currentUser) => {
+    try {
+      setLoading(true);
+        const q = query(collection(db, 'transactions'), where('userId', '==', currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        const transactionsData = [];
+        querySnapshot.forEach((docSnapshot) => {
+            transactionsData.push({ ...docSnapshot.data(), id: docSnapshot.id });
+        });
+        setTransactions(transactionsData);
+    } catch (err) {
+        console.error("Error fetching transactions: ", err);
+    } finally {
+        setLoading(false); // Set loading to false once data is fetched
+    }
+};
+
+const resetTransactions = async () => {
+  if (!auth.currentUser) {
+      console.log("User is not authenticated");
+      navigate('/login'); // Redirect to login if user is not authenticated
+      return;
+  }
+
+  try {
+      const q = query(collection(db, 'transactions'), where('userId', '==', auth.currentUser.uid));
+      const querySnapshot = await getDocs(q);
+      const deletePromises = [];
+      querySnapshot.forEach((docSnapshot) => {
+          deletePromises.push(deleteDoc(doc(db, 'transactions', docSnapshot.id)));
+      });
+      await Promise.all(deletePromises);
+      console.log('All transactions deleted');
+      setTransactions([]); // Clear the transactions state
+  } catch (err) {
+      console.error("Error deleting transactions: ", err);
+  }
+};
   // transactions.map((transaction) => transaction.amount * localCurrency)
   // const updatedTx = transactions.map(item => ({
   //   ...item,
@@ -298,6 +241,9 @@ function App() {
   // transactions.map((transaction) => console.log( new Date (transaction.date)))
 
   // console.log(sortedTransactions);
+
+
+
 
   const handleNavLinkClick = (id) => {
     setActiveLink(id);
@@ -378,6 +324,8 @@ function App() {
         manageError,
         isVisible,
         setIsVisible,
+        resetTransactions,
+        loading
       }}
     >
       <div className={`${theme} inter  `}>

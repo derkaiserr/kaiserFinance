@@ -39,10 +39,7 @@ export default function Login() {
     }
   };
 
-  // const loggedInLink = () =>{
-
-  //     "/home"
-  // }
+  
   const homeLink = "/home";
 
   // const onGoogleLogin = (e) =>{
@@ -101,7 +98,7 @@ export default function Login() {
             placeholder="Email"
             name=""
             id="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
           />
           <div className="relative flex items-center justify-center">
             <input

@@ -5,6 +5,8 @@ import bg from "../assets/bg-home.png";
 import Bg from "../bg.jsx";
 import ellipses from "../assets/ellipses.png";
 import UserContext from "../../hooks/context/context.js";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../firebase/firebase.js";
 
 const AddExpense = () => {
   const {
@@ -13,6 +15,10 @@ const AddExpense = () => {
     transactions,
     setTransactions,
     navigate,
+    error,
+    manageError,
+    isVisible,
+    setIsVisible,
   } = useContext(UserContext);
   const [transactType, setTransactType] = useState(1);
 
@@ -51,78 +57,65 @@ const AddExpense = () => {
 
   const dropdownRef = useClickOutside(closeOption);
 
-  const formattedNumber = (number) => {
-    // Convert the string to a number
-    const numericValue = parseFloat(number);
+  // const formattedNumber = (number) => {
+  //   // Convert the string to a number
+  //   const numericValue = parseFloat(number);
 
-    // Check if the input is a valid number
-    if (isNaN(numericValue)) {
-      return ""; // Return an empty string if it's not a valid number
-    }
+  //   // Check if the input is a valid number
+  //   if (isNaN(numericValue)) {
+  //     return ""; // Return an empty string if it's not a valid number
+  //   }
 
-    // Format the number with two decimal places and comma separators
-    return numericValue.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
+  //   // Format the number with two decimal places and comma separators
+  //   return numericValue.toLocaleString(undefined, {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2,
+  //   });
+  // };
   let newAmount = amount / localCurrency;
-  if (localCurrency === 1) {
-    newAmount = amount;
-  }
-  const addTransaction = (e) => {
+  if (localCurrency === 1)  newAmount = amount;
+  
+  const addTransaction = async (e) => {
     e.preventDefault();
 
-    // Format the date before adding to transactions
+    if (name !== "" && amount !== "" && date !== "") {
+        // const formattedDate = new Date(date).toISOString();
+        const newAmountt = parseFloat(newAmount);
 
-    // useEffect(()=> {
-    //   if (currencySymbol === "₦") {
-    //     setAmount(prev => prev / localCurrency)
-    //   } else {
-    //     setAmount(prev => prev * 1)
-    //   }
+        const newTransaction = {
+            name: name.charAt(0).toUpperCase() + name.slice(1),
+            amount: newAmountt,
+            date: formattedDate,
+            id: generateNewId(),
+            type: typeTrack,
+        };
 
-    // }, [currencySymbol])
+        if (typeTrack === 1) {
+            newTransaction.income = parseFloat(income);
+        } else {
+            newTransaction.expense = parseFloat(expenses);
+        }
 
-    // if (typeTrack === 1) {
-    //   console.log("Previous income:", income);
-    //   setIncome(prevIncome => parseFloat(prevIncome) + 30);
+        try {
+            const docRef = await addDoc(collection(db, 'transactions'), {
+                ...newTransaction,
+                userId: auth.currentUser.uid
+            });
+            console.log(date)
+            console.log('Document written with ID: ', docRef.id);
 
-    //   console.log("Updated income:", isNaN(income));
-    // } else if (typeTrack === 2) {
-    //   console.log("Previous expenses:", expenses);
-    //   setExpenses(prevExpenses => prevExpenses + parseFloat(amount));
-    //   console.log("Updated expenses:", expenses);
-    // }
+            setTransactions((prev) => [...prev, newTransaction]);
 
-    // console.log(isNaN(fo))
-
-    if (name != "" && amount != "" && date != "") {
-      const newTransaction = {
-        name: name.charAt(0).toUpperCase() + name.slice(1),
-        amount: newAmount,
-        date: formattedDate,
-        id: generateNewId(),
-        type: typeTrack,
-      };
-
-      if (typeTrack === 1) {
-        // Assuming typeTrack is 1 for income, 2 for expense
-        newTransaction.income = parseFloat(income); // Add income property only if type is 1
-      } else {
-        newTransaction.expense = parseFloat(expenses); // Add expense property only if type is
-      }
-      // Update transactions state
-      setTransactions((prev) => [...prev, newTransaction]);
-      // updatedTransactions.push(newTransaction);
-      // console.log(updatedTransactions)
-      console.log(transactions);
-
-      return navigate("/home");
+            return navigate("/home");
+        } catch (err) {
+            console.error("Error adding document: ", err);
+        }
+    } else {
+      manageError("Please fill in all fields")
+      setIsVisible(true)
+      console.error("Please fill in all fields");
     }
-
-    // Update income or expense detail
-  };
+};
 
   // useEffect(() => {
   //   console.log(transactions);
@@ -150,8 +143,18 @@ const AddExpense = () => {
     },
   ];
 
+
+
   return (
     <div>
+       { (
+        <p
+          data-state={isVisible}
+          className="absolute z-[100] text-center data-[state=true]:translate-y-0 -translate-y-24 ease-in-out top-0 bg-red-500 text-white text-md transition-all duration-300 mx-auto left-0 right-0  w-full p-5 "
+        >
+          {error}
+        </p>
+      )}
     <Bg />
       <header className="flex text-white absolute top-10 rid grid-cols-3 flex-row w-full justify-between z-50   p-6">
         <button >
@@ -231,7 +234,7 @@ const AddExpense = () => {
             {currencySymbol}
           </p>
           <input
-            type="text"
+            type="number"
             className="px-6 pr-12 py-2"
             name="amount"
             id="amount"
