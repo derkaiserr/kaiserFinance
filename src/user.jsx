@@ -7,12 +7,14 @@ import { doSignOut } from "./firebase/auth.js";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
+
 import {
   getDownloadURL,
   ref,
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
+import Loader from "./homePage/loader.jsx";
 
 export const ThemeContext = createContext(null);
 const User = ({}) => {
@@ -37,6 +39,8 @@ const User = ({}) => {
     manageError,
     isVisible,
     setIsVisible,
+    setLoading,
+    loading
   } = useContext(UserContext);
   useEffect(() => {
     setNav(true);
@@ -65,10 +69,11 @@ const User = ({}) => {
   const handleImageClick = () => {
     imageRef.current.click();
   };
-
+  
   useEffect(() => {
     const fetchDocs = async () => {
       try {
+        setLoading(true);
         const snapshot = await getDocs(colRef);
         const filteredDocs = snapshot.docs.filter((doc) => {
           return doc.data().email === auth.currentUser.email;
@@ -78,6 +83,8 @@ const User = ({}) => {
         }
       } catch (error) {
         console.error("Error fetching documents:", error);
+      } finally{
+        setLoading(false);
       }
     };
 
@@ -181,6 +188,9 @@ const User = ({}) => {
       setTransactions([]);
     }
   };
+
+  if (loading){
+  return <Loader />;}
 
   return (
     <div className="pb-28">

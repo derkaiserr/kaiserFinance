@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import ExpenseStats from "./expenseStats.jsx";
 import UserContext from "../../hooks/context/context.js";
+import Loader from "../homePage/loader.jsx";
 
 const Stats = () => {
   const {
@@ -12,6 +13,7 @@ const Stats = () => {
     setTransactions,
     sortedTransactions,
     navigate,
+    loading,
   } = useContext(UserContext);
   const chartWidth = window.innerWidth * 0.9;
 
@@ -22,6 +24,10 @@ const Stats = () => {
     (transactions) => transactions.type === 2
   );
   const [transactData, setTransactData] = useState(income);
+
+  if (loading){
+    // setNav(false)
+  return <Loader />;}
 
   return (
     <div className="mb-28">
@@ -38,7 +44,7 @@ const Stats = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             className="lucide lucide-chevron-left"
-            onClick={ ()=> navigate(-1)}
+            onClick={() => navigate(-1)}
           >
             <path d="m15 18-6-6 6-6" />
           </svg>

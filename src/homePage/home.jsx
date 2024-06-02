@@ -1,19 +1,28 @@
-import { useState, useEffect, useContext, useMemo , useRef} from "react";
+import { useState, useEffect, useContext, useMemo, useRef } from "react";
 
 import Bg from "../bg.jsx";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import Context from "../../hooks/context/context.js";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
+import Loader from "./loader.jsx";
 const PageOne = () => {
-  const { nav, setNav, theme, localCurrency, currencySymbol, transactions, navigate, loading } =
-    useContext(Context);
+  const {
+    nav,
+    setNav,
+    theme,
+    localCurrency,
+    currencySymbol,
+    transactions,
+    navigate,
+    loading,
+  } = useContext(Context);
   const [eye, setEye] = useState(false);
-const [showTxList, setShowTxList] = useState(false) 
+  const [showTxList, setShowTxList] = useState(false);
   useEffect(() => {
-    if(loading === true) {
+    if (loading === true) {
       setNav(false);
-      return
+      return;
     }
     setNav(true);
   }, [nav, loading]);
@@ -120,29 +129,25 @@ const [showTxList, setShowTxList] = useState(false)
   }, [transactions]);
   // console.log(reverselySortedTx);
 
+  const closeTx = () => {
+    setShowTxList(false);
+  };
+  const ref = useClickOutside(closeTx);
+  // const handlePropagation = (e) => {
+  //   // Prevent the click event from propagating
+  //   e.stopPropagation();
+  // }
 
-  const closeTx = ()=>{
-    setShowTxList(false)
-  }
-const ref = useClickOutside(closeTx)
-// const handlePropagation = (e) => {
-//   // Prevent the click event from propagating
-//   e.stopPropagation();
-// }
-
-const elementRef = useRef(null);
+  const elementRef = useRef(null);
 
   useEffect(() => {
-    
-      elementRef.current.scrollIntoView({ behavior: 'smooth' });
-    
-  },[!showTxList]);
+    elementRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [!showTxList]);
 
-
-  if(loading) return <div className=" flex h-[100vh] w-full justify-center items-center" ref={elementRef}><p className="loader"></p></div>
+  if (loading) return <Loader />;
   return (
     <div className=" ">
-     <Bg/>
+      <Bg />
       <section className="card absolute py-7 px-5 z-50 flex shadow-xl flex-col justify-center bg-[#1B5C58] rounded-3xl text-white  w-[90%]  -my-28  left-0 right-0  mx-auto">
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
@@ -252,15 +257,40 @@ const elementRef = useRef(null);
           </div>
         </div>
       </section>
-      <main  className={`px-1  mt-28 ${showTxList ?  "px-6 shadow-2xl activeTxList  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] " : "h-40 txList  overflow-hidden"} absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `} >
-      <header  className=" flex justify-between px ">
-        <p ref={elementRef} data-state={showTxList}  className={`font-semibold data-[state=true]:pt-6 transition-all duration-300  text-lg`}>Transactions History</p>
-        {reverselySortedTx.length > 2 && <button ref={ref} onClick={()=> setShowTxList(true)} className={`text-sm ${showTxList? "hidden" : "block"} text-gray-500 font-semibold`}>see all</button>}
-      </header>
+      <main
+        className={`px-1  mt-28 ${
+          showTxList
+            ? "px-6 shadow-2xl activeTxList  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] "
+            : "h-40 txList  overflow-hidden"
+        } absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `}
+      >
+        <header className=" flex justify-between px ">
+          <p
+            ref={elementRef}
+            data-state={showTxList}
+            className={`font-semibold data-[state=true]:pt-6 transition-all duration-300  text-lg`}
+          >
+            Transactions History
+          </p>
+          {reverselySortedTx.length > 2 && (
+            <button
+              ref={ref}
+              onClick={() => setShowTxList(true)}
+              className={`text-sm ${
+                showTxList ? "hidden" : "block"
+              } text-gray-500 font-semibold`}
+            >
+              see all
+            </button>
+          )}
+        </header>
 
         {reverselySortedTx.length > 0 ? (
           reverselySortedTx?.map((transaction) => (
-            <div key={transaction.id} className="flex justify-between my-4 mt-2">
+            <div
+              key={transaction.id}
+              className="flex justify-between my-4 mt-2"
+            >
               <div className="">
                 <p className="font-semibold">{transaction.name}</p>
                 <p className="text-slate-500 font-medium text-sm">
@@ -284,7 +314,7 @@ const elementRef = useRef(null);
         )}
       </main>
 
-      <button onClick={()=> navigate("/add")} >
+      <button onClick={() => navigate("/add")}>
         <div
           className={`fixed bg-[#1F615C] ${
             theme === "dark" ? "shadow-black" : "shadow-slate-300 "

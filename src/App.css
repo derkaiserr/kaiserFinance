@@ -1,12 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 
-body{
-  transition: all 1000ms ease;
-}
-.dark body{
-  transition: all 1000ms ease;
-}
 .inter {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
@@ -34,7 +28,7 @@ footer > svg {
 .loader::after {
   content: "";
   grid-area: 1/1;
-  --c:no-repeat linear-gradient(#046D8B 0 0);
+  --c:no-repeat linear-gradient(#30948e 0 0);
   background:
     var(--c) 0 0,
     var(--c) 100% 0,
@@ -133,6 +127,9 @@ footer > svg {
   color: #FFFFFF;
 }
 
+.dark html{
+  background-color: #1d1d1d;
+}
 .dark .card {
   background-color: rgb(18, 45, 44);
 }

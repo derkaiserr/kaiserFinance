@@ -270,6 +270,7 @@ const resetTransactions = async () => {
 
     const fetchImages = async () => {
       try {
+        setLoading(true);
         const imagesRef = ref(imageDb, `${auth.currentUser?.email}`);
         const imgs = await listAll(imagesRef);
 
@@ -289,11 +290,14 @@ const resetTransactions = async () => {
         setImgUrl(urls);
       } catch (error) {
         // console.error("Error fetching images: ", error);
+      }finally{
+        setLoading(false)
       }
+
     };
 
     fetchImages();
-  }, [imgUrl, auth.currentUser, reloadImage]);
+  }, [ auth.currentUser, reloadImage]);
 
   return (
     <Context.Provider
@@ -325,7 +329,8 @@ const resetTransactions = async () => {
         isVisible,
         setIsVisible,
         resetTransactions,
-        loading
+        loading, 
+        setLoading
       }}
     >
       <div className={`${theme} inter  `}>
