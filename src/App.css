@@ -80,6 +80,15 @@ footer > svg {
     radial-gradient(closest-side at 12.5% 50%,
     #16a34a 96%,#0000) 0 50%/80% 20% repeat-x;
 }
+.loaderSignUp,
+.loaderSignUp:before,
+.loaderSignUp:after{
+  background:
+    radial-gradient(closest-side at 50% 12.5%,
+    #fff 96%,#0000) 50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%,
+    #fff 96%,#0000) 0 50%/80% 20% repeat-x;
+}
 .Expense,
 .Expense:before,
 .Expense:after{
@@ -89,6 +98,7 @@ footer > svg {
     radial-gradient(closest-side at 12.5% 50%,
     rgb(220, 38, 38) 96%,#0000) 0 50%/80% 20% repeat-x;
 }
+
 .loaderAdd:before,
 .loaderAdd:after {
   content: "";

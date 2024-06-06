@@ -15,6 +15,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate()
   const [error, manageError] = useState("");
   const [isVisible, setIsVisible] = useState(false)
+  const [inputName, setInputName] = useState(false);
   useEffect(() => {
     // Set a timer to hide the element after 5 seconds
     const timer = setTimeout(() => {
@@ -25,59 +26,68 @@ const AuthProvider = ({ children }) => {
     // Clear the timer if the component is unmounted before 5 seconds
     return () => clearTimeout(timer);
   }, [isVisible === true]);
-  const Register = async (email, password) => {
-    // const { error, manageError } = useContext(AuthContext);
-    // return createUserWithEmailAndPassword(auth, email, password);
 
-    
+  const [isLoading, setIsLoading] = useState(false);
+
+  const Register = async (email, password) => {
+    setIsLoading(true);
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       console.log(user);
     } catch (error) {
       manageError(error.message);
       console.error(error.message);
-      setIsVisible(true)
+      setIsVisible(true);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const SignIn = async (email, password) => {
+    setIsLoading(true);
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
       console.log(auth.currentUser.email);
       console.log(user);
     } catch (err) {
-
-      //  const error =  new Error('Authentication failed');
       manageError(err.message);
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const doSignInWithGoogle = (e) => {
-    e.preventDefault()
+  const doSignInWithGoogle = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     const provider = new GoogleAuthProvider();
-    const result = signInWithPopup(auth, provider);
-    result.then((res)=>{ 
-      console.log(res);
-      const name = res.user.displayName
-      const email = res.user.email
-      // const displayPicture = res.user.photoURL
-      // console.error(displayPicture)
-      localStorage.setItem("name", name)
-      localStorage.setItem("email", email)
-      navigate("/home")
-      // localStorage.setItem("displayPicture", displayPicture)
-    }).catch((err)=>{
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+      const name = result.user.displayName;
+      const email = result.user.email;
+      localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
+      navigate("/home");
+    } catch (err) {
       console.error(err.message);
-    });
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   const doSignOut = async () => {
     return await auth.signOut(auth);
   };
 
   const doPasswordReset = async (email) => {
-    return sendPasswordResetEmail(auth, email);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Email sent");
+    } catch (err) {
+      console.log(err.message);
+    }
   };
+  
 
   const authContext = {
     Register,
@@ -88,6 +98,9 @@ const AuthProvider = ({ children }) => {
     error,
     manageError,
     isVisible,
+    isLoading,
+    inputName,
+    setInputName,
     // setIsVisible,
   };
 

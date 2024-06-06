@@ -33,9 +33,8 @@ function SignUp() {
   const [checked, setChecked] = useState(false);
   const [checkError, setCheckError] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
-  const [inputName, setInputName] = useState(false);
   const [toggleTerms, setToggleTerms] = useState(false);
-  const { Register, doSignInWithGoogle, manageError, error, isVisible } =
+  const { Register, doSignInWithGoogle, inputName,  setInputName, error, isVisible, isLoading } =
     useContext(AuthContext);
   // const user = auth.currentUser;
   // useEffect(() => {
@@ -114,7 +113,7 @@ function SignUp() {
       )}
       <header className="grid absolut w-full px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -196,10 +195,11 @@ function SignUp() {
             onChange={handleChange}
           />
           <label htmlFor="agreement">
-            By signing up, you agree to the 
-            <button ref={ref} onClick={openTerms} className="text-[#438883]">
-               Terms of Service and Privacy Policy
-            </button>
+            By signing up, you agree to the {" "}
+            <p ref={ref} onClick={openTerms} className="inline text-[#438883]">
+                Terms of Service and Privacy Policy
+            </p>
+            <div data-state={toggleTerms} className="data-[state=true]:block hidden  bg-transparent h-full top-0 left-0 z-50 absolute w-full "> </div>
           </label>
           {checkError && (
             <p className="text-red-500 text-sm">
@@ -216,19 +216,19 @@ function SignUp() {
             await onSubmit(e);
           }}
         >
-          Sign Up
+          {isLoading? <div className=" loaderAdd w-5 h-5 loaderSignUp "></div> : "Sign Up"}
         </button>
         <p className="text-center text-slate-500 text-sm font-semibold mb-2">
           Or
         </p>
         <button
           onClick={doSignInWithGoogle}
-          className="flex gap-3 rounded-lg border border-slate-300 h-10 items-center justify-center text-sm font-semibold w-full"
+          className="flex gap-3 rounded-lg  border border-slate-300 h-10 items-center justify-center text-sm font-semibold w-full"
         >
           <span>
             <img className="w-6" src={G} alt="googleIcon" />
           </span>
-          Sign Up with Google
+          Continue with Google
         </button>
         <p className="pt-3 text-center">
           Already have an account?
