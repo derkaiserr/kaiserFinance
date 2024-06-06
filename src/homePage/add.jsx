@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
 // import bg from "./assets/bg-home.png";
 import bg from "../assets/bg-home.png";
-import Bg from "../bg.jsx";
+import Bg from "../misc/bg.jsx";
 import ellipses from "../assets/ellipses.png";
 import UserContext from "../../hooks/context/context.js";
 import { addDoc, collection } from "firebase/firestore";
@@ -19,6 +19,8 @@ const AddExpense = () => {
     manageError,
     isVisible,
     setIsVisible,
+    loading,
+    setLoading
   } = useContext(UserContext);
   const [transactType, setTransactType] = useState(1);
 
@@ -73,49 +75,52 @@ const AddExpense = () => {
   //   });
   // };
   let newAmount = amount / localCurrency;
-  if (localCurrency === 1)  newAmount = amount;
-  
+  if (localCurrency === 1) newAmount = amount;
+
   const addTransaction = async (e) => {
     e.preventDefault();
 
     if (name !== "" && amount !== "" && date !== "") {
-        // const formattedDate = new Date(date).toISOString();
-        const newAmountt = parseFloat(newAmount);
+      // const formattedDate = new Date(date).toISOString();
+      const newAmountt = parseFloat(newAmount);
 
-        const newTransaction = {
-            name: name.charAt(0).toUpperCase() + name.slice(1),
-            amount: newAmountt,
-            date: formattedDate,
-            id: generateNewId(),
-            type: typeTrack,
-        };
+      const newTransaction = {
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        amount: newAmountt,
+        date: formattedDate,
+        id: generateNewId(),
+        type: typeTrack,
+      };
 
-        if (typeTrack === 1) {
-            newTransaction.income = parseFloat(income);
-        } else {
-            newTransaction.expense = parseFloat(expenses);
-        }
+      if (typeTrack === 1) {
+        newTransaction.income = parseFloat(income);
+      } else {
+        newTransaction.expense = parseFloat(expenses);
+      }
 
-        try {
-            const docRef = await addDoc(collection(db, 'transactions'), {
-                ...newTransaction,
-                userId: auth.currentUser.uid
-            });
-            console.log(date)
-            console.log('Document written with ID: ', docRef.id);
+      try {
+        setLoading(true);
+        const docRef = await addDoc(collection(db, "transactions"), {
+          ...newTransaction,
+          userId: auth.currentUser.uid,
+        });
+        console.log(date);
+        console.log("Document written with ID: ", docRef.id);
 
-            setTransactions((prev) => [...prev, newTransaction]);
+        setTransactions((prev) => [...prev, newTransaction]);
 
-            return navigate("/home");
-        } catch (err) {
-            console.error("Error adding document: ", err);
-        }
+        return navigate("/home");
+      } catch (err) {
+        console.error("Error adding document: ", err);
+      }finally{
+        setLoading(false);
+      }
     } else {
-      manageError("Please fill in all fields")
-      setIsVisible(true)
+      manageError("Please fill in all fields");
+      setIsVisible(true);
       console.error("Please fill in all fields");
     }
-};
+  };
 
   // useEffect(() => {
   //   console.log(transactions);
@@ -143,22 +148,19 @@ const AddExpense = () => {
     },
   ];
 
-
-
   return (
     <div>
-       { (
+      {
         <p
           data-state={isVisible}
           className="absolute z-[100] text-center data-[state=true]:translate-y-0 -translate-y-24 ease-in-out top-0 bg-red-500 text-white text-md transition-all duration-300 mx-auto left-0 right-0  w-full p-5 "
         >
           {error}
         </p>
-      )}
-    <Bg />
+      }
+      <Bg />
       <header className="flex text-white absolute top-10 rid grid-cols-3 flex-row w-full justify-between z-50   p-6">
-        <button >
-      
+        <button>
           <svg
             onClick={() => navigate(-1)}
             xmlns="http://www.w3.org/2000/svg"
@@ -275,11 +277,11 @@ const AddExpense = () => {
         </div>
         <button
           onClick={addTransaction}
-          className={`hover:bg-[#438883] ${
-            typeTrack === 1 ? "text-green-600" : "text-red-600"
+          className={` ${
+            typeTrack === 1 ? "text-green-600" : "text-red-600 ext-red-600"
           } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
         >
-          Add {typeTrack === 1 ? "Income" : "Expense"}
+         {!loading ? `Add ${typeTrack === 1 ? "Income" : "Expense"}` : <figure className={typeTrack === 1 ? "loaderAdd Income" : "loaderAdd Expense"}></figure>}
         </button>
       </form>
     </div>

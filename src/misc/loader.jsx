@@ -4,7 +4,7 @@ export default function  Loader() {
 //   if (loading)
     // useEffect(() => setNav(false),[])
     return (
-      <div className="absolute z-[300] bg-inherit flex h-full w-full justify-center items-center">
+      <div className="abso bg-inherit flex h-[100vh] w-full justify-center items-center">
         <p className="loader"></p>
       </div>
     );

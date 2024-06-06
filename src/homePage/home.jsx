@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, useMemo, useRef } from "react";
 
-import Bg from "../bg.jsx";
+import Bg from "../misc/bg.jsx";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import Context from "../../hooks/context/context.js";
 import useClickOutside from "../../hooks/useClickOutside.jsx";
-import Loader from "./loader.jsx";
+import Loader from "../misc/loader.jsx";
 const PageOne = () => {
   const {
     nav,

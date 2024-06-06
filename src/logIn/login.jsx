@@ -3,38 +3,42 @@ import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase/firebase";
-import { SignIn, doSignInWithGoogle } from "../firebase/auth";
+// import { SignIn, doSignInWithGoogle } from "../firebase/auth";
 import UserContext from "../../hooks/context/context.js";
-// import { AuthContext } from "../../hooks/context/authContext/authContext.jsx";
+import { AuthContext } from "../firebase/auth.jsx";
+
 
 export default function Login() {
-  const { navigate, isVisible, setIsVisible, erro, anageError } =
+  const { navigate, isVisible, setIsVisible, } =
     useContext(UserContext);
+    const { manageError, error, SignIn, doSignInWithGoogle} = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [error, setError] = useState("");
-  // const {userLoggedIn} = useContext(useAuth)
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    
     try {
       await SignIn(email, password);
-
+      
       // Check if sign-in was successful
       if (auth.currentUser && auth.currentUser.email === email) {
         navigate("/home");
-      } else {
-        throw new Error("Sign-in failed. Please check your credentials.");
+      }
+      else {
+          throw new Error
       }
     } catch (err) {
-      console.error("Error during sign-in:", err);
-
+      // console.error("Error during sign-in:", err);
+      // console.log(error)
+      // manageError(err);
       // If sign-in failed, manage the error and set visibility state
-      setError(err.message);
+      // setError(err.message);
+      // console.log(error)
+      // console.log(err.message)
       setIsVisible(true);
     }
   };
@@ -67,8 +71,8 @@ export default function Login() {
           {error}
         </p>
       )}
-      <header className="absolute w-full grid px-4 grid-cols-3 text-center pt-6 font-bold">
-        <svg
+      <header className="absolute w-full  px-4 grid-cols-3 text-center pt-6 font-bold">
+        {/* <svg
           onClick={() => navigate(-1)}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -83,7 +87,7 @@ export default function Login() {
         >
           <path d="m12 19-7-7 7-7" />
           <path d="M19 12H5" />
-        </svg>
+        </svg> */}
         <p>Login</p>
       </header>
 
@@ -140,9 +144,9 @@ export default function Login() {
           </Link>} */}
           </button>
 
-          <p className="text-center text-[#438883]  font-semibold mb-2">
+          <button className="text-center text-[#438883]  font-semibold mb-2">
             Forgot Password?
-          </p>
+          </button>
 
           <p className="pt-3 text-center">
             Don't have an account yet?

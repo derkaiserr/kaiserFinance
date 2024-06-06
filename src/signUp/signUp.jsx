@@ -1,70 +1,120 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import G from "../assets/G.png";
 import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
-import { Link} from "react-router-dom";
-import { Register, doSignInWithGoogle } from "../firebase/auth";
+import { Link } from "react-router-dom";
+// import { Register, doSignInWithGoogle } from "../firebase/auth";
+import { AuthContext } from "../firebase/auth.jsx";
 import { app, auth, db, colRef } from "../firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import UserContext from "../../hooks/context/context.js";
+import useClickOutside from "../../hooks/useClickOutside.jsx";
 
- function SignUp() {
 
-  const {navigate} = useContext(UserContext)
+
+function Privacy (){
+
+  const handlePropagation = (e) => {
+    //   // Prevent the click event from propagating
+      e.stopPropagation();
+    }
+  return(<div onClick={handlePropagation} className="absolute h-[50vh] top-0 bottom-0 left-0 right-0 m-auto w-[95vw] bg-white terms p-6 shadow-lg rounded-lg ">
+   <p className="font-bold text-xl">Terms and Privacy</p>
+    <p>Lorem ipsum dolor... just accept the terms and move on bro😂</p>
+
+  </div>)
+}
+function SignUp() {
+  const { navigate } = useContext(UserContext);
   const [eye, setEye] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [checkError, setCheckError] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
+  const [inputName, setInputName] = useState(false);
+  const [toggleTerms, setToggleTerms] = useState(false);
+  const { Register, doSignInWithGoogle, manageError, error, isVisible } =
+    useContext(AuthContext);
+  // const user = auth.currentUser;
+  // useEffect(() => {
+  //   if (user != null) {
+  //     // User is signed in
+  //     setSignedUp(true);
+  //     console.log(user);
+  //   } else {
+  //     // No user is signed in
+  //     setSignedUp(false);
+  //   }
+  // }, [user]);
 
-  const user = auth.currentUser;
-  useEffect(() => {
-    if (user != null) {
-      // User is signed in
-      setSignedUp(true);
-      console.log(user);
-    } else {
-      // No user is signed in
-      setSignedUp(false);
-    }
-  }, [user]);
-
-
-   
-
+  // const ref = useRef(null)
+  const closeTerms = () => {
+    setToggleTerms(false);
+  };
+  const ref = useClickOutside(closeTerms);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(auth.currentUser);
+    
+    console.log(isVisible);
+    if (!checked && email !== "" && password !== "") {
+      setCheckError(true);
+      return;
+    }
+    if (name === "") {
+      setInputName(true);
+      return;
+    }
     await Register(email, password);
     if (auth.currentUser === null) {
       // setIsSigningIn(true)
       // throw new Error("You Suck!");
-      const error = new Error("error")
+      const error = new Error("error");
       console.log(error);
-      throw error
+      throw error;
     }
-     try {
-    const docRef = await addDoc(collection(db, "userName"), {
-      email: email.toLowerCase(),
-      name: name,
-    });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (err) {
-    console.error("Error adding document: ", err);
-  }
+    try {
+      const docRef = await addDoc(collection(db, "userName"), {
+        email: email.toLowerCase(),
+        name: name,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (err) {
+      console.error("Error adding document: ", err);
+    }
     navigate("/home");
   };
+  const googleSignIn = (e)=>{
+    // e.preventDefault()
+    doSignInWithGoogle
+    return navigate('home')
+  }
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  const openTerms = (e) =>{
+    e.preventDefault();
+    setToggleTerms(true);
+  }
 
 
-  
-  
+
   return (
-    <div className="signUp ">
-      <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
+    <div className="signUp pt6">
+      { (
+        <p
+          data-state={isVisible}
+          className="absolute z-20 text-center data-[state=true]:translate-y-0 -translate-y-24 ease-in-out top-0 bg-red-500 text-white text-md transition-all duration-300 mx-auto left-0 right-0  w-full p-5 "
+        >
+          {error.slice(9)}
+        </p>
+      )}
+      <header className="grid absolut w-full px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
-        onClick={()=> navigate(-1)}
+          onClick={() => navigate(-1)}
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -82,15 +132,25 @@ import UserContext from "../../hooks/context/context.js";
         <p>Sign Up</p>
       </header>
 
-      <form className="flex flex-col justify-center h-[100vh] px-4 " action="">
-        <input
-          className="w-full rounded-lg border-slate-200 outline-none border mb-7 px-3 h-10"
-          type="text"
-          placeholder="Name"
-          name=""
-          id="name"
-          onChange={(e) => setName(e.target.value)}
-        />
+      <form className="flex flex-col justify-center h-[93vh] px-4 " action="">
+        <div className="mb-7">
+          <input
+            className="w-full rounded-lg border-slate-200 outline-none border  px-3 h-10"
+            type="text"
+            placeholder="Name"
+            name=""
+            id="name"
+            onChange={(e) => {
+              setName(e.target.value);
+              setInputName(false);
+            }}
+          />
+          {inputName && (
+            <p className="text-red-500 text-sm" htmlFor="name">
+              Please enter your name.
+            </p>
+          )}
+        </div>
         <input
           className="w-full rounded-lg border-slate-200 outline-none border mb-7 px-3 h-10"
           type="text"
@@ -132,14 +192,23 @@ import UserContext from "../../hooks/context/context.js";
             className="mr-1 rounded-lg border- accent-[#438883] "
             name="agreement"
             id="agreement"
+            checked={checked}
+            onChange={handleChange}
           />
           <label htmlFor="agreement">
-            By signing up, you agree to the
-            <span className="text-[#438883]">
-              Terms of Service and Privacy Policy
-            </span>
+            By signing up, you agree to the 
+            <button ref={ref} onClick={openTerms} className="text-[#438883]">
+               Terms of Service and Privacy Policy
+            </button>
           </label>
+          {checkError && (
+            <p className="text-red-500 text-sm">
+              Please accept the terms and privacy policy to continue.
+            </p>
+          )}
         </div>
+
+        {toggleTerms && <Privacy />}
         <button
           className="bg-[#438883] flex items-center rounded-lg  h-10 justify-center text-white my-3"
           type="submit"
@@ -147,8 +216,7 @@ import UserContext from "../../hooks/context/context.js";
             await onSubmit(e);
           }}
         >
-         
-            Sign Up
+          Sign Up
         </button>
         <p className="text-center text-slate-500 text-sm font-semibold mb-2">
           Or
@@ -174,5 +242,4 @@ import UserContext from "../../hooks/context/context.js";
   );
 }
 
-export {SignUp}
-
+export { SignUp };

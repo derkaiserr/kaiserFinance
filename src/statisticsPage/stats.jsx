@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import ExpenseStats from "./expenseStats.jsx";
 import UserContext from "../../hooks/context/context.js";
-import Loader from "../homePage/loader.jsx";
+import Loader from "../misc/loader.jsx";
 
 const Stats = () => {
   const {
@@ -25,9 +25,10 @@ const Stats = () => {
   );
   const [transactData, setTransactData] = useState(income);
 
-  if (loading){
+  if (loading) {
     // setNav(false)
-  return <Loader />;}
+    return <Loader />;
+  }
 
   return (
     <div className="mb-28">

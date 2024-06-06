@@ -1,5 +1,5 @@
-import bg from "./assets/bg-home.png"
-import ellipses from "./assets/ellipses.png";
+import bg from "../assets/bg-home.png"
+import ellipses from "../assets/ellipses.png";
 
 const Bg = () =>{
 

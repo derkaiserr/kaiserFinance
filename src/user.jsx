@@ -1,9 +1,10 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../hooks/context/context.js";
-import Bg from "./bg.jsx";
+import Bg from "./misc/bg.jsx";
 import user from "./assets/user.svg";
-import { doSignOut } from "./firebase/auth.js";
+// import { doSignOut } from "./firebase/auth.js";
+import { AuthContext } from "./firebase/auth.jsx";
 import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
@@ -14,7 +15,7 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import Loader from "./homePage/loader.jsx";
+import Loader from "./misc/loader.jsx";
 
 export const ThemeContext = createContext(null);
 const User = ({}) => {
@@ -40,36 +41,34 @@ const User = ({}) => {
     isVisible,
     setIsVisible,
     setLoading,
-    loading
+    loading,
+    resetTransactions,
+    currency,
+    setCurrency,
+    navigate
   } = useContext(UserContext);
+const {doSignOut} = useContext(AuthContext)
   useEffect(() => {
     setNav(true);
   }, [nav]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  const [currency, setCurrency] = useState(
-    localStorage.getItem("currency") || "USD"
-  );
+ 
+
+ 
   const changeCurrency = (e) => {
     const value = e.target.value;
-    // localStorage.getItem("currency");
     localStorage.setItem("currency", value);
     setCurrency(value);
-    if (value === "USD") {
-      setLocalCurrency(1);
-      setCurrencySymbol("$");
-    } else if (value === "NGN") {
-      setLocalCurrency(currencyState);
-      setCurrencySymbol("₦");
-    }
+    
   };
 
   const imageRef = useRef(null);
   const handleImageClick = () => {
     imageRef.current.click();
   };
-  
+
   useEffect(() => {
     const fetchDocs = async () => {
       try {
@@ -83,7 +82,7 @@ const User = ({}) => {
         }
       } catch (error) {
         console.error("Error fetching documents:", error);
-      } finally{
+      } finally {
         setLoading(false);
       }
     };
@@ -132,33 +131,33 @@ const User = ({}) => {
     }
   };
 
-  const handleImageUpload = async (event) => {
-    const imageFile = event.target.files[0];
+  // const handleImageUpload = async (event) => {
+  //   const imageFile = event.target.files[0];
 
-    const options = {
-      maxSizeMB: 1, // (default: Number.POSITIVE_INFINITY)
-      // maxWidthOrHeight: 800, // (default: undefined)
-      useWebWorker: true, // (default: true)
-    };
+  //   const options = {
+  //     maxSizeMB: 1, // (default: Number.POSITIVE_INFINITY)
+  //     // maxWidthOrHeight: 800, // (default: undefined)
+  //     useWebWorker: true, // (default: true)
+  //   };
 
-    try {
-      const compressedFile = await imageCompression(imageFile, options);
-      // console.log('compressedFile:', compressedFile);
+  //   try {
+  //     const compressedFile = await imageCompression(imageFile, options);
+  //     // console.log('compressedFile:', compressedFile);
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImgUrl((prevUrls) => [...prevUrls, reader.result]);
-        // Optionally save the compressed image to localStorage
-        localStorage.setItem(
-          "imgUrl",
-          JSON.stringify([...imgUrl, reader.result])
-        );
-      };
-      reader.readAsDataURL(compressedFile);
-    } catch (error) {
-      // console.error('Error compressing image:', error);
-    }
-  };
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImgUrl((prevUrls) => [...prevUrls, reader.result]);
+  //       // Optionally save the compressed image to localStorage
+  //       localStorage.setItem(
+  //         "imgUrl",
+  //         JSON.stringify([...imgUrl, reader.result])
+  //       );
+  //     };
+  //     reader.readAsDataURL(compressedFile);
+  //   } catch (error) {
+  //     // console.error('Error compressing image:', error);
+  //   }
+  // };
 
   function controlModal() {
     setIsOpen((prev) => !prev);
@@ -185,12 +184,13 @@ const User = ({}) => {
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
-      setTransactions([]);
+      resetTransactions()
     }
   };
 
-  if (loading){
-  return <Loader />;}
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="pb-28">
@@ -284,8 +284,8 @@ const User = ({}) => {
       </div>
       <section className="mt-24 px-6">
         <div className="flex-col justify-center items-center my-6 flex">
-          <p>{matchingName}</p>
-          <p>{auth.currentUser?.email}</p>
+          <p>{matchingName || localStorage.getItem("name")}</p>
+          <p>{auth.currentUser?.email || localStorage.getItem("email")}</p>
         </div>
 
         <div className="flex flex-col gap-10 justify-center">
@@ -347,18 +347,18 @@ const User = ({}) => {
             Reset
           </button>
 
-          <Link
-            to="/login"
+          <button
             onClick={() => {
+              navigate("/login")
               setNav(false);
               doSignOut();
               setImgUrl([]);
-              setMatchingName(null);
+              setMatchingName("");
             }}
             className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
           >
             Sign Out
-          </Link>
+          </button>
         </div>
       </section>
     </div>

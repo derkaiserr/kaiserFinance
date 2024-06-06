@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import date from "date-and-time";
 import GetStarted from "./getStarted";
 import { SignUp } from "./signUp/signUp.jsx";
@@ -18,9 +18,11 @@ import greenHome from "./assets/greenHome.svg";
 import greenWallet from "./assets/greenWallet.svg";
 import "./App.css";
 import AddExpense from "./homePage/add.jsx";
-import { AuthContext } from "../hooks/context/authContext/authContext.jsx";
+// import { AuthProvider } from "./firebase/auth.jsx";
+import { AuthProvider } from "./firebase/auth.jsx";
 import Context from "../hooks/context/context.js";
-import { ref, listAll, getDownloadURL } from "firebase/storage";
+// import { SignIn, Register } from "./firebase/auth.js";
+import { ref, listAll, getDownloadURL,  } from "firebase/storage";
 import { imageDb, auth, db } from "./firebase/firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
@@ -48,6 +50,9 @@ function App() {
   });
   const [error, manageError] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [currency, setCurrency] = useState(
+    localStorage.getItem("currency") || "USD"
+  );
 
   useEffect(() => {
     // Set a timer to hide the element after 5 seconds
@@ -154,7 +159,7 @@ function App() {
   // const updatedTransactions =
 
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [userIn, setUserIn] = useState(null);
 
   useEffect(() => {
@@ -210,6 +215,8 @@ const resetTransactions = async () => {
       console.error("Error deleting transactions: ", err);
   }
 };
+
+
   // transactions.map((transaction) => transaction.amount * localCurrency)
   // const updatedTx = transactions.map(item => ({
   //   ...item,
@@ -270,7 +277,6 @@ const resetTransactions = async () => {
 
     const fetchImages = async () => {
       try {
-        setLoading(true);
         const imagesRef = ref(imageDb, `${auth.currentUser?.email}`);
         const imgs = await listAll(imagesRef);
 
@@ -291,13 +297,23 @@ const resetTransactions = async () => {
       } catch (error) {
         // console.error("Error fetching images: ", error);
       }finally{
-        setLoading(false)
       }
 
     };
 
     fetchImages();
-  }, [ auth.currentUser, reloadImage]);
+  }, [imgUrl, auth.currentUser, reloadImage]);
+
+
+  useEffect(() => {
+    if (currency === "USD") {
+      setLocalCurrency(1);
+      setCurrencySymbol("$");
+    } else if (currency === "NGN") {
+      setLocalCurrency(currencyState);
+      setCurrencySymbol("₦");
+    }
+  },[currency])
 
   return (
     <Context.Provider
@@ -330,9 +346,13 @@ const resetTransactions = async () => {
         setIsVisible,
         resetTransactions,
         loading, 
-        setLoading
+        setLoading, 
+        currency,
+        setCurrency,
+        
       }}
     >
+      <AuthProvider>
       <div className={`${theme} inter  `}>
         <Routes>
           <Route
@@ -346,6 +366,8 @@ const resetTransactions = async () => {
           <Route path="/home" element={<PageOne />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/user" element={<User />} />
+          {/* <Route path="./firebase/auth.js" element={<Register/>} /> */}
+          {/* <Route path="./firebase/auth" element={SignIn()} /> */}
         </Routes>
 
         {nav && (
@@ -366,6 +388,7 @@ const resetTransactions = async () => {
           </footer>
         )}
       </div>
+      </AuthProvider>
     </Context.Provider>
     //
   );
