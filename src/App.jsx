@@ -159,7 +159,7 @@ function App() {
   // const updatedTransactions =
 
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userIn, setUserIn] = useState(null);
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const resetTransactions = async () => {
             return url;
           })
         );
-
+        
         setImgUrl(urls);
       } catch (error) {
         // console.error("Error fetching images: ", error);
@@ -302,7 +302,7 @@ const resetTransactions = async () => {
     };
 
     fetchImages();
-  }, [imgUrl, auth.currentUser, reloadImage]);
+  }, [ auth.currentUser, reloadImage]);
 
 
   useEffect(() => {

@@ -20,10 +20,10 @@ const PageOne = () => {
   const [eye, setEye] = useState(false);
   const [showTxList, setShowTxList] = useState(false);
   useEffect(() => {
-    if (loading === true) {
-      setNav(false);
-      return;
-    }
+    // if (loading === true) {
+    //   setNav(false);
+    //   return;
+    // }
     setNav(true);
   }, [nav, loading]);
 

@@ -5,28 +5,16 @@ import Loader from "../misc/loader.jsx";
 
 const Stats = () => {
   const {
-    nav,
-    setNav,
-    localCurrency,
-    currencySymbol,
     transactions,
-    setTransactions,
-    sortedTransactions,
     navigate,
     loading,
   } = useContext(UserContext);
   const chartWidth = window.innerWidth * 0.9;
 
-  const income = sortedTransactions.filter(
-    (transactions) => transactions.type === 1
-  );
-  const expenses = sortedTransactions.filter(
-    (transactions) => transactions.type === 2
-  );
-  const [transactData, setTransactData] = useState(income);
+
 
   if (loading) {
-    // setNav(false)
+    
     return <Loader />;
   }
 
@@ -75,10 +63,7 @@ const Stats = () => {
       <main>
         {transactions.length > 0 ? (
           <ExpenseStats
-            transactData={transactData}
-            setTransactData={setTransactData}
-            income={income}
-            expenses={expenses}
+           
           />
         ) : (
           <p className="px-6 text-gray-500">No statistical data available.</p>

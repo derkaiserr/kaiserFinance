@@ -127,6 +127,9 @@ const {doSignOut} = useContext(AuthContext)
         console.error("Error compressing or uploading file:", error);
         manageError("Image Upload Failed");
         setIsVisible(true);
+      }finally{
+        setReloadImage(prev => !prev)
+        
       }
     }
   };
@@ -193,7 +196,7 @@ const {doSignOut} = useContext(AuthContext)
   }
 
   return (
-    <div className="pb-28">
+    <div className="pb-24">
       {error != "" && isVisible && (
         <p className="absolute rounded-bl z-50 bg-red-500 text-white text-sm px-1 right-0">
           {error}
@@ -205,9 +208,7 @@ const {doSignOut} = useContext(AuthContext)
           {
             <img
               src={imgUrl[0] ? imgUrl[0] : user}
-              className={`absolute bg-white user ${
-                !imgUrl[0] && "p-"
-              }  w-40 h-40 -mt-20 rounded-full z-20 left-0 right-0 mx-auto`}
+              className={`absolute bg-white user w-40 h-40 -mt-20 rounded-full z-20 left-0 right-0 mx-auto`}
             />
           }
 
@@ -216,7 +217,7 @@ const {doSignOut} = useContext(AuthContext)
             className="hidden"
             name="myImage"
             ref={imageRef}
-            accept="image/jpeg, image/png, image/gif"
+            accept="image/jpeg, image/png, image/gif, image/svg+xml, image/jpg, image/webp"
             onChange={handleImageInput}
           />
           <div
@@ -288,7 +289,7 @@ const {doSignOut} = useContext(AuthContext)
           <p>{auth.currentUser?.email || localStorage.getItem("email")}</p>
         </div>
 
-        <div className="flex flex-col gap-10 justify-center">
+        <div className="flex flex-col gap-5 justify-center">
           <div className="flex  justify-between">
             <label htmlFor="currency">Currency</label>
             <select
@@ -355,7 +356,7 @@ const {doSignOut} = useContext(AuthContext)
               setImgUrl([]);
               setMatchingName("");
             }}
-            className="bg-red-600 py-2 text-lg font-semibold shadow-xl flex justify-center text-white rounded-md w-full"
+            className="bg-red-600  text-lg font-semibold py-2 shadow-xl flex items-center justify-center text-white rounded-md w-full"
           >
             Sign Out
           </button>
