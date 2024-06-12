@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler
 } from "chart.js";
 import ChartTime from "./chartTime.jsx";
 
@@ -20,7 +21,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 const ExpenseStats = ({}) => {
@@ -79,74 +81,31 @@ const ExpenseStats = ({}) => {
   const labels = Object.keys(data);
   const incomeData = labels.map((label) => data[label].income);
   const expenseData = labels.map((label) => data[label].expense);
-  const [dataState, setDataState] = useState(incomeData);
-  // const chartDataa = {
-  //   labels,
-  //   datasets: [
-  //     {
-  //       label: labelState,
-  //       data: incomeData, // Assuming income is always present
-  //       borderColor: colorState,
-  //       backgroundColor: "rgba(75, 192, 192, 0.2)",
-  //       fill: false,
-  //     },
-  //   ],
-  // };
+  const [dataState, setDataState] = useState("income");
+  const [chartBg, setchartBg] = useState("rgba(75, 192, 192, 0.2)");
 
+  
+  
+  const selectedData = dataState === 'income' ? incomeData : expenseData;
   const chartData = {
     labels,
     datasets: [
       {
         label: labelState,
-        data: dataState,
+        data: selectedData,
         borderColor: colorState,
-        // backgroundColor: colorState,
-        fill: false,
+        borderWidth: 2,
+        backgroundColor: chartBg,
+        fill: true,
       },
-      {
-        label: "Expense",
-        data: expenseData,
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        fill: false,
-      },
+   
     ],
   };
   const chartWidth = window.innerWidth * 0.5;
 
-  // const numberWithCommas = "8,000.00";
-  // const numberWithoutCommas = parseFloat(numberWithCommas.replace(/,/g, ""));
-  // const data = sortedTransactions.map((transaction) => {
-  //   const parts = transaction.date.split(" ");
-  //   const dateParts = parts[0].split("/");
-  //   const month = parseInt(dateParts[1], 10); // Extract month as a number
-  //   return { ...transaction, month };
-  // });
 
-  const chartOptions = {
-    scales: {
-      x: {
-        grid: {
-          display: false, // Disable x-axis grid lines
-        },
-      },
-      y: {
-        grid: {
-          display: false, // Disable y-axis grid lines
-        },
-      },
-    },
-    // responsive: true, // Set responsive to false to define fixed width and height
-    // maintainAspectRatio: true, // Set maintainAspectRatio to false to allow defining custom width and height
-    plugins: {
-      legend: {
-        display: true,
-        position: "bottom",
-      },
-    },
-    // width: chartWidth, // Set width
-    // height: "20rem" // Set height
-  };
+
+  
 
   const formattedNumber = (number) => {
     // Convert the string to a number
@@ -202,13 +161,13 @@ const ExpenseStats = ({}) => {
     elements: {
       line: {
         tension: 0.4, // Smooth curve (0 for straight lines)
-        borderWidth: 3, // Line thickness
+        borderWidth: 2, // Line thickness
       },
       point: {
-        radius: 5, // Point radius
+        radius: 4, // Point radius
         hoverRadius: 7, // Hover radius
         backgroundColor: "white", // Point background color
-        borderWidth: 2, // Point border width
+        borderWidth: 1, // Point border width
       },
     },
     plugins: {
@@ -220,31 +179,7 @@ const ExpenseStats = ({}) => {
         mode: "index",
         intersect: false,
       },
-      shadowline: {
-        // Custom plugin for adding shadow below the line
-        draw: function (context) {
-          var chartArea = context.chart.chartArea;
-          var ctx = context.chart.ctx;
-          var xaxis = context.chart.scales["x-axis-0"];
-
-          // Draw shadow
-          ctx.save();
-          ctx.fillStyle = "rgba(0,0,0,0.1)";
-          ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-          ctx.shadowBlur = 20;
-          ctx.beginPath();
-          ctx.moveTo(xaxis.left, chartArea.bottom);
-          for (var i = 0; i < xaxis.ticks.length; i++) {
-            var x = xaxis.getPixelForTick(i);
-            var y = context.chart.getDatasetMeta(0).data[i]._model.y;
-            ctx.lineTo(x, y);
-          }
-          ctx.lineTo(xaxis.right, chartArea.bottom);
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
-        },
-      },
+     
     },
   };
 
@@ -255,7 +190,6 @@ const ExpenseStats = ({}) => {
     (transactions) => transactions.type === 2
   );
   const [transactData, setTransactData] = useState(income);
-  console.log(transactData);
   return (
     <div className="relative pt-10">
       <div
@@ -271,18 +205,16 @@ const ExpenseStats = ({}) => {
             const selectedValue = e.target.value;
             if (selectedValue === "income") {
               setTransactData(income);
-              setDataState(
-                sortedTransactions.map(
-                  (transaction) => transaction.income * localCurrency || 0
-                )
-              );
+              setDataState("income");
               setLabelState("Income");
               setColorState("green");
+              setchartBg("rgba(75, 192, 192, 0.2)")
             } else if (selectedValue === "expenses") {
               setTransactData(expenses);
-              setDataState(expenseData);
+              setDataState("exp");
               setLabelState("Expense");
               setColorState("red");
+              setchartBg("rgba(255, 0, 0, 0.2")
             }
           }}
         >
