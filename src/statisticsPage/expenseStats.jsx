@@ -10,7 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 } from "chart.js";
 import ChartTime from "./chartTime.jsx";
 
@@ -51,7 +51,7 @@ const ExpenseStats = ({}) => {
       let key;
 
       if (interval === "day") {
-        key = date.toISOString().split("T")[0];
+        key = date.toLocaleDateString("en-NG");
       } else if (interval === "week") {
         const startOfWeek = new Date(date);
         startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
@@ -84,9 +84,7 @@ const ExpenseStats = ({}) => {
   const [dataState, setDataState] = useState("income");
   const [chartBg, setchartBg] = useState("rgba(75, 192, 192, 0.2)");
 
-  
-  
-  const selectedData = dataState === 'income' ? incomeData : expenseData;
+  const selectedData = dataState === "income" ? incomeData : expenseData;
   const chartData = {
     labels,
     datasets: [
@@ -98,14 +96,9 @@ const ExpenseStats = ({}) => {
         backgroundColor: chartBg,
         fill: true,
       },
-   
     ],
   };
   const chartWidth = window.innerWidth * 0.5;
-
-
-
-  
 
   const formattedNumber = (number) => {
     // Convert the string to a number
@@ -132,7 +125,7 @@ const ExpenseStats = ({}) => {
 
   const dynamicWidth = labels.length * 60;
   const containerWidth =
-    interval === "month" || interval === "year" ? "90vw" : `${dynamicWidth}px`;
+    interval === "month" || interval === "year" ? "90vw" : `${dynamicWidth}px `;
 
   const options = {
     responsive: true,
@@ -141,21 +134,15 @@ const ExpenseStats = ({}) => {
       x: {
         grid: { display: false },
         // display: true,
-        title: {
-          display: true,
-          text: "Time",
-        },
       },
       y: {
         display: true,
-        grid: {
-          display: false, // Remove grid lines for y-axis
-        },
+        grid: {display: false},
         title: {
           display: true,
-          text: "Amount",
+          text: "",
         },
-        beginAtZero: true,
+        beginAtZero: false,
       },
     },
     elements: {
@@ -179,7 +166,6 @@ const ExpenseStats = ({}) => {
         mode: "index",
         intersect: false,
       },
-     
     },
   };
 
@@ -208,13 +194,13 @@ const ExpenseStats = ({}) => {
               setDataState("income");
               setLabelState("Income");
               setColorState("green");
-              setchartBg("rgba(75, 192, 192, 0.2)")
+              setchartBg("rgba(75, 192, 192, 0.2)");
             } else if (selectedValue === "expenses") {
               setTransactData(expenses);
               setDataState("exp");
               setLabelState("Expense");
               setColorState("red");
-              setchartBg("rgba(255, 0, 0, 0.2")
+              setchartBg("rgba(255, 0, 0, 0.2");
             }
           }}
         >
@@ -222,13 +208,9 @@ const ExpenseStats = ({}) => {
           <option value="expenses">Expenses</option>
         </select>
       </div>
-      <ChartTime times={times} interval={interval} setInterval={setInterval} />
+      <ChartTime times={times} interval={interval} setInterval={setInterval} dataState={dataState} />
       <div
-        className={`overflow-x-auto overflow-y-hidden white-space-nowrap ${
-          interval === "month" || interval === "year"
-            ? "min-w-[90vw]"
-            : "w-[90vw]"
-        }`}
+        className={`overflow-x-auto overflow-y-hidden white-space-nowrap min-w-[90vw] mx-6`}
         style={{}}
       >
         <div style={{ width: containerWidth, height: "300px" }}>

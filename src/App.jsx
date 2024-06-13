@@ -51,7 +51,7 @@ function App() {
   const [error, manageError] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [currency, setCurrency] = useState(
-    localStorage.getItem("currency") || "USD"
+    localStorage.getItem("currency") || "🇺🇸"
   );
 
   useEffect(() => {
@@ -306,10 +306,10 @@ const resetTransactions = async () => {
 
 
   useEffect(() => {
-    if (currency === "USD") {
+    if (currency === "🇺🇸") {
       setLocalCurrency(1);
       setCurrencySymbol("$");
-    } else if (currency === "NGN") {
+    } else if (currency === "🇳🇬") {
       setLocalCurrency(currencyState);
       setCurrencySymbol("₦");
     }

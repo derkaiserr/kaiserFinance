@@ -250,7 +250,7 @@ const {doSignOut} = useContext(AuthContext)
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-x  data-[state=false]:-translate-y-6 transition-all duration-500"
+              className="lucide lucide-x mt-1  data-[state=false]:-translate-y-7 transition-all duration-500"
               data-state={!modalIsOpen}
             >
               <path d="M18 6 6 18" />
@@ -299,8 +299,8 @@ const {doSignOut} = useContext(AuthContext)
               id="currency"
               value={currency}
             >
-              <option value="USD">USD</option>
-              <option value="NGN">NGN</option>
+              <option value="🇺🇸">🇺🇸</option>
+              <option value="🇳🇬">🇳🇬</option>
             </select>
           </div>
 
