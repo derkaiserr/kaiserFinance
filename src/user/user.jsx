@@ -1,11 +1,10 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../hooks/context/context.js";
-import Bg from "./misc/bg.jsx";
-import user from "./assets/user.svg";
-// import { doSignOut } from "./firebase/auth.js";
-import { AuthContext } from "./firebase/auth.jsx";
-import { auth, colRef, db, imageDb } from "./firebase/firebase.js";
+import UserContext from "../../hooks/context/context.js";
+import Bg from "../misc/bg.jsx";
+import user from "../assets/user.svg";
+import { AuthContext } from "../firebase/auth.jsx";
+import { auth, colRef, db, imageDb } from "../firebase/firebase.js";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
 
@@ -15,7 +14,9 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import Loader from "./misc/loader.jsx";
+import Loader from "../misc/loader.jsx";
+import About from "./about.jsx";
+import useClickOutside from "../../hooks/useClickOutside.jsx";
 
 export const ThemeContext = createContext(null);
 const User = ({}) => {
@@ -45,23 +46,20 @@ const User = ({}) => {
     resetTransactions,
     currency,
     setCurrency,
-    navigate
+    navigate,
   } = useContext(UserContext);
-const {doSignOut} = useContext(AuthContext)
+  const { doSignOut } = useContext(AuthContext);
+  const [toggleAbout, setToggleAbout] = useState(false)
   useEffect(() => {
     setNav(true);
   }, [nav]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
- 
-
- 
   const changeCurrency = (e) => {
     const value = e.target.value;
     localStorage.setItem("currency", value);
     setCurrency(value);
-    
   };
 
   const imageRef = useRef(null);
@@ -127,9 +125,8 @@ const {doSignOut} = useContext(AuthContext)
         console.error("Error compressing or uploading file:", error);
         manageError("Image Upload Failed");
         setIsVisible(true);
-      }finally{
-        setReloadImage(prev => !prev)
-        
+      } finally {
+        setReloadImage((prev) => !prev);
       }
     }
   };
@@ -187,13 +184,25 @@ const {doSignOut} = useContext(AuthContext)
   const resetPrompt = () => {
     const prompt = confirm("Are you sure you want to clear all transactions?");
     if (prompt) {
-      resetTransactions()
+      resetTransactions();
     }
   };
-
-  if (loading) {
-    return <Loader />;
+  const closeAbout = (e) =>{
+    e.stopPropagation();
+    setToggleAbout(false);
   }
+  const aboutRef = useClickOutside(closeAbout)
+  
+  const aboutApp = () =>{
+    setToggleAbout(true);
+  }
+  
+  
+  
+    if (loading) {
+      return <Loader />;
+    }
+
 
   return (
     <div className="pb-24">
@@ -319,8 +328,10 @@ const {doSignOut} = useContext(AuthContext)
           </div>
           {/* <DarkMode /> */}
 
-          <div className="flex items-center justify-between">
-            <p>About</p>
+          <div ref={aboutRef} onClick={aboutApp} className="flex items-center justify-between">
+            <button >About</button>
+            { <div data-state={toggleAbout} onClick={closeAbout}  className="fixed data-[state=true]:block hidden z-[400] h-[100vh] w-[100vw] top-0 left-0 bg-[#0000005f]"></div>}
+            <About  setToggleAbout={setToggleAbout} toggleAbout={toggleAbout}/>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -350,7 +361,7 @@ const {doSignOut} = useContext(AuthContext)
 
           <button
             onClick={() => {
-              navigate("/login")
+              navigate("/login");
               setNav(false);
               doSignOut();
               setImgUrl([]);

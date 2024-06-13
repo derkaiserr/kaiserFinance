@@ -213,7 +213,7 @@ const AddExpense = () => {
             </button>
           ))}
       </div>
-      <form className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
+      <form  onSubmit={addTransaction} className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
         <div>
           <label className="text-sm text-[#666666]" htmlFor="name">
             Name
@@ -249,6 +249,7 @@ const AddExpense = () => {
           />
           <div>
             <button
+            type="button"
               onClick={(e) => {
                 e.preventDefault();
                 setAmount("");
@@ -276,7 +277,8 @@ const AddExpense = () => {
           />
         </div>
         <button
-          onClick={addTransaction}
+         
+          type="submit"
           className={` ${
             typeTrack === 1 ? "text-green-600" : "text-red-600 ext-red-600"
           } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}

@@ -102,7 +102,8 @@ const PageOne = () => {
   };
 
   useEffect(() => {
-    if (transactions.length < 1) setEye(true);
+    if (transactions.length < 1) return setEye(true);
+    if (transactions.length > 0) return setEye(false);
   }, [transactions]);
 
   const formattedNumber = (number) => {
@@ -247,7 +248,7 @@ const PageOne = () => {
         className={`px-1  mt-28 ${
           showTxList
             ? "px-6 shadow-2xl activeTxList  w-[90%]  rounded-2xl overflow-auto fixed  h-[75%] -translate-y-[8cm] "
-            : "h-40 txList  overflow-hidden"
+            : "h-52 txList  overflow-hidden"
         } absolute  w-[90%] right-0 left-0 mx-auto z-[50]   bg-white transition-all duration-300 ease-in `}
       >
         <header className=" flex justify-between px ">
@@ -258,7 +259,7 @@ const PageOne = () => {
           >
             Transactions History
           </p>
-          {reverselySortedTx.length > 2 && (
+          {reverselySortedTx.length > 3 && (
             <button
               ref={ref}
               onClick={() => setShowTxList(true)}

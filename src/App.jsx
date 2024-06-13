@@ -1,13 +1,20 @@
 import { useState, useEffect, useContext } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import date from "date-and-time";
 import GetStarted from "./getStarted";
 import { SignUp } from "./signUp/signUp.jsx";
 import Login from "./logIn/login.jsx";
 import PageOne from "./homePage/home.jsx";
 import Stats from "./statisticsPage/stats.jsx";
-import User from "./user.jsx";
+import User from "./user/user.jsx";
 import bars from "./assets/bars.svg";
 import user from "./assets/user.svg";
 import home from "./assets/home.svg";
@@ -22,9 +29,10 @@ import AddExpense from "./homePage/add.jsx";
 import { AuthProvider } from "./firebase/auth.jsx";
 import Context from "../hooks/context/context.js";
 // import { SignIn, Register } from "./firebase/auth.js";
-import { ref, listAll, getDownloadURL,  } from "firebase/storage";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { imageDb, auth, db } from "./firebase/firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
+import Wallet from "./wallet/wallet.jsx";
 // 'X-RapidAPI-Key':import.meta.env.VITE_SOME_KEY
 function App() {
   let saveLocation = window.location.pathname;
@@ -58,7 +66,7 @@ function App() {
     // Set a timer to hide the element after 5 seconds
     const timer = setTimeout(() => {
       setIsVisible(false);
-      manageError("")
+      manageError("");
     }, 5000);
 
     // Clear the timer if the component is unmounted before 5 seconds
@@ -89,7 +97,7 @@ function App() {
     { img: home, altImg: greenHome, id: 1, to: "/home" },
     { img: bars, altImg: greenBars, id: 2, to: "/stats" },
     { img: "", altImg: "", id: 3 },
-    { img: wallet, altImg: wallet, id: 4, to: "/home" },
+    { img: wallet, altImg: greenWallet, id: 4, to: "/wallet" },
     { img: user, altImg: greenUser, id: 5, to: "/user" },
   ];
 
@@ -164,58 +172,63 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-        if (currentUser) {
-            setUserIn(currentUser);
-            fetchTransactions(currentUser);
-        } else {
-            setUserIn(null);
-            setLoading(false);
-            // navigate('/login'); // Redirect to login if user is not authenticated
-        }
+      if (currentUser) {
+        setUserIn(currentUser);
+        fetchTransactions(currentUser);
+      } else {
+        setUserIn(null);
+        setLoading(false);
+        // navigate('/login'); // Redirect to login if user is not authenticated
+      }
     });
 
     return () => unsubscribe();
-}, [auth, navigate]);
+  }, [auth, navigate]);
 
-const fetchTransactions = async (currentUser) => {
+  const fetchTransactions = async (currentUser) => {
     try {
       setLoading(true);
-        const q = query(collection(db, 'transactions'), where('userId', '==', currentUser.uid));
-        const querySnapshot = await getDocs(q);
-        const transactionsData = [];
-        querySnapshot.forEach((docSnapshot) => {
-            transactionsData.push({ ...docSnapshot.data(), id: docSnapshot.id });
-        });
-        setTransactions(transactionsData);
+      const q = query(
+        collection(db, "transactions"),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const transactionsData = [];
+      querySnapshot.forEach((docSnapshot) => {
+        transactionsData.push({ ...docSnapshot.data(), id: docSnapshot.id });
+      });
+      setTransactions(transactionsData);
     } catch (err) {
-        console.error("Error fetching transactions: ", err);
+      console.error("Error fetching transactions: ", err);
     } finally {
-        setLoading(false); // Set loading to false once data is fetched
+      setLoading(false); // Set loading to false once data is fetched
     }
-};
+  };
 
-const resetTransactions = async () => {
-  if (!auth.currentUser) {
+  const resetTransactions = async () => {
+    if (!auth.currentUser) {
       console.log("User is not authenticated");
-      navigate('/login'); // Redirect to login if user is not authenticated
+      navigate("/login"); // Redirect to login if user is not authenticated
       return;
-  }
+    }
 
-  try {
-      const q = query(collection(db, 'transactions'), where('userId', '==', auth.currentUser.uid));
+    try {
+      const q = query(
+        collection(db, "transactions"),
+        where("userId", "==", auth.currentUser.uid)
+      );
       const querySnapshot = await getDocs(q);
       const deletePromises = [];
       querySnapshot.forEach((docSnapshot) => {
-          deletePromises.push(deleteDoc(doc(db, 'transactions', docSnapshot.id)));
+        deletePromises.push(deleteDoc(doc(db, "transactions", docSnapshot.id)));
       });
       await Promise.all(deletePromises);
-      console.log('All transactions deleted');
+      console.log("All transactions deleted");
       setTransactions([]); // Clear the transactions state
-  } catch (err) {
+    } catch (err) {
       console.error("Error deleting transactions: ", err);
-  }
-};
-
+    }
+  };
 
   // transactions.map((transaction) => transaction.amount * localCurrency)
   // const updatedTx = transactions.map(item => ({
@@ -248,9 +261,6 @@ const resetTransactions = async () => {
   // transactions.map((transaction) => console.log( new Date (transaction.date)))
 
   // console.log(sortedTransactions);
-
-
-
 
   const handleNavLinkClick = (id) => {
     setActiveLink(id);
@@ -292,18 +302,16 @@ const resetTransactions = async () => {
             return url;
           })
         );
-        
+
         setImgUrl(urls);
       } catch (error) {
         // console.error("Error fetching images: ", error);
-      }finally{
+      } finally {
       }
-
     };
 
     fetchImages();
-  }, [ auth.currentUser, reloadImage]);
-
+  }, [auth.currentUser, reloadImage]);
 
   useEffect(() => {
     if (currency === "🇺🇸") {
@@ -313,7 +321,7 @@ const resetTransactions = async () => {
       setLocalCurrency(currencyState);
       setCurrencySymbol("₦");
     }
-  },[currency])
+  }, [currency]);
 
   return (
     <Context.Provider
@@ -345,49 +353,48 @@ const resetTransactions = async () => {
         isVisible,
         setIsVisible,
         resetTransactions,
-        loading, 
-        setLoading, 
+        loading,
+        setLoading,
         currency,
         setCurrency,
-        
       }}
     >
       <AuthProvider>
-      <div className={`${theme} inter  `}>
-        <Routes>
-          <Route
-            path="/"
-            element={<GetStarted theme={theme} setNav={setNav} />}
-          />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+        <div className={`${theme} inter  `}>
+          <Routes>
+            <Route
+              path="/"
+              element={<GetStarted theme={theme} setNav={setNav} />}
+            />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/add" element={<AddExpense />} />
+            <Route path="/home" element={<PageOne />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/user" element={<User />} />
+            {/* <Route path="./firebase/auth.js" element={<Register/>} /> */}
+            {/* <Route path="./firebase/auth" element={SignIn()} /> */}
+          </Routes>
 
-          <Route path="/add" element={<AddExpense />} />
-          <Route path="/home" element={<PageOne />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/user" element={<User />} />
-          {/* <Route path="./firebase/auth.js" element={<Register/>} /> */}
-          {/* <Route path="./firebase/auth" element={SignIn()} /> */}
-        </Routes>
-
-        {nav && (
-          <footer className="fixed bg-white flex z-[100] py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
-            {navLinks.map((nav) => (
-              <Link
-                to={nav.to}
-                key={nav.id}
-                onClick={() => handleNavLinkClick(nav.id)}
-                className={activeLink === nav.id ? "active" : ""}
-              >
-                <img
-                  src={saveLocation === nav.to ? nav.altImg : nav.img}
-                  alt=""
-                />
-              </Link>
-            ))}
-          </footer>
-        )}
-      </div>
+          {nav && (
+            <footer className="fixed bg-white flex z-[100] py-3 pt-4 bottom-0 w-full justify-around border border-t-2">
+              {navLinks.map((nav) => (
+                <Link
+                  to={nav.to}
+                  key={nav.id}
+                  onClick={() => handleNavLinkClick(nav.id)}
+                  className={activeLink === nav.id ? "active" : ""}
+                >
+                  <img
+                    src={saveLocation === nav.to ? nav.altImg : nav.img}
+                    alt=""
+                  />
+                </Link>
+              ))}
+            </footer>
+          )}
+        </div>
       </AuthProvider>
     </Context.Provider>
     //
