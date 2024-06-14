@@ -111,7 +111,7 @@ function SignUp() {
           {error.slice(9)}
         </p>
       )}
-      <header className="grid absolut w-full px-4 grid-cols-3 text-center pt-6 font-bold">
+      <header className="grid absolute w-full px-4 grid-cols-3 text-center pt-6 font-bold">
         <svg
           onClick={() => navigate("/")}
           xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +131,7 @@ function SignUp() {
         <p>Sign Up</p>
       </header>
 
-      <form className="flex flex-col justify-center h-[93vh] px-4 " action="">
+      <form className="flex flex-col justify-center h-dvh  px-4 " action="">
         <div className="mb-7">
           <input
             className="w-full rounded-lg border-slate-200 outline-none border  px-3 h-10"

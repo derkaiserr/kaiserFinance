@@ -201,9 +201,11 @@ const AddExpense = () => {
         </button>
       </header>
 
-      <div className="absolute float border z-[85] top-[90px] right-6  flex flex-col rounded-md bg-white  ">
+      
         {selector &&
-          selection.map((select) => (
+        <div className="absolute float border z-[85] top-[90px] right-6  flex flex-col rounded-md bg-white  ">
+         { selection.map((select) => (
+
             <button
               key={select.type}
               onClick={select.function}
@@ -213,6 +215,7 @@ const AddExpense = () => {
             </button>
           ))}
       </div>
+          }
       <form  onSubmit={addTransaction} className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
         <div>
           <label className="text-sm text-[#666666]" htmlFor="name">

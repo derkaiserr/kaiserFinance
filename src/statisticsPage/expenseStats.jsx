@@ -125,7 +125,7 @@ const ExpenseStats = ({}) => {
 
   const dynamicWidth = labels.length * 60;
   const containerWidth =
-    interval === "month" || interval === "year" ? "90vw" : `${dynamicWidth}px `;
+    interval === "month" || interval === "year" || labels.length < 6 ? "90vw" : `${dynamicWidth}px `;
 
   const options = {
     responsive: true,
@@ -142,7 +142,7 @@ const ExpenseStats = ({}) => {
           display: true,
           text: "",
         },
-        beginAtZero: false,
+        beginAtZero: true,
       },
     },
     elements: {
