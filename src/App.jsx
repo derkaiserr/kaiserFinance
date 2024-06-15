@@ -161,7 +161,7 @@ function App() {
   const resetTransactions = async () => {
     if (!auth.currentUser) {
       console.log("User is not authenticated");
-      navigate("/login"); // Redirect to login if user is not authenticated
+      navigate("/login"); // redirect to login if user is not authenticated
       return;
     }
 
