@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-
 .inter {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
@@ -10,18 +9,15 @@
 }
 
 footer > svg {
-  /* background-color: green; */
   padding: 0.8rem;
   color: gray;
-  /* font-size: 45px; */
 }
 
 ul li {
-  list-style-type:disc;
+  list-style-type: disc;
   margin: 0.5rem 0 0.5rem 1rem;
 }
 
-/* HTML: <div class="loader"></div> */
 .loader {
   width: 50px;
   aspect-ratio: 1;
@@ -31,75 +27,91 @@ ul li {
 .loader::after {
   content: "";
   grid-area: 1/1;
-  --c:no-repeat linear-gradient(#30948e 0 0);
-  background:
-    var(--c) 0 0,
-    var(--c) 100% 0,
-    var(--c) 100% 100%,
-    var(--c) 0 100%;
-  animation: 
-    l10-1 2s infinite linear,
-    l10-2 2s infinite linear;
+  --c: no-repeat linear-gradient(#30948e 0 0);
+  background: var(--c) 0 0, var(--c) 100% 0, var(--c) 100% 100%, var(--c) 0 100%;
+  animation: l10-1 2s infinite linear, l10-2 2s infinite linear;
 }
 .loader::after {
   margin: 25%;
   transform: scale(-1);
 }
 @keyframes l10-1 {
-  0%   {background-size: 0    4px,4px 0   ,0    4px,4px 0   }
-  12.5%{background-size: 100% 4px,4px 0   ,0    4px,4px 0   }
-  25%  {background-size: 100% 4px,4px 100%,0    4px,4px 0   }
-  37.5%{background-size: 100% 4px,4px 100%,100% 4px,4px 0   }
+  0% {
+    background-size: 0 4px, 4px 0, 0 4px, 4px 0;
+  }
+  12.5% {
+    background-size: 100% 4px, 4px 0, 0 4px, 4px 0;
+  }
+  25% {
+    background-size: 100% 4px, 4px 100%, 0 4px, 4px 0;
+  }
+  37.5% {
+    background-size: 100% 4px, 4px 100%, 100% 4px, 4px 0;
+  }
   45%,
-  55%  {background-size: 100% 4px,4px 100%,100% 4px,4px 100%}
-  62.5%{background-size: 0    4px,4px 100%,100% 4px,4px 100%}
-  75%  {background-size: 0    4px,4px 0   ,100% 4px,4px 100%}
-  87.5%{background-size: 0    4px,4px 0   ,0    4px,4px 100%}
-  100% {background-size: 0    4px,4px 0   ,0    4px,4px 0   }
+  55% {
+    background-size: 100% 4px, 4px 100%, 100% 4px, 4px 100%;
+  }
+  62.5% {
+    background-size: 0 4px, 4px 100%, 100% 4px, 4px 100%;
+  }
+  75% {
+    background-size: 0 4px, 4px 0, 100% 4px, 4px 100%;
+  }
+  87.5% {
+    background-size: 0 4px, 4px 0, 0 4px, 4px 100%;
+  }
+  100% {
+    background-size: 0 4px, 4px 0, 0 4px, 4px 0;
+  }
 }
 
 @keyframes l10-2 {
-  0%,49.9%{background-position: 0 0   ,100% 0   ,100% 100%,0 100%}
-  50%,100%{background-position: 100% 0,100% 100%,0    100%,0 0   }
+  0%,
+  49.9% {
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+  }
+  50%,
+  100% {
+    background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+  }
 }
 
-
-
-/* HTML: <div class="loader"></div> */
 .loaderAdd {
   width: 28px;
   height: 100%;
   aspect-ratio: 1;
-  display:grid;
-  -webkit-mask: conic-gradient(from 15deg,#0000,#000);
+  display: grid;
+  -webkit-mask: conic-gradient(from 15deg, #0000, #000);
   animation: l26 1s infinite steps(12);
 }
 .loaderAdd,
 .loaderAdd:before,
-.loaderAdd:after{
-  background:
-    radial-gradient(closest-side at 50% 12.5%,
-    #16a34a 96%,#0000) 50% 0/20% 80% repeat-y,
-    radial-gradient(closest-side at 12.5% 50%,
-    #16a34a 96%,#0000) 0 50%/80% 20% repeat-x;
+.loaderAdd:after {
+  background: radial-gradient(closest-side at 50% 12.5%, #16a34a 96%, #0000) 50%
+      0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%, #16a34a 96%, #0000) 0 50%/80% 20%
+      repeat-x;
 }
 .loaderSignUp,
 .loaderSignUp:before,
-.loaderSignUp:after{
-  background:
-    radial-gradient(closest-side at 50% 12.5%,
-    #fff 96%,#0000) 50% 0/20% 80% repeat-y,
-    radial-gradient(closest-side at 12.5% 50%,
-    #fff 96%,#0000) 0 50%/80% 20% repeat-x;
+.loaderSignUp:after {
+  background: radial-gradient(closest-side at 50% 12.5%, #fff 96%, #0000) 50% 0/20%
+      80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%, #fff 96%, #0000) 0 50%/80% 20%
+      repeat-x;
 }
 .Expense,
 .Expense:before,
-.Expense:after{
-  background:
-    radial-gradient(closest-side at 50% 12.5%,
-    rgb(220, 38, 38) 96%,#0000) 50% 0/20% 80% repeat-y,
-    radial-gradient(closest-side at 12.5% 50%,
-    rgb(220, 38, 38) 96%,#0000) 0 50%/80% 20% repeat-x;
+.Expense:after {
+  background: radial-gradient(
+        closest-side at 50% 12.5%,
+        rgb(220, 38, 38) 96%,
+        #0000
+      )
+      50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%, rgb(220, 38, 38) 96%, #0000) 0
+      50%/80% 20% repeat-x;
 }
 
 .loaderAdd:before,
@@ -113,7 +125,9 @@ ul li {
 }
 
 @keyframes l26 {
-  100% {transform:rotate(1turn)}
+  100% {
+    transform: rotate(1turn);
+  }
 }
 
 .transActs {
@@ -134,30 +148,7 @@ ul li {
 }
 
 .line-chart-container {
-  /* Add styles for the container if needed */
   border: 0;
-}
-
-.recharts-wrapper {
-  /* Add styles for the chart wrapper */
-  border: 0;
-}
-
-.recharts-cartesian-grid-horizontal line {
-  stroke: transparent; /* Customize grid lines color */
-}
-
-.recharts-tooltip {
-  background-color: blue; /* Tooltip background color */
-  border: 0; /* Tooltip border */
-}
-
-.recharts-tooltip-label {
-  color: transparent; /* Tooltip label color */
-}
-
-.recharts-tooltip-item {
-  color: #888888; /* Tooltip value color */
 }
 
 .addForm > div > input {
@@ -174,16 +165,16 @@ ul li {
   border: #438883 1px solid;
 }
 
-.light{
+.light {
   background-color: white;
 }
 
- .dark {
+.dark {
   background-color: #1d1d1d;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-.dark html{
+.dark html {
   background-color: #1d1d1d;
 }
 .dark .card {
@@ -192,109 +183,87 @@ ul li {
 
 .dark .card h1,
 .dark .card p {
-  color: #B3B3B3;
+  color: #b3b3b3;
 }
 
-
-
-.dark  footer{
+.dark footer {
   background-color: #0e201e;
   border: none;
 }
-/* .dark select{
-  background-color: transparent;
-  color: white;
-  
-  
-} */
 
-.dark select{
+.dark select {
   background-color: #1d1d1d;
 }
-.dark .user{
+.dark .user {
   background-color: #666666;
 }
 
-/* .dark option{
-  background-color: black;
-
-} */
-.dark option{
+.dark option {
   background-color: rgb(188, 188, 188);
 }
 
-.green{
-  background-color: #1B5C58;
+.green {
+  background-color: #1b5c58;
 }
 
-
-.dark form{
+.dark form {
   background-color: #363737;
   color: white;
 }
 
-.dark form label{
+.dark form label {
   color: white;
 }
 
-.dark form input{
+.dark form input {
   background-color: black;
-  border: #444   1px solid;
+  border: #444 1px solid;
   color: white;
 }
-.dark input[type="date"]{
+.dark input[type="date"] {
   color: white;
 }
-.dark .login form, .dark .signUp form{
+.dark .login form,
+.dark .signUp form {
   background-color: transparent;
 }
 
-.dark .float{
+.dark .float {
   background-color: #1d1d1d;
-  
 }
 
-.dark .terms{
+.dark .terms {
   color: white;
   background-color: #2f2f2f;
 }
- 
-
-
-
-
 
 .image-container img {
- 
-  object-fit:cover; /*Resize the image to cover the entire container */
-  object-position:center; /* Position the image at the center */
+  object-fit: cover;
+  object-position: center;
 }
 
-.image-container .svg{
-  opacity:0;
+.image-container .svg {
+  opacity: 0;
   transition: all 0.5s;
   z-index: 1000;
 }
 
-.image-container:hover .svg{
+.image-container:hover .svg {
   background-color: #3c3c3c5b;
   opacity: 0.8;
 }
 
-
-.pictureOptions{
-  box-shadow: rgba(38, 38, 38, 1) 1px  12px 30px 1px ;
+.pictureOptions {
+  box-shadow: rgba(38, 38, 38, 1) 1px 12px 30px 1px;
 }
 
-
- .dark .activeTxList{
+.dark .activeTxList {
   background-color: #000;
 }
- .dark .txList{
+.dark .txList {
   background-color: #1d1d1d;
-  
 }
 
-.dark .about{
+.dark .about {
   background-color: #000;
 }

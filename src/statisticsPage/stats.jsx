@@ -9,7 +9,6 @@ const Stats = () => {
     navigate,
     loading,
   } = useContext(UserContext);
-  const chartWidth = window.innerWidth * 0.9;
 
 
 

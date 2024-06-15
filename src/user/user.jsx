@@ -26,10 +26,6 @@ const User = ({}) => {
     transactions,
     theme,
     setTheme,
-    setLocalCurrency,
-    currencyState,
-    setCurrencySymbol,
-    setTransactions,
     imgUrl,
     setImgUrl,
     selectedImage,
@@ -48,13 +44,14 @@ const User = ({}) => {
     setCurrency,
     navigate,
   } = useContext(UserContext);
+
   const { doSignOut } = useContext(AuthContext);
-  const [toggleAbout, setToggleAbout] = useState(false)
+  const [toggleAbout, setToggleAbout] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     setNav(true);
   }, [nav]);
-
-  const [modalIsOpen, setIsOpen] = useState(false);
 
   const changeCurrency = (e) => {
     const value = e.target.value;
@@ -92,7 +89,6 @@ const User = ({}) => {
     const file = event.target.files[0];
 
     if (file) {
-      // Compress the image file
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 800,
@@ -103,10 +99,8 @@ const User = ({}) => {
         const compressedFile = await imageCompression(file, options);
         console.log("compressedFile:", compressedFile);
 
-        // Set the selected image to the state
         setSelectedImage(compressedFile);
 
-        // Create a reference to the image in your database
         const imgRef = ref(
           imageDb,
           `${auth.currentUser.email}/${auth.currentUser.email}`
@@ -117,7 +111,6 @@ const User = ({}) => {
           getDownloadURL(value.ref).then((url) => {
             setImgUrl((data) => [...data, url]);
             setIsOpen(false);
-            // Optionally save the URL to localStorage
             localStorage.setItem("imgUrl", JSON.stringify([...imgUrl, url]));
           });
         });
@@ -130,34 +123,6 @@ const User = ({}) => {
       }
     }
   };
-
-  // const handleImageUpload = async (event) => {
-  //   const imageFile = event.target.files[0];
-
-  //   const options = {
-  //     maxSizeMB: 1, // (default: Number.POSITIVE_INFINITY)
-  //     // maxWidthOrHeight: 800, // (default: undefined)
-  //     useWebWorker: true, // (default: true)
-  //   };
-
-  //   try {
-  //     const compressedFile = await imageCompression(imageFile, options);
-  //     // console.log('compressedFile:', compressedFile);
-
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImgUrl((prevUrls) => [...prevUrls, reader.result]);
-  //       // Optionally save the compressed image to localStorage
-  //       localStorage.setItem(
-  //         "imgUrl",
-  //         JSON.stringify([...imgUrl, reader.result])
-  //       );
-  //     };
-  //     reader.readAsDataURL(compressedFile);
-  //   } catch (error) {
-  //     // console.error('Error compressing image:', error);
-  //   }
-  // };
 
   function controlModal() {
     setIsOpen((prev) => !prev);
@@ -187,22 +152,19 @@ const User = ({}) => {
       resetTransactions();
     }
   };
-  const closeAbout = (e) =>{
-    e.stopPropagation();
+  const closeAbout = (e) => {
+    e?.stopPropagation();
     setToggleAbout(false);
-  }
-  const aboutRef = useClickOutside(closeAbout)
-  
-  const aboutApp = () =>{
-    setToggleAbout(true);
-  }
-  
-  
-  
-    if (loading) {
-      return <Loader />;
-    }
+  };
+  const aboutRef = useClickOutside(closeAbout);
 
+  const aboutApp = () => {
+    setToggleAbout(true);
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="pb-24">
@@ -326,12 +288,21 @@ const User = ({}) => {
               <option value="dark">Dark</option>
             </select>
           </div>
-          {/* <DarkMode /> */}
 
-          <div ref={aboutRef} onClick={aboutApp} className="flex items-center justify-between">
-            <button >About</button>
-            { <div data-state={toggleAbout} onClick={closeAbout}  className="fixed data-[state=true]:block hidden z-[400] h-[100vh] w-[100vw] top-0 left-0 bg-[#0000005f]"></div>}
-            <About  setToggleAbout={setToggleAbout} toggleAbout={toggleAbout}/>
+          <div
+            ref={aboutRef}
+            onClick={aboutApp}
+            className="flex items-center justify-between"
+          >
+            <button>About</button>
+            {
+              <div
+                data-state={toggleAbout}
+                onClick={closeAbout}
+                className="fixed data-[state=true]:block hidden z-[400] h-[100vh] w-[100vw] top-0 left-0 bg-[#0000005f]"
+              ></div>
+            }
+            <About toggleAbout={toggleAbout} />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

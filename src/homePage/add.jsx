@@ -20,11 +20,9 @@ const AddExpense = () => {
     isVisible,
     setIsVisible,
     loading,
-    setLoading
+    setLoading,
   } = useContext(UserContext);
-  const [transactType, setTransactType] = useState(1);
 
-  const [inputValue, setInputValue] = useState("");
   const [selector, setSelector] = useState(false);
 
   const [name, setName] = useState("");
@@ -42,8 +40,6 @@ const AddExpense = () => {
     return maxId + 1;
   };
 
-  // const dateString = date;
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: "2-digit", month: "short", year: "numeric" };
@@ -59,21 +55,6 @@ const AddExpense = () => {
 
   const dropdownRef = useClickOutside(closeOption);
 
-  // const formattedNumber = (number) => {
-  //   // Convert the string to a number
-  //   const numericValue = parseFloat(number);
-
-  //   // Check if the input is a valid number
-  //   if (isNaN(numericValue)) {
-  //     return ""; // Return an empty string if it's not a valid number
-  //   }
-
-  //   // Format the number with two decimal places and comma separators
-  //   return numericValue.toLocaleString(undefined, {
-  //     minimumFractionDigits: 2,
-  //     maximumFractionDigits: 2,
-  //   });
-  // };
   let newAmount = amount / localCurrency;
   if (localCurrency === 1) newAmount = amount;
 
@@ -81,7 +62,6 @@ const AddExpense = () => {
     e.preventDefault();
 
     if (name !== "" && amount !== "" && date !== "") {
-      // const formattedDate = new Date(date).toISOString();
       const newAmountt = parseFloat(newAmount);
 
       const newTransaction = {
@@ -112,7 +92,7 @@ const AddExpense = () => {
         return navigate("/home");
       } catch (err) {
         console.error("Error adding document: ", err);
-      }finally{
+      } finally {
         setLoading(false);
       }
     } else {
@@ -121,13 +101,6 @@ const AddExpense = () => {
       console.error("Please fill in all fields");
     }
   };
-
-  // useEffect(() => {
-  //   console.log(transactions);
-  // }, [transactions]);
-  // useEffect(() => {
-  //   console.log(date);
-  // }, [date]);
 
   const selection = [
     {
@@ -201,11 +174,9 @@ const AddExpense = () => {
         </button>
       </header>
 
-      
-        {selector &&
+      {selector && (
         <div className="absolute float border z-[85] top-[90px] right-6  flex flex-col rounded-md bg-white  ">
-         { selection.map((select) => (
-
+          {selection.map((select) => (
             <button
               key={select.type}
               onClick={select.function}
@@ -214,9 +185,12 @@ const AddExpense = () => {
               {select.value}
             </button>
           ))}
-      </div>
-          }
-      <form  onSubmit={addTransaction} className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 ">
+        </div>
+      )}
+      <form
+        onSubmit={addTransaction}
+        className="addForm p-9 py-6 w-[90%] h-[70%] shadow-lg rounded-lg justify-between bg-white flex flex-col absolute z-[60]  top-[20%] text-xl font-semibold  mx-auto left-0 right-0 "
+      >
         <div>
           <label className="text-sm text-[#666666]" htmlFor="name">
             Name
@@ -252,7 +226,7 @@ const AddExpense = () => {
           />
           <div>
             <button
-            type="button"
+              type="button"
               onClick={(e) => {
                 e.preventDefault();
                 setAmount("");
@@ -280,13 +254,20 @@ const AddExpense = () => {
           />
         </div>
         <button
-         
           type="submit"
           className={` ${
             typeTrack === 1 ? "text-green-600" : "text-red-600 ext-red-600"
           } py-2 border rounded-lg w-full flex items-center justify-center hover:text-white my-3`}
         >
-         {!loading ? `Add ${typeTrack === 1 ? "Income" : "Expense"}` : <figure className={typeTrack === 1 ? "loaderAdd Income" : "loaderAdd Expense"}></figure>}
+          {!loading ? (
+            `Add ${typeTrack === 1 ? "Income" : "Expense"}`
+          ) : (
+            <figure
+              className={
+                typeTrack === 1 ? "loaderAdd Income" : "loaderAdd Expense"
+              }
+            ></figure>
+          )}
         </button>
       </form>
     </div>

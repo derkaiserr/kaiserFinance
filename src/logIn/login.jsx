@@ -3,20 +3,24 @@ import { EyeOff } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase/firebase";
-// import { SignIn, doSignInWithGoogle } from "../firebase/auth";
 import UserContext from "../../hooks/context/context.js";
 import { AuthContext } from "../firebase/auth.jsx";
 import G from "../assets/G.png";
 
 export default function Login() {
   const { navigate, isVisible, setIsVisible } = useContext(UserContext);
-  const { manageError, error, SignIn, doSignInWithGoogle, isLoading, doPasswordReset, setInputName, inputName } =
-    useContext(AuthContext);
+  const {
+    error,
+    SignIn,
+    doSignInWithGoogle,
+    isLoading,
+    doPasswordReset,
+    setInputName,
+    inputName,
+  } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -24,45 +28,24 @@ export default function Login() {
     try {
       await SignIn(email, password);
 
-      // Check if sign-in was successful
       if (auth.currentUser && auth.currentUser.email === email) {
         navigate("/home");
       } else {
         throw new Error();
       }
     } catch (err) {
-      // console.error("Error during sign-in:", err);
-      // console.log(error)
-      // manageError(err);
-      // If sign-in failed, manage the error and set visibility state
-      // setError(err.message);
-      // console.log(error)
-      // console.log(err.message)
       setIsVisible(true);
     }
   };
 
-  const PasswordReset =(e)=>{
+  const PasswordReset = (e) => {
     e.preventDefault();
-    if(email === "") return setInputName(true)
-    return doPasswordReset(email)
-  }
+    if (email === "") return setInputName(true);
+    return doPasswordReset(email);
+  };
 
   const homeLink = "/home";
 
-  // const onGoogleLogin = (e) =>{
-  //   e.preventDefault()
-  //   if(!isSigningIn){
-  //     setIsSigningIn(true)
-  //      doSignInWithGoogle().catch(err=>{
-  //       setIsSigningIn(false)
-  //      })
-  //   }
-  // }
-
-  // useEffect(()=>{
-  //   <Navigate to={homeLink}  />
-  // },[ isSigningIn])
   const [eye, setEye] = useState(false);
 
   return (
@@ -76,22 +59,6 @@ export default function Login() {
         </p>
       }
       <header className="absolute w-full  px-4 grid-cols-3 text-center pt-6 font-bold">
-        {/* <svg
-          onClick={() => navigate(-1)}
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-arrow-left"
-        >
-          <path d="m12 19-7-7 7-7" />
-          <path d="M19 12H5" />
-        </svg> */}
         <p>Login</p>
       </header>
 
@@ -101,22 +68,22 @@ export default function Login() {
           action=""
         >
           <div className="mb-7">
-
-          <input
-            className="w-full rounded-lg border-slate-200 outline-none border px-3 h-10"
-            type="email"
-            placeholder="Email"
-            name=""
-            id="email"
-            onChange={(e) => {
-              setInputName(false)
-              setEmail(e.target.value.toLowerCase())}}
+            <input
+              className="w-full rounded-lg border-slate-200 outline-none border px-3 h-10"
+              type="email"
+              placeholder="Email"
+              name=""
+              id="email"
+              onChange={(e) => {
+                setInputName(false);
+                setEmail(e.target.value.toLowerCase());
+              }}
             />
-           {inputName && (
-            <p className="text-red-500 text-sm" htmlFor="name">
-              Please enter your email.
-            </p>
-          )}
+            {inputName && (
+              <p className="text-red-500 text-sm" htmlFor="name">
+                Please enter your email.
+              </p>
+            )}
           </div>
           <div className="relative flex items-center justify-center">
             <input
@@ -127,7 +94,7 @@ export default function Login() {
               id="password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="">
+            <div>
               {eye ? (
                 <EyeOff
                   className="absolute text-gray-500 right-3 top-2 "
@@ -172,7 +139,10 @@ export default function Login() {
             Continue with Google
           </button>
 
-          <button onClick={PasswordReset} className="text-center text-[#438883] mt-4  font-semibold ">
+          <button
+            onClick={PasswordReset}
+            className="text-center text-[#438883] mt-4  font-semibold "
+          >
             Forgot Password?
           </button>
 

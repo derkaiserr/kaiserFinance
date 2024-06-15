@@ -12,18 +12,17 @@ import { app, auth } from "./firebase.js";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [error, manageError] = useState("");
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
   const [inputName, setInputName] = useState(false);
   useEffect(() => {
-    // Set a timer to hide the element after 5 seconds
+    // timer to hide the error element after 5 seconds
     const timer = setTimeout(() => {
       setIsVisible(false);
-      manageError("")
+      manageError("");
     }, 5000);
 
-    // Clear the timer if the component is unmounted before 5 seconds
     return () => clearTimeout(timer);
   }, [isVisible === true]);
 
@@ -87,7 +86,6 @@ const AuthProvider = ({ children }) => {
       console.log(err.message);
     }
   };
-  
 
   const authContext = {
     Register,
@@ -101,7 +99,6 @@ const AuthProvider = ({ children }) => {
     isLoading,
     inputName,
     setInputName,
-    // setIsVisible,
   };
 
   return (

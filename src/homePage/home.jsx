@@ -16,22 +16,17 @@ const PageOne = () => {
     transactions,
     navigate,
     loading,
-    currency
+    currency,
   } = useContext(Context);
   const [eye, setEye] = useState(false);
   const [showTxList, setShowTxList] = useState(false);
   useEffect(() => {
-    // if (loading === true) {
-    //   setNav(false);
-    //   return;
-    // }
     setNav(true);
   }, [nav, loading]);
 
   const calculateAmount = (transactions, type) => {
     let total = 0;
     transactions.forEach((transaction) => {
-      // const amount = parseFloat(transaction.amount.replace(/,/g, ""));
       const amount = parseFloat(transaction.amount * localCurrency);
       if (type === "total") {
         transaction.type === 1 ? (total += amount) : (total -= amount);
@@ -107,15 +102,12 @@ const PageOne = () => {
   }, [transactions]);
 
   const formattedNumber = (number) => {
-    // Convert the string to a number
     const numericValue = parseFloat(number);
 
-    // Check if the input is a valid number
     if (isNaN(numericValue)) {
-      return ""; // Return an empty string if it's not a valid number
+      return "";
     }
 
-    // Format the number with two decimal places and comma separators
     return numericValue.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -129,16 +121,11 @@ const PageOne = () => {
       return dateB - dateA;
     });
   }, [transactions]);
-  // console.log(reverselySortedTx);
 
   const closeTx = () => {
     setShowTxList(false);
   };
   const ref = useClickOutside(closeTx);
-  // const handlePropagation = (e) => {
-  //   // Prevent the click event from propagating
-  //   e.stopPropagation();
-  // }
 
   const elementRef = useRef(null);
 
@@ -154,7 +141,7 @@ const PageOne = () => {
         <div className="flex  justify-between">
           <p className="flex font-semibold  items-center text-sm gap-2">
             Total Balance
-            <span className="">
+            <span>
               {eye ? (
                 <EyeOff
                   className=" w-5"
@@ -172,7 +159,7 @@ const PageOne = () => {
               )}
             </span>
           </p>
-         {currency}
+          {currency}
         </div>
 
         <div>

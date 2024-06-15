@@ -25,19 +25,7 @@ ChartJS.register(
   Filler
 );
 
-const ExpenseStats = ({}) => {
-  // let sortedTransactions = transactions.sort((a, b) => {
-  //   return new Date(a.date) - new Date(b.date);})
-
-  //   useEffect(() => {setTransactions(sortedTransactions)}, [transactions])
-  // useEffect(() => {
-  //  sortedTransactions = transactions.sort((a, b) => {
-  //   return new Date(a.date) - new Date(b.date);
-  // })}, [transactions])
-
-  // setTransactions(sortedTransactions);
-
-  // console.log(sortedTransactions)
+const ExpenseStats = () => {
   const [interval, setInterval] = useState("day");
 
   const { sortedTransactions, localCurrency, currencySymbol, theme } =
@@ -83,12 +71,15 @@ const ExpenseStats = ({}) => {
   const expenseData = labels.map((label) => data[label].expense);
   const [dataState, setDataState] = useState("income");
 
-const chartRef = useRef(null)
-const [fillGradient, setFillGradient] = useState([{color: "rgba(75, 192, 192, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
+  const chartRef = useRef(null);
+  const [fillGradient, setFillGradient] = useState([
+    { color: "rgba(75, 192, 192, 0.4)" },
+    { color: "rgba(255, 255, 255, 0.1)" },
+  ]);
 
-useEffect(() => {
-  const chart = chartRef.current;
-  if (chart) {
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (chart) {
       const ctx = chart.ctx;
 
       const gradientStroke = ctx.createLinearGradient(500, 250, 400, 0);
@@ -96,20 +87,20 @@ useEffect(() => {
       gradientStroke.addColorStop(1, colorState);
 
       const gradientFill = ctx.createLinearGradient(5, 90, 30, 289);
-gradientFill.addColorStop(0, fillGradient[0].color); // Transparent green at the top
-gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].color); // White at the bottom
-
+      gradientFill.addColorStop(0, fillGradient[0].color);
+      gradientFill.addColorStop(
+        1,
+        theme === "dark" ? "transparent" : fillGradient[1].color
+      );
 
       chart.data.datasets[0].borderColor = gradientStroke;
       chart.data.datasets[0].pointBorderColor = gradientStroke;
-      // chart.data.datasets[0].pointBackgroundColor = "#fff";
-      // chart.data.datasets[0].pointHoverBorderColor = gradientStroke;
       chart.data.datasets[0].backgroundColor = gradientFill;
 
       chart.update();
-  }
-}, [colorState]);
-  
+    }
+  }, [colorState]);
+
   const selectedData = dataState === "income" ? incomeData : expenseData;
   const chartData = {
     labels,
@@ -117,7 +108,7 @@ gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].
       {
         label: labelState,
         data: selectedData,
-        pointBackgroundColor: '#fff',
+        pointBackgroundColor: "#fff",
         pointBorderWidth: 1,
         pointRadius: 4,
         fill: true,
@@ -127,15 +118,10 @@ gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].
   };
 
   const formattedNumber = (number) => {
-    // Convert the string to a number
     const numericValue = parseFloat(number);
-
-    // Check if the input is a valid number
     if (isNaN(numericValue)) {
-      return ""; // Return an empty string if it's not a valid number
+      return "";
     }
-
-    // Format the number with two decimal places and comma separators
     return numericValue.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -151,60 +137,57 @@ gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].
 
   const dynamicWidth = labels.length * 60;
   const containerWidth =
-    interval === "month" || interval === "year" || labels.length < 6 ? "90vw" : `${dynamicWidth}px `;
+    interval === "month" || interval === "year" || labels.length < 6
+      ? "90vw"
+      : `${dynamicWidth}px `;
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-   
       y: {
         ticks: {
-            color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
-            font: {
-                weight: 'semibold',
-            },
-            beginAtZero: true,
-            maxTicksLimit: 5,
-            padding: 20,
+          color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
+          font: {
+            weight: "semibold",
+          },
+          beginAtZero: true,
+          maxTicksLimit: 5,
+          padding: 20,
         },
         grid: {
-            drawTicks: false,
-            display: false,
-        }
-    },
-    x: {
+          drawTicks: false,
+          display: false,
+        },
+      },
+      x: {
         grid: {
-            zeroLineColor: "transparent",
+          zeroLineColor: "transparent",
         },
         ticks: {
-            padding: 20,
-            color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
-            font: {
-                weight: 'semibold',
-            },
-        }
-    }
+          padding: 20,
+          color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
+          font: {
+            weight: "semibold",
+          },
+        },
+      },
     },
     elements: {
       line: {
-        tension: 0.5, // Smooth curve (0 for straight lines)
+        tension: 0.5,
       },
       point: {
-        radius: 4, // Point radius
-        hoverRadius: 7, // Hover radius
-        backgroundColor: "white", // Point background color
-        borderWidth: 1, // Point border width
+        radius: 4,
+        hoverRadius: 7,
+        backgroundColor: "white",
+        borderWidth: 1,
       },
     },
     plugins: {
       legend: {
         display: true,
         position: "bottom",
-      },
-      tooltip: {
-        // mode: "index",
-        // intersect: false,
       },
     },
   };
@@ -234,14 +217,19 @@ gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].
               setDataState("income");
               setLabelState("Income");
               setColorState("#1c9890");
-              setFillGradient([{color: "rgba(75, 192, 192, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
-
+              setFillGradient([
+                { color: "rgba(75, 192, 192, 0.4)" },
+                { color: "rgba(255, 255, 255, 0.1)" },
+              ]);
             } else if (selectedValue === "expenses") {
               setTransactData(expenses);
               setDataState("exp");
               setLabelState("Expense");
               setColorState("rgba(205, 50, 50, 0.7)");
-              setFillGradient([{color: "rgba(255, 50, 50, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
+              setFillGradient([
+                { color: "rgba(255, 50, 50, 0.4)" },
+                { color: "rgba(255, 255, 255, 0.1)" },
+              ]);
             }
           }}
         >
@@ -249,7 +237,12 @@ gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].
           <option value="expenses">Expenses</option>
         </select>
       </div>
-      <ChartTime times={times} interval={interval} setInterval={setInterval} dataState={dataState} />
+      <ChartTime
+        times={times}
+        interval={interval}
+        setInterval={setInterval}
+        dataState={dataState}
+      />
       <div
         className={`overflow-x-auto overflow-y-hidden white-space-nowrap min-w-[90vw] mx-6`}
         style={{}}
