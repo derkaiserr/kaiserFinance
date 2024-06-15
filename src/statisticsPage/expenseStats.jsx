@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import UserContext from "../../hooks/context/context.js";
 import { Line } from "react-chartjs-2";
 import {
@@ -40,7 +40,7 @@ const ExpenseStats = ({}) => {
   // console.log(sortedTransactions)
   const [interval, setInterval] = useState("day");
 
-  const { sortedTransactions, localCurrency, currencySymbol, transactions } =
+  const { sortedTransactions, localCurrency, currencySymbol, theme } =
     useContext(UserContext);
 
   const aggregateTransactions = (transactions, interval) => {
@@ -76,14 +76,40 @@ const ExpenseStats = ({}) => {
     return result;
   };
   const [labelState, setLabelState] = useState("Income");
-  const [colorState, setColorState] = useState("green");
+  const [colorState, setColorState] = useState("#1c9890");
   const data = aggregateTransactions(sortedTransactions, interval);
   const labels = Object.keys(data);
   const incomeData = labels.map((label) => data[label].income);
   const expenseData = labels.map((label) => data[label].expense);
   const [dataState, setDataState] = useState("income");
-  const [chartBg, setchartBg] = useState("rgba(75, 192, 192, 0.2)");
 
+const chartRef = useRef(null)
+const [fillGradient, setFillGradient] = useState([{color: "rgba(75, 192, 192, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
+
+useEffect(() => {
+  const chart = chartRef.current;
+  if (chart) {
+      const ctx = chart.ctx;
+
+      const gradientStroke = ctx.createLinearGradient(500, 250, 400, 0);
+      gradientStroke.addColorStop(0, colorState);
+      gradientStroke.addColorStop(1, colorState);
+
+      const gradientFill = ctx.createLinearGradient(5, 90, 30, 289);
+gradientFill.addColorStop(0, fillGradient[0].color); // Transparent green at the top
+gradientFill.addColorStop(1, theme === "dark" ? "transparent" : fillGradient[1].color); // White at the bottom
+
+
+      chart.data.datasets[0].borderColor = gradientStroke;
+      chart.data.datasets[0].pointBorderColor = gradientStroke;
+      // chart.data.datasets[0].pointBackgroundColor = "#fff";
+      // chart.data.datasets[0].pointHoverBorderColor = gradientStroke;
+      chart.data.datasets[0].backgroundColor = gradientFill;
+
+      chart.update();
+  }
+}, [colorState]);
+  
   const selectedData = dataState === "income" ? incomeData : expenseData;
   const chartData = {
     labels,
@@ -91,14 +117,14 @@ const ExpenseStats = ({}) => {
       {
         label: labelState,
         data: selectedData,
-        borderColor: colorState,
-        borderWidth: 2,
-        backgroundColor: chartBg,
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointRadius: 4,
         fill: true,
+        borderWidth: 2,
       },
     ],
   };
-  const chartWidth = window.innerWidth * 0.5;
 
   const formattedNumber = (number) => {
     // Convert the string to a number
@@ -131,24 +157,38 @@ const ExpenseStats = ({}) => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: {
-        grid: { display: false },
-        // display: true,
-      },
+   
       y: {
-        display: true,
-        grid: {display: false},
-        title: {
-          display: true,
-          text: "",
+        ticks: {
+            color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
+            font: {
+                weight: 'semibold',
+            },
+            beginAtZero: true,
+            maxTicksLimit: 5,
+            padding: 20,
         },
-        beginAtZero: true,
-      },
+        grid: {
+            drawTicks: false,
+            display: false,
+        }
+    },
+    x: {
+        grid: {
+            zeroLineColor: "transparent",
+        },
+        ticks: {
+            padding: 20,
+            color: theme === "dark" ? "#aaa" : "rgba(80,80,80,0.9)",
+            font: {
+                weight: 'semibold',
+            },
+        }
+    }
     },
     elements: {
       line: {
-        tension: 0.4, // Smooth curve (0 for straight lines)
-        borderWidth: 2, // Line thickness
+        tension: 0.5, // Smooth curve (0 for straight lines)
       },
       point: {
         radius: 4, // Point radius
@@ -160,11 +200,11 @@ const ExpenseStats = ({}) => {
     plugins: {
       legend: {
         display: true,
-        position: "top",
+        position: "bottom",
       },
       tooltip: {
-        mode: "index",
-        intersect: false,
+        // mode: "index",
+        // intersect: false,
       },
     },
   };
@@ -180,7 +220,7 @@ const ExpenseStats = ({}) => {
     <div className="relative pt-10">
       <div
         className={` absolute  ${
-          colorState === "green" ? "text-green-600" : "text-red-600"
+          colorState === "#1c9890" ? "text-[#1c9890]" : "text-red-600"
         }  z-40 right-6  top-0`}
       >
         <select
@@ -193,14 +233,15 @@ const ExpenseStats = ({}) => {
               setTransactData(income);
               setDataState("income");
               setLabelState("Income");
-              setColorState("green");
-              setchartBg("rgba(75, 192, 192, 0.2)");
+              setColorState("#1c9890");
+              setFillGradient([{color: "rgba(75, 192, 192, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
+
             } else if (selectedValue === "expenses") {
               setTransactData(expenses);
               setDataState("exp");
               setLabelState("Expense");
-              setColorState("red");
-              setchartBg("rgba(255, 0, 0, 0.2");
+              setColorState("rgba(205, 50, 50, 0.7)");
+              setFillGradient([{color: "rgba(255, 50, 50, 0.4)"},{color: "rgba(255, 255, 255, 0.1)"}])
             }
           }}
         >
@@ -214,7 +255,7 @@ const ExpenseStats = ({}) => {
         style={{}}
       >
         <div style={{ width: containerWidth, height: "300px" }}>
-          <Line data={chartData} options={options} />
+          <Line data={chartData} ref={chartRef} options={options} />
         </div>
       </div>
 
