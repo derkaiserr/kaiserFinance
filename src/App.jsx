@@ -103,7 +103,7 @@ function App() {
       })
       .then((data) => {
         console.log(data);
-        // addRate(data.conversion_rates.NGN);
+        addRate(data.conversion_rates.NGN);
       })
       .catch((error) => {
         console.error("Error fetching exchange rate:", error);
