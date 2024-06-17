@@ -97,9 +97,10 @@ function App() {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
         }
-        return response.json();
+        return response.text();
       })
       .then((data) => {
+        console.log(data);
         addRate(data.conversion_rates.NGN);
       })
       .catch((error) => {
