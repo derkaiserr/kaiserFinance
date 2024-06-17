@@ -9,7 +9,7 @@ export default defineConfig({
         target: "https://v6.exchangerate-api.com",
         changeOrigin: true,
         rewrite: (path) =>
-          path.replace(/^\/api/, "/v6/4b948ebe6e96d10d04c97923"),
+          path.replace(/^\/api/, "/v6/5395552a5b807960dbf0f7df"),
       },
     },
   },
