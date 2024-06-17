@@ -86,7 +86,7 @@ function App() {
   const [currencyState, setCurrencyState] = useState(1);
   const [currencySymbol, setCurrencySymbol] = useState("$");
 
-  // CURRENCY EXCHANGE SECTION
+  // CURRENCY EXCHANGE SECTION.
   const addRate = useCallback((rate) => {
     setCurrencyState(rate);
   }, []);
