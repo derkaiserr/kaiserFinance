@@ -93,7 +93,7 @@ function App() {
   console.log(API_KEY);
 
   const currencyMemo = useMemo(() => {
-    return fetch(`/${API_KEY}/latest/USD`)
+    return fetch(`/api/v6/${API_KEY}/latest/USD`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
