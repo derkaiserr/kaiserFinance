@@ -92,7 +92,7 @@ function App() {
   }, []);
 
   const currencyMemo = useMemo(() => {
-    return fetch(`/api/latest/USD`)
+    return fetch(`/api`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
@@ -101,7 +101,7 @@ function App() {
       })
       .then((data) => {
         console.log(data);
-        addRate(data.conversion_rates.NGN);
+        // addRate(data.conversion_rates.NGN);
       })
       .catch((error) => {
         console.error("Error fetching exchange rate:", error);
