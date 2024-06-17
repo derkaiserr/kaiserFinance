@@ -97,7 +97,7 @@ function App() {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
         }
-        return response.text();
+        return response.json();
       })
       .then((data) => {
         console.log(data);
