@@ -272,7 +272,7 @@ const PageOne = () => {
                 </p>
               </div>
               <p
-                className={`amount font-semibold flex items-center justiy-between ${
+                className={`amount font-semibold flex items-center text-nowrap whitespace-nowrap justiy-between ${
                   transaction.type === 1 ? "text-green-700" : "text-red-700"
                 } `}
               >
