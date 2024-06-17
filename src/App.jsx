@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import {
   collection,
@@ -8,7 +8,6 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import date from "date-and-time";
 import GetStarted from "./getStarted";
 import { SignUp } from "./signUp/signUp.jsx";
 import Login from "./logIn/login.jsx";
@@ -90,7 +89,6 @@ function App() {
   const addRate = useCallback((rate) => {
     setCurrencyState(rate);
   }, []);
-  console.log(API_KEY);
 
   const currencyMemo = useMemo(() => {
     return fetch(
@@ -103,7 +101,6 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         addRate(data.conversion_rates.NGN);
       })
       .catch((error) => {
