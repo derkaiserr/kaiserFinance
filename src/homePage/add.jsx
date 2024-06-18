@@ -31,6 +31,7 @@ const AddExpense = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [typeTrack, setTypeTrack] = useState(1);
+  Const [txForm, setTxForm] = useState([])
 
   const generateNewId = () => {
     const maxId = transactions.reduce(
@@ -58,6 +59,9 @@ const AddExpense = () => {
   let newAmount = amount / localCurrency;
   if (localCurrency === 1) newAmount = amount;
 
+  const editTxForm = (e) =>{
+    {[e.name] = e.value }
+  }
   const addTransaction = async (e) => {
     e.preventDefault();
 

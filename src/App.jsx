@@ -92,7 +92,9 @@ function App() {
 
   const currencyMemo = useMemo(() => {
     return fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`, {
-      header: "Access-Control-Allow-Origin",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
     })
       .then((response) => {
         if (!response.ok) {
