@@ -82,7 +82,7 @@ function App() {
 
   const API_KEY = import.meta.env.VITE_SOME_KEY;
 
-  const [currencyState, setCurrencyState] = useState(1);
+  const [currencyState, setCurrencyState] = useState(1)
   const [currencySymbol, setCurrencySymbol] = useState("$");
 
   // CURRENCY EXCHANGE SECTION.
