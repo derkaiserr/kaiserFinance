@@ -82,7 +82,7 @@ function App() {
 
   const API_KEY = import.meta.env.VITE_SOME_KEY;
 
-  const [currencyState, setCurrencyState] = useState(1)
+  const [currencyState, setCurrencyState] = useState(1);
   const [currencySymbol, setCurrencySymbol] = useState("$");
 
   // CURRENCY EXCHANGE SECTION.
@@ -91,12 +91,10 @@ function App() {
   }, []);
 
   const currencyMemo = useMemo(() => {
-    return fetch(`https://openexchangerates.org/api/latest.json?app_id=${API_KEY}`, {
-      // headers: {
-      //   "Access-Control-Allow-Origin": "*",
-      // },
-      
-    })
+    return fetch(
+      `https://v6.exchangerate-api.com/v6/5395552a5b807960dbf0f7df/latest/USD` 
+      //had to hardcode the API as a last resort (long story)
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
@@ -104,8 +102,7 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        addRate(data.rates.NGN);
-        console.log(data.rates.NGN)
+        addRate(data.conversion_rates.NGN);
       })
       .catch((error) => {
         console.error("Error fetching exchange rate:", error);
