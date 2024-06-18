@@ -91,9 +91,9 @@ function App() {
   }, []);
 
   const currencyMemo = useMemo(() => {
-    return fetch(
-      `https://v6.exchangerate-api.com/v6/5395552a5b807960dbf0f7df/latest/USD`
-    )
+    return fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`, {
+      header: "Access-Control-Allow-Origin",
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch exchange rate");
