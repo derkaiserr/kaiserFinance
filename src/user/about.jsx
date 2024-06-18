@@ -78,7 +78,7 @@ export default function About({ toggleAbout }) {
           Kaiser<span className="text-green-700">Finance</span> is built using a
           modern tech stack of{" "}
           {"{React, Firebase, Context API, Tailwind CSS, ChartJS}"} to ensure a
-          robust, responsive, and efficient user experience:
+          robust, responsive, and efficient user experience
         </p>
         <br />
         <p className="font-semibold">
