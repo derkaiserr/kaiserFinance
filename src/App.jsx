@@ -92,7 +92,7 @@ function App() {
 
   const currencyMemo = useMemo(() => {
     return fetch(
-      `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`
+      `https://v6.exchangerate-api.com/v6/5395552a5b807960dbf0f7df/latest/USD`
     )
       .then((response) => {
         if (!response.ok) {
