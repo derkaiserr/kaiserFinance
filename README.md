@@ -21,5 +21,7 @@ KaiserFinance is built using a modern tech stack of {React, Firebase, Context AP
 With KaiserFinance, you can:
 
 Understand Your Spending Habits
+
 Set Financial Goals
+
 Stay Organized
