@@ -91,10 +91,11 @@ function App() {
   }, []);
 
   const currencyMemo = useMemo(() => {
-    return fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
+    return fetch(`https://openexchangerates.org/api/latest.json?app_id=${API_KEY}`, {
+      // headers: {
+      //   "Access-Control-Allow-Origin": "*",
+      // },
+      
     })
       .then((response) => {
         if (!response.ok) {
@@ -103,7 +104,8 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        addRate(data.conversion_rates.NGN);
+        addRate(data.rates.NGN);
+        console.log(data.rates.NGN)
       })
       .catch((error) => {
         console.error("Error fetching exchange rate:", error);
