@@ -266,7 +266,7 @@ const PageOne = () => {
               className="flex justify-between my-4 mt-2"
             >
               <div className="">
-                <p className="font-semibold">{transaction.name}</p>
+                <p className="font-semibold text-wrap">{transaction.name}</p>
                 <p className="text-slate-500 font-medium text-sm">
                   {formatDate(transaction.date)}
                 </p>
